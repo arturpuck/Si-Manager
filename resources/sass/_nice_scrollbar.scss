@@ -1,0 +1,31 @@
+$color : linear-gradient(#bdb7b5, #585454) #131212;
+
+@mixin nice-scrollbar($className){
+
+    #{$className}::-webkit-scrollbar {
+        width: 1.1vw;
+        @media(max-width: 1200px){
+            width:15px;
+        }
+      }
+      
+      #{$className}::-webkit-scrollbar-track {
+        background: #131212; 
+      }
+       
+      #{$className}::-webkit-scrollbar-thumb {
+        background: $color;
+        border-radius: 0 0 5px 5px;
+      }
+
+      #{$className}{
+        scrollbar-color: $color;
+        scrollbar-width:1.1vw;
+        @media(max-width: 1200px){
+            scrollbar-width:15px;
+        }
+      }
+    
+
+}
+

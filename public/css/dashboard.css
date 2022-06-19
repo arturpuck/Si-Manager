@@ -1,0 +1,121 @@
+/***
+    The new CSS reset - version 1.6.1 (last updated 25.5.2022)
+    GitHub page: https://github.com/elad2412/the-new-css-reset
+***/
+/*
+    Remove all the styles of the "User-Agent-Stylesheet", except for the 'display' property
+    - The "symbol *" part is to solve Firefox SVG sprite bug
+ */
+*:where(:not(html, iframe, canvas, img, svg, video):not(svg *, symbol *)) {
+  all: unset;
+  display: revert; }
+
+/* Preferred box-sizing value */
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box; }
+
+/* Reapply the pointer cursor for anchor tags */
+a, button {
+  cursor: revert; }
+
+/* Remove list styles (bullets/numbers) */
+ol, ul, menu {
+  list-style: none; }
+
+/* For images to not be able to exceed their container */
+img {
+  max-width: 100%; }
+
+/* removes spacing between cells in tables */
+table {
+  border-collapse: collapse; }
+
+/* revert the 'white-space' property for textarea elements on Safari */
+textarea {
+  white-space: revert; }
+
+/* minimum style to allow to style meter element */
+meter {
+  -webkit-appearance: revert;
+  -moz-appearance: revert;
+       appearance: revert; }
+
+/* reset default text opacity of input placeholder */
+::-webkit-input-placeholder {
+  color: unset; }
+::-moz-placeholder {
+  color: unset; }
+:-ms-input-placeholder {
+  color: unset; }
+::-ms-input-placeholder {
+  color: unset; }
+::placeholder {
+  color: unset; }
+
+/* fix the feature of 'hidden' attribute.
+   display:revert; revert to element instead of attribute */
+:where([hidden]) {
+  display: none; }
+
+/* revert for bug in Chromium browsers
+   - fix for the content editable attribute will work properly. */
+:where([contenteditable]:not([contenteditable="false"])) {
+  -moz-user-modify: read-write;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space; }
+
+/* apply back the draggable feature - exist only in Chromium and Safari */
+:where([draggable="true"]) {
+  -webkit-user-drag: element; }
+
+.body {
+  background: black; }
+
+.content {
+  background: #030336;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  margin: 10vh auto;
+  width: 80%; }
+
+.dashboard-header {
+  color: white;
+  font-size: 2vw;
+  font-family: "Exo 2", sans-serif;
+  text-align: center;
+  padding: 10px; }
+  @media (max-width: 1200px) {
+    .dashboard-header {
+      font-size: 20px; } }
+
+.option-link {
+  font-size: 1.7vw;
+  font-family: "Exo 2", sans-serif;
+  color: white; }
+  @media (max-width: 1200px) {
+    .option-link {
+      font-size: 18px; } }
+  .option-link:hover {
+    text-decoration: underline;
+    color: crimson; }
+
+.option {
+  padding: 10px; }
+
+.logout-button {
+  font-size: 1.7vw;
+  font-family: "Exo 2", sans-serif;
+  color: white;
+  cursor: pointer; }
+  @media (max-width: 1200px) {
+    .logout-button {
+      font-size: 18px; } }
+  .logout-button:hover {
+    color: crimson; }
+

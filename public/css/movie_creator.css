@@ -1,0 +1,569 @@
+/***
+    The new CSS reset - version 1.6.1 (last updated 25.5.2022)
+    GitHub page: https://github.com/elad2412/the-new-css-reset
+***/
+/*
+    Remove all the styles of the "User-Agent-Stylesheet", except for the 'display' property
+    - The "symbol *" part is to solve Firefox SVG sprite bug
+ */
+*:where(:not(html, iframe, canvas, img, svg, video):not(svg *, symbol *)) {
+  all: unset;
+  display: revert; }
+
+/* Preferred box-sizing value */
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box; }
+
+/* Reapply the pointer cursor for anchor tags */
+a, button {
+  cursor: revert; }
+
+/* Remove list styles (bullets/numbers) */
+ol, ul, menu {
+  list-style: none; }
+
+/* For images to not be able to exceed their container */
+img {
+  max-width: 100%; }
+
+/* removes spacing between cells in tables */
+table {
+  border-collapse: collapse; }
+
+/* revert the 'white-space' property for textarea elements on Safari */
+textarea {
+  white-space: revert; }
+
+/* minimum style to allow to style meter element */
+meter {
+  -webkit-appearance: revert;
+  -moz-appearance: revert;
+       appearance: revert; }
+
+/* reset default text opacity of input placeholder */
+::-webkit-input-placeholder {
+  color: unset; }
+::-moz-placeholder {
+  color: unset; }
+:-ms-input-placeholder {
+  color: unset; }
+::-ms-input-placeholder {
+  color: unset; }
+::placeholder {
+  color: unset; }
+
+/* fix the feature of 'hidden' attribute.
+   display:revert; revert to element instead of attribute */
+:where([hidden]) {
+  display: none; }
+
+/* revert for bug in Chromium browsers
+   - fix for the content editable attribute will work properly. */
+:where([contenteditable]:not([contenteditable="false"])) {
+  -moz-user-modify: read-write;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space; }
+
+/* apply back the draggable feature - exist only in Chromium and Safari */
+:where([draggable="true"]) {
+  -webkit-user-drag: element; }
+
+.body {
+  background: #0e0e0e; }
+
+.movie-title {
+  margin: 0 auto;
+  max-width: 1400px; }
+
+.sex-ammount {
+  margin: 10px 0; }
+
+.main-header {
+  margin: 0;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.7vw;
+  font-family: "Exo 2", sans-serif;
+  color: white; }
+  @media (max-width: 1200px) {
+    .main-header {
+      font-size: 20px; } }
+
+.full-body {
+  background: #0e0e0e; }
+
+.movie-duration {
+  width: 100%;
+  background: #e1104a;
+  border: none;
+  color: white;
+  padding: 4px; }
+
+.add-movie-panel {
+  display: grid;
+  padding: -webkit-calc(30px + 1vw) 0 5px 0;
+  padding: -moz-calc(30px + 1vw) 0 5px 0;
+  padding: calc(30px + 1vw) 0 5px 0;
+  grid-template-columns: repeat(4, 23%);
+  grid-template-rows: auto;
+  -webkit-box-pack: space-evenly;
+  -webkit-justify-content: space-evenly;
+     -moz-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  max-height: 3000px;
+  -webkit-transition: max-height 1s;
+  -o-transition: max-height 1s;
+  -moz-transition: max-height 1s;
+  transition: max-height 1s; }
+  @media (max-width: 541) {
+    .add-movie-panel {
+      margin-top: 70px; } }
+  @media (max-width: 1250px) {
+    .add-movie-panel {
+      grid-template-columns: repeat(2, 43%); } }
+  @media (max-width: 700px) {
+    .add-movie-panel {
+      grid-template-columns: 65%; } }
+  @media (max-width: 420px) {
+    .add-movie-panel {
+      grid-template-columns: 98%; } }
+  .add-movie-panel--hidden {
+    max-height: 0; }
+
+.information-content {
+  font-size: 1.2vw;
+  font-family: "Exo 2", sans-serif;
+  color: white;
+  margin: 0;
+  padding: 0 0 7px 0;
+  text-align: center; }
+  @media (max-width: 1200px) {
+    .information-content {
+      font-size: 16px; } }
+
+.panel-group {
+  -webkit-border-radius: 1vw;
+     -moz-border-radius: 1vw;
+          border-radius: 1vw;
+  padding: 6px;
+  margin: 0;
+  border: 2px solid #35363a; }
+  .panel-group--relative {
+    -webkit-border-radius: 1vw;
+       -moz-border-radius: 1vw;
+            border-radius: 1vw;
+    padding: 6px;
+    margin: 0;
+    border: 2px solid #35363a;
+    position: relative; }
+
+.panel-group-legend {
+  font-size: 1.8vw;
+  font-family: "Exo 2", sans-serif;
+  color: silver; }
+  @media (max-width: 1200px) {
+    .panel-group-legend {
+      font-size: 25px; } }
+
+.info-decoration-icon {
+  width: 1.8vw;
+  margin: 0 3px;
+  vertical-align: middle;
+  fill: #ec1515;
+  height: auto; }
+  @media (max-width: 1200px) {
+    .info-decoration-icon {
+      width: 25px; } }
+
+#app .select_container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex; }
+
+#app .select-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex; }
+
+#app .select-container__select {
+  -webkit-box-flex: 10;
+  -webkit-flex-grow: 10;
+     -moz-box-flex: 10;
+      -ms-flex-positive: 10;
+          flex-grow: 10; }
+
+.select-container {
+  margin: 10px 0; }
+
+.labeled-checkbox-description {
+  font-size: 1.2vw;
+  font-family: "Exo 2", sans-serif;
+  color: white; }
+  @media (max-width: 1200px) {
+    .labeled-checkbox-description {
+      font-size: 16px; } }
+
+.labeled_checkbox--aditional-margin {
+  margin: 8px 0; }
+
+.range-selection {
+  margin: 10px; }
+
+.range-selection-description {
+  text-align: center;
+  font-size: 1.2vw;
+  font-family: "Exo 2", sans-serif;
+  color: white;
+  display: block;
+  padding: 7px; }
+  @media (max-width: 1200px) {
+    .range-selection-description {
+      font-size: 16px; } }
+
+.range-selection__input {
+  -webkit-appearance: none;
+  /* Hides the slider so that custom slider can be made */
+  width: 100%;
+  /* Specific width is required for Firefox. */
+  background: transparent;
+  /* Otherwise white in Chrome */ }
+
+.range-selection__input::-webkit-slider-thumb {
+  -webkit-appearance: none; }
+
+.range-selection__input:focus {
+  outline: none;
+  /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */ }
+
+.range-selection__input::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  /* Hides the slider so custom styles can be added */
+  background: transparent;
+  border-color: transparent;
+  color: transparent; }
+
+.range-selection__input::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1vw;
+  cursor: pointer;
+  -webkit-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #242229;
+  -webkit-border-radius: 4px;
+          border-radius: 4px;
+  border: none; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-webkit-slider-runnable-track {
+      height: 10px; } }
+
+.range-selection__input::-moz-range-track {
+  width: 100%;
+  height: 1vw;
+  cursor: pointer;
+  -moz-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+       box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #242229;
+  -moz-border-radius: 4px;
+       border-radius: 4px;
+  border: none; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-moz-range-track {
+      height: 10px; } }
+
+.range-selection__input::-ms-track {
+  width: 100%;
+  height: 1vw;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #242229;
+  border-radius: 4px;
+  border: none; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-ms-track {
+      height: 10px; } }
+
+.range-selection__input::-ms-fill-upper {
+  width: 100%;
+  height: 1vw;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #242229;
+  border-radius: 4px;
+  border: none; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-ms-fill-upper {
+      height: 10px; } }
+
+.range-selection__input::-ms-fill-lower {
+  width: 100%;
+  height: 1vw;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #242229;
+  border-radius: 4px;
+  border: none; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-ms-fill-lower {
+      height: 10px; } }
+
+.range-selection__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 1.6vw;
+  width: 1vw;
+  min-width: 10px;
+  -webkit-border-radius: 4px;
+          border-radius: 4px;
+  background: crimson;
+  cursor: pointer;
+  margin-top: -0.3vw;
+  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  -webkit-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-webkit-slider-thumb {
+      height: 16px;
+      margin-top: -3px; } }
+
+.range-selection__input::-moz-range-thumb {
+  border: none;
+  height: 1.6vw;
+  width: 1vw;
+  min-width: 10px;
+  -moz-border-radius: 4px;
+       border-radius: 4px;
+  background: crimson;
+  cursor: pointer;
+  margin-top: -0.3vw;
+  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  -moz-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+       box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-moz-range-thumb {
+      height: 16px;
+      margin-top: -3px; } }
+
+.range-selection__input::-ms-thumb {
+  border: none;
+  height: 1.6vw;
+  width: 1vw;
+  min-width: 10px;
+  border-radius: 4px;
+  background: crimson;
+  cursor: pointer;
+  margin-top: -0.3vw;
+  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; }
+  @media (max-width: 1000px) {
+    .range-selection__input::-ms-thumb {
+      height: 16px;
+      margin-top: -3px; } }
+
+#app .control-panel-button--type-reset {
+  line-height: 1.5em; }
+  #app .control-panel-button--type-reset:hover {
+    -webkit-filter: saturate(1.7);
+            filter: saturate(1.7); }
+  #app .control-panel-button--type-reset:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ec1515), to(#8a240a));
+    background: -webkit-linear-gradient(#ec1515, #8a240a);
+    background: -moz-linear-gradient(#ec1515, #8a240a);
+    background: -o-linear-gradient(#ec1515, #8a240a);
+    background: linear-gradient(#ec1515, #8a240a); }
+
+#app .control-panel-button--type-submit {
+  margin: 20px auto;
+  line-height: 1.5em; }
+  #app .control-panel-button--type-submit:hover {
+    -webkit-filter: saturate(1.7);
+            filter: saturate(1.7); }
+  #app .control-panel-button--type-submit:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#0fe00b), to(#054004));
+    background: -webkit-linear-gradient(#0fe00b, #054004);
+    background: -moz-linear-gradient(#0fe00b, #054004);
+    background: -o-linear-gradient(#0fe00b, #054004);
+    background: linear-gradient(#0fe00b, #054004); }
+
+.control-panel-button__icon {
+  width: 1em;
+  vertical-align: middle;
+  margin: 0 2px;
+  min-width: 12px;
+  fill: white;
+  height: auto; }
+  .control-panel-button__icon--bigger {
+    width: 1.5em;
+    vertical-align: middle;
+    margin: 0 2px;
+    min-width: 12px;
+    fill: white;
+    height: auto; }
+  .control-panel-button__icon--arrow-down {
+    vertical-align: middle;
+    margin: 0 2px;
+    min-width: 12px;
+    fill: white;
+    height: auto;
+    width: 15%; }
+  .control-panel-button__icon--reset {
+    vertical-align: middle;
+    margin: 0 2px;
+    min-width: 12px;
+    fill: white;
+    height: auto;
+    width: 1.5em; }
+
+.aditional-control-panel {
+  position: fixed;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+     -moz-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+       -o-transform: translateX(-50%);
+          transform: translateX(-50%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  top: -webkit-calc(35px + 1vw);
+  top: -moz-calc(35px + 1vw);
+  top: calc(35px + 1vw);
+  padding: 4px 0;
+  -webkit-box-shadow: 1px 1px 1px 1px black;
+     -moz-box-shadow: 1px 1px 1px 1px black;
+          box-shadow: 1px 1px 1px 1px black;
+  z-index: 1;
+  border: 1px solid black;
+  -webkit-border-radius: 5px 0 0 5px;
+     -moz-border-radius: 5px 0 0 5px;
+          border-radius: 5px 0 0 5px;
+  overflow: hidden;
+  background: #151314;
+  opacity: 1;
+  -webkit-transition: opacity 1.5s;
+  -o-transition: opacity 1.5s;
+  -moz-transition: opacity 1.5s;
+  transition: opacity 1.5s; }
+  .aditional-control-panel--hidden {
+    opacity: 0; }
+  .aditional-control-panel__description {
+    position: absolute;
+    top: -9999px;
+    left: -9999px; }
+  .aditional-control-panel__button--green {
+    border: none;
+    outline: none;
+    display: block;
+    padding: 2px;
+    text-align: center;
+    margin: 0 2px;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 1.1vw;
+    font-family: "Exo 2", sans-serif;
+    line-height: 1.5em;
+    color: white;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0fe00b), to(#054004));
+    background: -webkit-linear-gradient(#0fe00b, #054004);
+    background: -moz-linear-gradient(#0fe00b, #054004);
+    background: -o-linear-gradient(#0fe00b, #054004);
+    background: linear-gradient(#0fe00b, #054004); }
+    @media (max-width: 1200px) {
+      .aditional-control-panel__button--green {
+        font-size: 13px; } }
+    .aditional-control-panel__button--green:hover {
+      -webkit-filter: saturate(1.7);
+              filter: saturate(1.7); }
+  .aditional-control-panel__button--red {
+    border: none;
+    outline: none;
+    display: block;
+    padding: 2px;
+    text-align: center;
+    margin: 0 2px;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 1.1vw;
+    font-family: "Exo 2", sans-serif;
+    line-height: 1.5em;
+    color: white;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ec1515), to(#8a240a));
+    background: -webkit-linear-gradient(#ec1515, #8a240a);
+    background: -moz-linear-gradient(#ec1515, #8a240a);
+    background: -o-linear-gradient(#ec1515, #8a240a);
+    background: linear-gradient(#ec1515, #8a240a); }
+    @media (max-width: 1200px) {
+      .aditional-control-panel__button--red {
+        font-size: 13px; } }
+    .aditional-control-panel__button--red:hover {
+      -webkit-filter: saturate(1.7);
+              filter: saturate(1.7); }
+  .aditional-control-panel__button--up {
+    border: none;
+    outline: none;
+    display: block;
+    padding: 2px;
+    text-align: center;
+    margin: 0 2px;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 1.1vw;
+    font-family: "Exo 2", sans-serif;
+    line-height: 1.5em;
+    color: white;
+    background: #1d42d2; }
+    @media (max-width: 1200px) {
+      .aditional-control-panel__button--up {
+        font-size: 13px; } }
+    .aditional-control-panel__button--up:hover {
+      -webkit-filter: saturate(1.7);
+              filter: saturate(1.7); }
+  .aditional-control-panel__button--light-red {
+    border: none;
+    outline: none;
+    display: block;
+    padding: 2px;
+    text-align: center;
+    margin: 0 2px;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 1.1vw;
+    font-family: "Exo 2", sans-serif;
+    line-height: 1.5em;
+    color: white;
+    background: -webkit-gradient(linear, left top, right top, from(#b31f45), to(#da1047));
+    background: -webkit-linear-gradient(left, #b31f45, #da1047);
+    background: -moz-linear-gradient(left, #b31f45, #da1047);
+    background: -o-linear-gradient(left, #b31f45, #da1047);
+    background: linear-gradient(to right, #b31f45, #da1047); }
+    @media (max-width: 1200px) {
+      .aditional-control-panel__button--light-red {
+        font-size: 13px; } }
+    .aditional-control-panel__button--light-red:hover {
+      -webkit-filter: saturate(1.7);
+              filter: saturate(1.7); }
+

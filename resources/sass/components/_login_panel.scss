@@ -1,0 +1,74 @@
+@import "~sass/fonts";
+
+.main-panel-label {
+	display: block;
+	text-align: center;
+	padding: 4px;
+	@include responsive-font(1.3vw, 18px);
+	color: white;
+  }
+
+.login-form-container{
+	position: fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	z-index: 999;
+	opacity : 0;
+	animation: fade-in;
+	animation-duration: 1.5s;
+	animation-fill-mode: forwards;
+}
+
+.login-panel-toolbar{
+	border-radius: 5px 5px 0 0;
+	background:#242229;
+	padding: 5px;
+	@include responsive-font(1.5vw, 19px, Play);
+	color:white;
+	text-align: center;
+}
+
+.login-form{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	background: black;
+    border-radius: 8px;
+    box-shadow: 3px 3px 3px 3px black;
+	min-width:320px;
+	width:25%;
+	font-family: "Exo 2", sans-serif;
+	border: 2px solid #242229;
+}
+
+.forgot-password-link {
+	display: block;
+	padding: 4px;
+	text-align: center;
+	color: white;
+	text-decoration: none;
+	@include responsive-font(1.2vw, 17px);
+	&:hover {
+	  text-decoration: underline;
+	}
+	border-radius: 0 0 7px 7px;
+	background: #242229;
+  }
+
+  .remember-me-checkbox {
+	color: white;
+	margin: 4px 2.5%;
+  }
+
+@keyframes fade-in{
+	from  {
+       opacity : 0;
+	}
+
+	to {
+		opacity : 1
+	}
+}

@@ -1,0 +1,9 @@
+@mixin responsive-icon($margin : 0 3px, $relativeWidth : 1.8vw, $smallScreenWidth : 25px, $changeAt : 1200px) {
+    
+	width:$relativeWidth;
+	margin:$margin;
+
+	@media(max-width: $changeAt){
+		width:$smallScreenWidth;
+	}
+}

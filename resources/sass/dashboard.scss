@@ -1,0 +1,41 @@
+@import '~sass/basic';
+
+.body {
+    background: black;
+}
+
+.content{
+    background:rgb(3, 3, 54);
+    border-radius: 5px;
+    margin:10vh auto;
+    width:80%;
+}
+
+.dashboard-header{
+    color:white;
+    @include responsive-font(2vw, 20px);
+    text-align: center;
+    padding: 10px;
+}
+
+.option-link{
+    @include responsive-font(1.7vw, 18px);
+    color:white;
+    &:hover {
+        text-decoration: underline;
+        color:crimson;
+    }
+}
+
+.option {
+    padding: 10px;
+}
+
+.logout-button {
+    @include responsive-font(1.7vw, 18px);
+    color:white;
+    cursor:pointer;
+    &:hover {
+        color:crimson;
+    }
+}

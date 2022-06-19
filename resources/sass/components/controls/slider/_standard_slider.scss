@@ -1,0 +1,49 @@
+@import '~sasscomponent/controls/slider/thumb';
+@import '~sasscomponent/controls/slider/track';
+@import '~sasscomponent/controls/slider/reset';
+
+@mixin standard-slider($selector){
+
+$trackHeight : 1vw;
+$thumbHeight : 1.6 * $trackHeight;
+$marginTop : -1 * $trackHeight * 0.3;
+
+$edgeWidth : 1000px;
+
+$fixedTrackHeight : 10px;
+$fixedThumbHeight : 1.6 * $fixedTrackHeight;
+$fixedMarginTop : -1 * $fixedTrackHeight * 0.3;
+
+
+@include slider-reset($selector);
+
+@include slider-track($selector){
+  width: 100%;
+  height: $trackHeight;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #242229;
+  border-radius: 4px;
+  border: none;
+  @media(max-width:$edgeWidth){
+      height:$fixedTrackHeight;
+  }
+}
+
+@include slider-thumb($selector){
+  border: none;
+  height: $thumbHeight;
+  width: 1vw;
+  min-width:10px;
+  border-radius: 4px;
+  background: crimson;
+  cursor: pointer;
+  margin-top: $marginTop; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  @media(max-width:$edgeWidth){
+    height:$fixedThumbHeight;
+    margin-top:$fixedMarginTop;
+  }
+}
+
+}

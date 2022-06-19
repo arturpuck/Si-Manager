@@ -1,0 +1,13 @@
+@import '~sass/basic';
+
+.body{
+	background-size: cover;
+	background: url('/images/login_background.jpg');
+}
+
+.error-information {
+    text-align: center;
+    color: red;
+    padding:10vh 0;
+    @include responsive-font(3vw, 25px);
+}

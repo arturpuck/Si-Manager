@@ -1,0 +1,23 @@
+@mixin slider-track($selector){
+
+    #{$selector}::-webkit-slider-runnable-track{
+       @content
+    }
+
+    #{$selector}::-moz-range-track{
+        @content 
+    }
+
+    #{$selector}::-ms-track{
+        @content 
+    }
+
+    #{$selector}::-ms-fill-upper{
+        @content 
+    }
+
+    #{$selector}::-ms-fill-lower{
+        @content 
+    }
+
+}

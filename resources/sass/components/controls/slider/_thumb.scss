@@ -1,0 +1,15 @@
+@mixin slider-thumb($selector){
+
+    #{$selector}::-webkit-slider-thumb{
+        -webkit-appearance: none;
+        @content
+    }
+
+    #{$selector}::-moz-range-thumb{
+        @content
+    }
+
+    #{$selector}::-ms-thumb{
+        @content
+    }
+}
