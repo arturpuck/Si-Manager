@@ -3,9 +3,6 @@
 @import "~sass/responsive_icon";
 @import "~sasscomponent/controls/slider/standard_slider";
 
-.body {
-    background: #0e0e0e;
-}
 
 .movie-title{
     margin: 0 auto;
@@ -54,18 +51,6 @@
 
 .sex-ammount {
     margin: 10px 0;
-}
-
-.main-header{
-    margin:0;
-    padding: 10px;
-    text-align: center;
-    @include responsive-font(1.7vw, 20px);
-    color:white;
-}
-
-.full-body {
-    background: #0e0e0e;
 }
 
 .movie-duration {
@@ -151,11 +136,11 @@
     color: white;
 }
 
-.labeled_checkbox--aditional-margin {
+.movie-panel-checkbox {
     margin: 8px 0;
+    @include responsive-font();
+    color: white;
 }
-
-
 
 .range-selection{ 
     margin: 10px;

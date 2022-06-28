@@ -45,6 +45,8 @@ export default {
 
    pl: {
       actress_body_and_type : "Budowa, typ aktorek",
+      gadgets_and_clothing : "Ubiór i gadżety",
+      cumshot : "Wytrysk",
       login_to_sex_empire_manager : "Menager Sex-Imperium",
       login_to_sex_empire_manager : "Zaloguj do Menagera Sex-Imperium",
       tits_size : "Rozmiar cycków",
@@ -65,6 +67,7 @@ export default {
       delete : 'usuń',
       cancel : 'anuluj',
       answear_comment : 'Odpowiedz',
+      error_during_fetching_pornstars_list : "Podczas pobierania listy gwiazd pojawił się błąd",
       account_deletion_warning : "Czy na pewno chcesz usunąć konto? Znikną wszystkie komentarze i wystawione oceny. Nie będzie można tego cofnąć. Jeżeli jesteś pewny/a wpisz hasło i kliknij usuń",
       email_has_already_been_taken: "Adres email jest już zajęty",
       current_number_of_votes : "Liczba oddanych głosów",
@@ -108,6 +111,7 @@ export default {
       checking_image: "Sprawdzam obraz",
       checking_the_email: "Sprawdzam email",
       changing_user_data: "Pracuję nad zmianą danych",
+      server_error : "Błąd serwera",
       invalid_image_url_or_another_error: "Prawdopodobnie adres URL jest nieprawidłowy lub wystąpił inny bliżej niezidentyfikowany problem",
       deleting_the_avatar: "Usuwam avatar",
       message_exceeds_1000_characters : "Wiadomość przekracza 1000 znaków",

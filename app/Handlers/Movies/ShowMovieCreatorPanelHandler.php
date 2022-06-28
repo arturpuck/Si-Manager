@@ -9,9 +9,6 @@ Class ShowMovieCreatorPanelHandler
 {
     public function handle() : View
     {
-        $pornstarsNames = Pornstar::pluck('nickname')->toArray();
-        return view('movies.movie_creator')->with([
-            'pornstarsNames' => $pornstarsNames
-        ]);
+        return view('movies.movie_creator');
     }
 }

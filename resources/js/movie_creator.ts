@@ -15,6 +15,7 @@ import LabeledRange from "@jscomponents-form-controls/labeled_range";
 import SearchEngineVariables from '@jsmodules/search_engine_variables.ts';
 import UserNotification from '@jscomponents/user_notification.vue';
 import NotificationFunction from '@jsmodules/notification_function.ts';
+import MovieEditCreate from '@jscomponents/movie_edit_create';
 
 const EventBus = EventEmmiter();
 const propertiesNotDescribingMovie = [
@@ -44,7 +45,8 @@ const settings = {
    ShutdownIcon,
    ResetButton,
    LabeledRange,
-   UserNotification
+   UserNotification,
+   MovieEditCreate
  },
 
   data() {

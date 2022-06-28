@@ -16,7 +16,7 @@
       <h1 v-text="headerText" class="notification-header"></h1>
       <button-close v-on:click="closeNotification"></button-close>
     </header>
-    <p v-text="notificationText" class="notification-content"></p>
+    <p v-text="message" class="notification-content"></p>
     <div class="notification-pseudo-footer">
       <component v-bind:class="decorationComponentClass" v-bind:is="decorationComponentName"></component>
     </div>
@@ -29,41 +29,34 @@ import { Vue, Options } from "vue-property-decorator";
 import Translator from '@jsmodules/translator.js';
 import InfoCircleIcon from "@svgicon/info_circle_icon.vue";
 import ExclamationErrorIcon from "@svgicon/exclamation_icon.vue";
+import UserNotificationBox from "@interfaces/components/user_notification_box";
+import NotificationType from "@js/enums/notification_type";
 
 
 @Options({ name: "UserNotification", components: { ButtonClose, InfoCircleIcon, ExclamationErrorIcon } })
 export default class UserNotification extends Vue {
-  private notificationText: string = "";
+  private message: string = "";
   private visible: boolean = false;
   private headerText: string = "Information";
-  private type: string = "no-error";
+  private type: NotificationType = NotificationType.Neutral;
   private flicker: boolean = false;
 
   closeNotification() {
     this.visible = false;
   }
 
-  showNotification(content) {
+  showNotification(notification : UserNotificationBox) {
     const currentType = this.type;
-    const currentNotificationText = this.notificationText;
-    const translator = Translator;
+    const currentmessage = this.message;
 
-    if (content["headerText"]) {
-      this.headerText = translator.translate(content["headerText"]);
-    }
-
-    if (content["notificationText"]) {
-      this.notificationText = translator.translate(content["notificationText"]);
-    }
-
-    if (content["notificationType"]) {
-      this.type = content["notificationType"];
-    }
+      this.headerText = notification.headerText;
+      this.message = notification.message;
+      this.type = notification.type ?? NotificationType.Neutral;
     
     if (
       this.visible &&
       this.type === currentType &&
-      this.notificationText === currentNotificationText
+      this.message === currentmessage
     ) {
       this.flicker = true;
       setTimeout(() => (this.flicker = false), 1000);
@@ -72,7 +65,7 @@ export default class UserNotification extends Vue {
   }
 
   get showsError() {
-    return this.type === "error";
+    return this.type === NotificationType.Error;
   }
 
   get decorationComponentName() : string

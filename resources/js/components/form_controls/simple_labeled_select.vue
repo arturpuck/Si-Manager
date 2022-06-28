@@ -109,6 +109,7 @@ export default class SimpleLabeledSelect extends Vue {
   background: #242229;
   outline: none;
   margin-left: 4px;
+  flex-grow: 100;
 }
 
 .select-container__select,

@@ -1,4 +1,5 @@
 <template>
+<div>
 <form>
       <simple-labeled-input class="movie-title" v-model="title">{{descriptionsTranslations['title']}} : </simple-labeled-input>
       <div class="add-movie-panel">
@@ -6,9 +7,7 @@
             <legend class="panel-group-legend">
                {{descriptionsTranslations['actress_body_and_type']}}
             </legend>
-            <simple-labeled-select v-model="titsSize" v-bind:options="movieCreatorTranslations['titsSize']">
-               {{descriptionsTranslations['tits_size']}} :
-            </simple-labeled-select>
+            <simple-labeled-select v-model="titsSize" v-bind:options="movieCreatorTranslations['titsSize']">{{descriptionsTranslations['tits_size']}} :</simple-labeled-select>
             <simple-labeled-select v-model="assSize" v-bind:options="movieCreatorTranslations['assSize']">
                {{descriptionsTranslations['ass_size']}} :
             </simple-labeled-select>
@@ -51,7 +50,7 @@
             <simple-labeled-select v-model="cumshotType" v-bind:options="movieCreatorTranslations['cumshotType']">
                {{descriptionsTranslations['cumshot']}} :
             </simple-labeled-select>
-            <labeled-checkbox v-model="isCumshotCompilation" name="cumshot-compilation">{{descriptionsTranslations['cumshot_compilation']}}</labeled-checkbox>
+            <labeled-checkbox v-model="isCumshotCompilation" class="movie-panel-checkbox" name="cumshot-compilation">{{descriptionsTranslations['cumshot_compilation']}}</labeled-checkbox>
          </fieldset>
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
@@ -72,28 +71,28 @@
             <simple-labeled-select v-model="hasStory" v-bind:options="movieCreatorTranslations['binaryOptions']">
                {{descriptionsTranslations['has_story']}} :
             </simple-labeled-select>
-            <labeled-checkbox v-model="recordedBySpyCamera" class="labeled_checkbox--aditional-margin" name="recorded-by-spy-camera">{{descriptionsTranslations['spy_camera']}}</labeled-checkbox>
-            <labeled-checkbox v-model="isSadisticOrMasochistic" class="labeled_checkbox--aditional-margin" name="sado-maso">{{descriptionsTranslations['sadistic_or_masochistic']}}</labeled-checkbox>
-            <labeled-checkbox v-model="isFemaleDomination" class="labeled_checkbox--aditional-margin" name="female-domination">{{descriptionsTranslations['female_domination']}}</labeled-checkbox>
-            <labeled-checkbox v-model="isTranslatedToPolish" class="labeled_checkbox--aditional-margin" name="translated-to-polish">{{descriptionsTranslations['polish_language_version']}}</labeled-checkbox>
+            <labeled-checkbox v-model="recordedBySpyCamera" class="movie-panel-checkbox" name="recorded-by-spy-camera">{{descriptionsTranslations['spy_camera']}}</labeled-checkbox>
+            <labeled-checkbox v-model="isSadisticOrMasochistic" class="movie-panel-checkbox" name="sado-maso">{{descriptionsTranslations['sadistic_or_masochistic']}}</labeled-checkbox>
+            <labeled-checkbox v-model="isFemaleDomination" class="movie-panel-checkbox" name="female-domination">{{descriptionsTranslations['female_domination']}}</labeled-checkbox>
+            <labeled-checkbox v-model="isTranslatedToPolish" class="movie-panel-checkbox" name="translated-to-polish">{{descriptionsTranslations['polish_language_version']}}</labeled-checkbox>
          </fieldset>
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
-               {{descriptionsTranslations['gadgets']}}
+               {{descriptionsTranslations['gadgets_and_clothing']}}
             </legend>
-            <labeled-checkbox v-model="showPantyhose" class="labeled_checkbox--aditional-margin" name="pantyhose">{{descriptionsTranslations['pantyhose']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showStockings" class="labeled_checkbox--aditional-margin" name="stockings">{{descriptionsTranslations['stockings']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showGlasses" class="labeled_checkbox--aditional-margin" name="glasses">{{descriptionsTranslations['glasses']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showHighHeels" class="labeled_checkbox--aditional-margin" name="high-heels">{{descriptionsTranslations['high_heels']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showHugeCock" class="labeled_checkbox--aditional-margin" name="huge-cock">{{descriptionsTranslations['huge_cock']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showWhips" class="labeled_checkbox--aditional-margin" name="whips">{{descriptionsTranslations['whips']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showSexToys" class="labeled_checkbox--aditional-margin" name="sex-toys">{{descriptionsTranslations['sex_toys']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showPantyhose" class="movie-panel-checkbox" name="pantyhose">{{descriptionsTranslations['pantyhose']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showStockings" class="movie-panel-checkbox" name="stockings">{{descriptionsTranslations['stockings']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showGlasses" class="movie-panel-checkbox" name="glasses">{{descriptionsTranslations['glasses']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showHighHeels" class="movie-panel-checkbox" name="high-heels">{{descriptionsTranslations['high_heels']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showHugeCock" class="movie-panel-checkbox" name="huge-cock">{{descriptionsTranslations['huge_cock']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showWhips" class="movie-panel-checkbox" name="whips">{{descriptionsTranslations['whips']}}</labeled-checkbox>
+            <labeled-checkbox v-model="showSexToys" class="movie-panel-checkbox" name="sex-toys">{{descriptionsTranslations['sex_toys']}}</labeled-checkbox>
          </fieldset>
          <fieldset class="panel-group--relative">
             <legend class="panel-group-legend">
                {{descriptionsTranslations['stars']}}
             </legend>
-            <multiselect v-bind:options="pornstarsNames" v-model="pornstarsList" main-label="descriptionsTranslations['choose_from_pornstars_list']" v-bind:show-search-input="true"></multiselect>
+            <multiselect v-model="pornstarsList" v-bind:main-label="descriptionsTranslations['choose_from_pornstars_list']" v-bind:show-search-input="true"></multiselect>
          </fieldset>
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
@@ -116,6 +115,7 @@
          </fieldset>
       </div>
    </form>
+   </div>
 </template>
 
 <script lang="ts">
@@ -135,7 +135,8 @@ import EventEmmiter from "mitt";
 import LabeledRange from "@jscomponents-form-controls/labeled_range";
 import SearchEngineVariables from "@jsmodules/search_engine_variables.ts";
 import UserNotification from "@jscomponents/user_notification.vue";
-import NotificationFunction from "@jsmodules/notification_function.ts";
+import PornstarBasic from "@interfaces/pornstars/pornstar_basic.ts";
+import UserNotificationCalls from "@js/mixins/user_notification_call";
 
 const EventBus = EventEmmiter();
 const propertiesNotDescribingMovie = [
@@ -154,6 +155,8 @@ const propertiesNotDescribingMovie = [
 
 export default {
   name: "movie-edit-create",
+
+  mixins : [UserNotificationCalls],
 
   components: {
     SimpleLabeledSelect,
@@ -267,8 +270,38 @@ export default {
       this.hasStory = '';
     },
 
-   async saveMovie() {
-        const movieData = {...this.$data};
+    async fetchPornstarsList() {
+
+       const requestData = {
+         method: 'GET',
+         headers: {
+           'X-CSRF-TOKEN': this.csrfToken,
+         }
+       };
+
+       const response = await fetch('/pornstar', requestData);
+       
+       switch(response.status) {
+          case 200:
+             const responseBody = await response.json();
+             this.loadPornstarsList(responseBody.data);
+           break;
+              
+            default:
+              this.showUserNotification('error_during_fetching_pornstars_list', 'error', true);
+            break;
+       }
+
+    },
+
+    loadPornstarsList(pornstarsList : PornstarBasic[]) : void {
+       let processedNames = [];
+       pornstarsList.forEach(pornstarData => processedNames.push(pornstarData.nickname));
+       this.emitter.emit('replaceAvailableOptionsForMultiselect', processedNames);
+    },
+
+    getMovieData() : object {
+       const movieData = {...this.$data};
         propertiesNotDescribingMovie.forEach( property => delete movieData[property] );
         Object.keys(movieData).forEach(function(propertName : string){
            if(!movieData[propertName]) {
@@ -280,6 +313,12 @@ export default {
           delete movieData.pornstarsList;
         }
 
+        return movieData;
+    },
+
+   async saveMovie() {
+        const movieData = this.getMovieData();
+
         const requestData = {
          method: 'POST',
          body: JSON.stringify(movieData),
@@ -289,11 +328,11 @@ export default {
          }
        };
 
-       const response = await fetch('/employee-panel/movies', requestData);
+       const response = await fetch('/movie', requestData);
 
        switch(response.status) {
            case 201:
-             this.notifyEmployee('added_movie');
+             this.showUserNotification('added_movie');
            break;
 
            case 400:
@@ -313,25 +352,25 @@ export default {
     notifyEmployeeAboutBadRequest(responseBody) : void {
          let errorMessage = Translator.translate('employee_added_incorrect_parameters');
          errorMessage= `${errorMessage} : ${responseBody.join(', ')}`;
-         this.notifyEmployee(errorMessage, 'error');
+         this.showUserNotification(errorMessage, 'error', true);
     },
         
-    notifyEmployeeAboutServerError(response) : void {
-          let errorMessage = Translator.translate('the_requested_data_is_probably_ok_but_a_server_error_occured');
-          errorMessage= `${errorMessage} : ${response}`;
-          this.notifyEmployee(errorMessage, 'error');
+    notifyEmployeeAboutServerError(errorDetails? : string) : void {
+          let errorMessage = Translator.translate('server_error');
+          errorMessage = errorDetails ? `${errorMessage} : ${Translator.translate(errorDetails)}` : errorMessage;
+          this.showUserNotification(errorMessage, 'error', true);
     },
 
-    notifyEmployee : NotificationFunction
 
   },
 
   mounted() {
     this.csrfToken = (<HTMLMetaElement>document.getElementById("csrf-token")).content;
+    this.fetchPornstarsList();
   } 
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~sasscomponent/movie_edit_create';
 </style>

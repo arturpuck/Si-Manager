@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Movies\MovieCreatorController;
+use App\Http\Controllers\Pornstars\PornstarsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +29,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/submit/panel', [MovieCreatorController::class, 'showMovieSubmitPanel'])
                 ->name('submit.panel');
 
+            Route::post('', [MovieCreatorController::class, 'addMovieCandidate'])
+                  ->name('create');
+
          });
 
-    }
-);
+        Route::prefix('/pornstar')->name('pornstar.')->middleware(['role:movieCreator'])->group( function () {
+            Route::get('', [PornstarsController::class, 'getPornstars'])->name('list');
+         });
+
+});
 
 
 require __DIR__.'/auth.php';

@@ -131,6 +131,8 @@ export default class LabeledCheckbox extends Vue {
 .labeled-checkbox-container {
   display: inline-flex;
   align-items: center;
+  padding:2px 1.2vw;
+  cursor: pointer;
 }
 
 .labeled-checkbox:hover + .labeled-checkbox-description:before {

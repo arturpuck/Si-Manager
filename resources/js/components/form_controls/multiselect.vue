@@ -31,6 +31,7 @@
               v-on:click="updateModel"
               v-model="optionsStates[key]"
               v-bind:name="key"
+              class="option-checkbox"
             >
               {{ option }}
             </labeled-checkbox>
@@ -226,6 +227,10 @@ export default class MultiSelect extends Vue {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+.option-checkbox {
+  color:white;
 }
 
 .multiselect {
