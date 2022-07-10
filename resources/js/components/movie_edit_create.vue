@@ -1,7 +1,8 @@
 <template>
 <div>
 <form>
-      <simple-labeled-input class="movie-title" v-model="title">{{descriptionsTranslations['title']}} : </simple-labeled-input>
+      <simple-labeled-input class="movie-description" v-model="title">{{descriptionsTranslations['title']}} : </simple-labeled-input>
+      <simple-labeled-input class="movie-description" v-model="description">{{descriptionsTranslations['description']}} : </simple-labeled-input>
       <div class="add-movie-panel">
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
@@ -138,6 +139,7 @@ import UserNotification from "@jscomponents/user_notification.vue";
 import PornstarBasic from "@interfaces/pornstars/pornstar_basic.ts";
 import UserNotificationCalls from "@js/mixins/user_notification_call";
 
+
 const EventBus = EventEmmiter();
 const propertiesNotDescribingMovie = [
    'fetchingMoviesInProgress',
@@ -224,7 +226,8 @@ export default {
         scrollYreactiveProperty: 0,
         currentPage: undefined,
         movieDuration : '00:00:00',
-        title : ''
+        title : '',
+        description : '',
      };
   },
 
@@ -268,6 +271,7 @@ export default {
       this.storyOrCostume = '';
       this.professionalismLevel = '';
       this.hasStory = '';
+      this.description = '';
     },
 
     async fetchPornstarsList() {
@@ -300,7 +304,7 @@ export default {
        this.emitter.emit('replaceAvailableOptionsForMultiselect', processedNames);
     },
 
-    getMovieData() : object {
+    getMovieDataForRequest() : object {
        const movieData = {...this.$data};
         propertiesNotDescribingMovie.forEach( property => delete movieData[property] );
         Object.keys(movieData).forEach(function(propertName : string){
@@ -316,8 +320,33 @@ export default {
         return movieData;
     },
 
+    async processSaveMovieResponse(response) {
+
+       let responseBody = await response.json();;
+ 
+       switch(response.status) {
+           case 201:
+             this.showMovieCandidateOnList(responseBody);
+             this.showUserNotification('added_movie');
+           break;
+ 
+           case 400:
+              this.notifyEmployeeAboutBadRequest(responseBody)
+              break;
+              
+            case 500:
+              this.notifyEmployeeAboutServerError(response.body);
+              break;
+       }
+
+    },
+
+    showMovieCandidateOnList(movieCandidate : object) : void {
+       this.emitter.emit('updateResourceItemsList', movieCandidate)
+    },
+
    async saveMovie() {
-        const movieData = this.getMovieData();
+        const movieData = this.getMovieDataForRequest();
 
         const requestData = {
          method: 'POST',
@@ -328,45 +357,20 @@ export default {
          }
        };
 
-       const response = await fetch('/movie', requestData);
-
-       switch(response.status) {
-           case 201:
-             this.showUserNotification('added_movie');
-           break;
-
-           case 400:
-              let responseBody = await response.json();
-              this.notifyEmployeeAboutBadRequest(responseBody)
-              break;
-              
-            case 500:
-              console.log(response.body);
-              this.notifyEmployeeAboutServerError(response.body);
-              break;
-       }
-
-
+       const response = await fetch('/movie-candidate', requestData);
+       this.processSaveMovieResponse(response);
     },
 
-    notifyEmployeeAboutBadRequest(responseBody) : void {
-         let errorMessage = Translator.translate('employee_added_incorrect_parameters');
-         errorMessage= `${errorMessage} : ${responseBody.join(', ')}`;
-         this.showUserNotification(errorMessage, 'error', true);
-    },
-        
-    notifyEmployeeAboutServerError(errorDetails? : string) : void {
-          let errorMessage = Translator.translate('server_error');
-          errorMessage = errorDetails ? `${errorMessage} : ${Translator.translate(errorDetails)}` : errorMessage;
-          this.showUserNotification(errorMessage, 'error', true);
-    },
-
+    addOnReadMovie() : void {
+      this.emitter.on('loadMovieProperties', this.loadMovieProperties);
+    } 
 
   },
 
   mounted() {
     this.csrfToken = (<HTMLMetaElement>document.getElementById("csrf-token")).content;
     this.fetchPornstarsList();
+    this.addOnReadMovie();
   } 
 };
 </script>

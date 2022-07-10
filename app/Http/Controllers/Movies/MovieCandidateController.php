@@ -8,9 +8,10 @@ use Illuminate\View\View;
 use App\Handlers\Movies\ShowMovieCreatorPanelHandler;
 use App\Handlers\Movies\UpdateOrCreateMovieCandidateHandler;
 use Illuminate\Http\JsonResponse;
+use App\Handlers\Movies\GetPendingMovieCandidatesHandler;
 
 
-class MovieCreatorController extends Controller
+class MovieCandidateController extends Controller
 {
     public function showMovieCreatorPanel(ShowMovieCreatorPanelHandler $handler) : View {
         return $handler->handle();
@@ -22,6 +23,11 @@ class MovieCreatorController extends Controller
 
     public function addMovieCandidate(UpdateOrCreateMovieCandidateHandler $handler, Request $request) : JsonResponse {
        return $handler->handle($request);
+    }
+
+    public function getPendingMovieCandidates(GetPendingMovieCandidatesHandler $handler) : JsonResponse
+    {
+        return $handler->handle();
     }
 
 }

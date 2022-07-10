@@ -96,12 +96,12 @@ Class UpdateOrCreateMovieCandidateHandler
     protected function parsePornstarsList(array $validatedData, MovieCandidate $movieCandidate) : void
     {
         if(array_key_exists('pornstarsList', $validatedData)) {
-            $movieCandidate->pornstarList = explode(',', $validatedData['pornstarsList']);
+            $movieCandidate->pornstars_list = implode(',', $validatedData['pornstarsList']);
         } 
     }
 
     protected function getSimpleValues(array $validatedData) : array {
-        $simpleValues = array_diff_key($validatedData, array_flip(['nationality', 'location', 'storyOrCostume']));
+        $simpleValues = array_diff_key($validatedData, array_flip(['nationality', 'location', 'storyOrCostume', 'pornstarsList']));
         if(array_key_exists('professionalismLevel', $simpleValues)){
             $simpleValues['professionalismLevel'] = match($simpleValues['professionalismLevel']) {
                 'professional' => 1,

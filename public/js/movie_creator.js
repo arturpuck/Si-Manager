@@ -17867,6 +17867,11 @@ exports.default = {
       required: false,
       type: String,
       "default": ""
+    },
+    shouldShowWhenValueIsSelected: {
+      required: false,
+      type: Boolean,
+      "default": true
     }
   },
   methods: {
@@ -17877,6 +17882,9 @@ exports.default = {
   computed: {
     displayedValue: function displayedValue() {
       return this.modelValue + " " + this.unit;
+    },
+    showsSelectedValue: function showsSelectedValue() {
+      return Boolean(this.shouldShowWhenValueIsSelected && this.modelValue);
     }
   }
 };
@@ -18272,6 +18280,14 @@ var SimpleLabeledInput = function (_super) {
     this.$emit("update:modelValue", event.target.value);
   };
 
+  Object.defineProperty(SimpleLabeledInput.prototype, "showsSelectedValue", {
+    get: function get() {
+      return Boolean(this.shouldShowWhenValueIsSelected && this.modelValue);
+    },
+    enumerable: false,
+    configurable: true
+  });
+
   __decorate([vue_property_decorator_1.Prop({
     type: Boolean,
     required: false,
@@ -18318,6 +18334,12 @@ var SimpleLabeledInput = function (_super) {
     required: false,
     "default": null
   })], SimpleLabeledInput.prototype, "maximumValue", void 0);
+
+  __decorate([vue_property_decorator_1.Prop({
+    type: Boolean,
+    required: false,
+    "default": true
+  })], SimpleLabeledInput.prototype, "shouldShowWhenValueIsSelected", void 0);
 
   SimpleLabeledInput = __decorate([vue_property_decorator_1.Options({
     name: "SimpleLabeledInput"
@@ -18402,6 +18424,14 @@ var SimpleLabeledSelect = function (_super) {
     return _this;
   }
 
+  Object.defineProperty(SimpleLabeledSelect.prototype, "showsSelectedValue", {
+    get: function get() {
+      return Boolean(this.shouldShowWhenValueIsSelected && this.modelValue);
+    },
+    enumerable: false,
+    configurable: true
+  });
+
   SimpleLabeledSelect.prototype.created = function () {
     this.selectOptions = this.options;
     EventBus.on("updateSelectValues" + this.name, this.updateSelectValues);
@@ -18449,6 +18479,12 @@ var SimpleLabeledSelect = function (_super) {
     required: false,
     "default": undefined
   })], SimpleLabeledSelect.prototype, "options", void 0);
+
+  __decorate([vue_property_decorator_1.Prop({
+    type: Boolean,
+    required: false,
+    "default": true
+  })], SimpleLabeledSelect.prototype, "shouldShowWhenValueIsSelected", void 0);
 
   SimpleLabeledSelect = __decorate([vue_property_decorator_1.Options({
     name: "SimpleLabeledSelect"
@@ -18742,7 +18778,8 @@ exports.default = {
       scrollYreactiveProperty: 0,
       currentPage: undefined,
       movieDuration: '00:00:00',
-      title: ''
+      title: '',
+      description: ''
     };
   },
   methods: {
@@ -18779,6 +18816,7 @@ exports.default = {
       this.storyOrCostume = '';
       this.professionalismLevel = '';
       this.hasStory = '';
+      this.description = '';
     },
     fetchPornstarsList: function fetchPornstarsList() {
       return __awaiter(this, void 0, void 0, function () {
@@ -18845,7 +18883,7 @@ exports.default = {
       });
       this.emitter.emit('replaceAvailableOptionsForMultiselect', processedNames);
     },
-    getMovieData: function getMovieData() {
+    getMovieDataForRequest: function getMovieDataForRequest() {
       var movieData = __assign({}, this.$data);
 
       propertiesNotDescribingMovie.forEach(function (property) {
@@ -18863,14 +18901,52 @@ exports.default = {
 
       return movieData;
     },
+    processSaveMovieResponse: function processSaveMovieResponse(response) {
+      return __awaiter(this, void 0, void 0, function () {
+        var responseBody;
+        return __generator(this, function (_a) {
+          switch (_a.label) {
+            case 0:
+              return [4
+              /*yield*/
+              , response.json()];
+
+            case 1:
+              responseBody = _a.sent();
+              ;
+
+              switch (response.status) {
+                case 201:
+                  this.showMovieCandidateOnList(responseBody);
+                  this.showUserNotification('added_movie');
+                  break;
+
+                case 400:
+                  this.notifyEmployeeAboutBadRequest(responseBody);
+                  break;
+
+                case 500:
+                  this.notifyEmployeeAboutServerError(response.body);
+                  break;
+              }
+
+              return [2
+              /*return*/
+              ];
+          }
+        });
+      });
+    },
+    showMovieCandidateOnList: function showMovieCandidateOnList(movieCandidate) {
+      this.emitter.emit('updateResourceItemsList', movieCandidate);
+    },
     saveMovie: function saveMovie() {
       return __awaiter(this, void 0, void 0, function () {
-        var movieData, requestData, response, _a, responseBody;
-
-        return __generator(this, function (_b) {
-          switch (_b.label) {
+        var movieData, requestData, response;
+        return __generator(this, function (_a) {
+          switch (_a.label) {
             case 0:
-              movieData = this.getMovieData();
+              movieData = this.getMovieDataForRequest();
               requestData = {
                 method: 'POST',
                 body: JSON.stringify(movieData),
@@ -18881,59 +18957,11 @@ exports.default = {
               };
               return [4
               /*yield*/
-              , fetch('/movie', requestData)];
+              , fetch('/movie-candidate', requestData)];
 
             case 1:
-              response = _b.sent();
-              _a = response.status;
-
-              switch (_a) {
-                case 201:
-                  return [3
-                  /*break*/
-                  , 2];
-
-                case 400:
-                  return [3
-                  /*break*/
-                  , 3];
-
-                case 500:
-                  return [3
-                  /*break*/
-                  , 5];
-              }
-
-              return [3
-              /*break*/
-              , 6];
-
-            case 2:
-              this.showUserNotification('added_movie');
-              return [3
-              /*break*/
-              , 6];
-
-            case 3:
-              return [4
-              /*yield*/
-              , response.json()];
-
-            case 4:
-              responseBody = _b.sent();
-              this.notifyEmployeeAboutBadRequest(responseBody);
-              return [3
-              /*break*/
-              , 6];
-
-            case 5:
-              console.log(response.body);
-              this.notifyEmployeeAboutServerError(response.body);
-              return [3
-              /*break*/
-              , 6];
-
-            case 6:
+              response = _a.sent();
+              this.processSaveMovieResponse(response);
               return [2
               /*return*/
               ];
@@ -18941,20 +18969,86 @@ exports.default = {
         });
       });
     },
-    notifyEmployeeAboutBadRequest: function notifyEmployeeAboutBadRequest(responseBody) {
-      var errorMessage = translator_js_1["default"].translate('employee_added_incorrect_parameters');
-      errorMessage = errorMessage + " : " + responseBody.join(', ');
-      this.showUserNotification(errorMessage, 'error', true);
-    },
-    notifyEmployeeAboutServerError: function notifyEmployeeAboutServerError(errorDetails) {
-      var errorMessage = translator_js_1["default"].translate('server_error');
-      errorMessage = errorDetails ? errorMessage + " : " + translator_js_1["default"].translate(errorDetails) : errorMessage;
-      this.showUserNotification(errorMessage, 'error', true);
+    addOnReadMovie: function addOnReadMovie() {
+      this.emitter.on('loadMovieProperties', this.loadMovieProperties);
     }
   },
   mounted: function mounted() {
     this.csrfToken = document.getElementById("csrf-token").content;
     this.fetchPornstarsList();
+    this.addOnReadMovie();
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=script&lang=ts":
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=script&lang=ts ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = void 0 && (void 0).__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var phantom_button_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/phantom_button.vue */ "./resources/js/components/form_controls/phantom_button.vue"));
+
+var translator_js_1 = __importDefault(__webpack_require__(/*! @jsmodules/translator.js */ "./resources/js/modules/translator.js"));
+
+exports.default = {
+  name: 'simple-resource-table',
+  emits: ['edit'],
+  components: {
+    PhantomButton: phantom_button_vue_1["default"]
+  },
+  props: {
+    transformAtWidth: {
+      required: false,
+      "default": '600px',
+      type: String
+    }
+  },
+  data: function data() {
+    return {
+      headers: [],
+      resourceInstances: [],
+      translator: translator_js_1["default"]
+    };
+  },
+  methods: {
+    onUpdateTableHeaders: function onUpdateTableHeaders() {
+      this.emitter.on('updateResourceTableHeaders', this.updateTableHeaders);
+    },
+    onUpdateResource: function onUpdateResource() {
+      this.emitter.on('updateResourcesTable', this.updateResource);
+    },
+    updateTableHeaders: function updateTableHeaders(headers) {
+      this.headers = headers;
+    },
+    emitEditEvent: function emitEditEvent(resource) {
+      this.$emit('edit', resource);
+    },
+    updateResource: function updateResource(resource) {
+      if (Array.isArray(resource)) {
+        this.resourceInstances = this.resourceInstances.concat(resource);
+      } else {
+        this.resourceInstances.push(resource);
+      }
+    }
+  },
+  created: function created() {
+    this.onUpdateTableHeaders();
+    this.onUpdateResource();
   }
 };
 
@@ -19172,39 +19266,19 @@ exports.default = {
         type: showError ? notification_type_1["default"].Error : notification_type_1["default"].Neutral
       };
       this.emitter.emit('showNotification', notificationStatus);
+    },
+    notifyEmployeeAboutBadRequest: function notifyEmployeeAboutBadRequest(responseBody) {
+      var errorMessage = translator_js_1["default"].translate('employee_added_incorrect_parameters');
+      errorMessage = errorMessage + " : " + responseBody.errors.join(', ');
+      this.showUserNotification(errorMessage, 'error', true);
+    },
+    notifyEmployeeAboutServerError: function notifyEmployeeAboutServerError(errorDetails) {
+      var errorMessage = translator_js_1["default"].translate('server_error');
+      errorMessage = errorDetails ? errorMessage + " : " + translator_js_1["default"].translate(errorDetails) : errorMessage;
+      this.showUserNotification(errorMessage, 'error', true);
     }
   }
 };
-
-/***/ }),
-
-/***/ "./resources/js/modules/notification_function.ts":
-/*!*******************************************************!*\
-  !*** ./resources/js/modules/notification_function.ts ***!
-  \*******************************************************/
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-
-function default_1(text, type) {
-  if (type === void 0) {
-    type = "no-error";
-  }
-
-  var header = type === "no-error" ? "information" : "error";
-  this.emitter.emit('showNotification', {
-    notificationText: text,
-    notificationType: type,
-    headerText: header
-  });
-}
-
-exports.default = default_1;
 
 /***/ }),
 
@@ -19247,6 +19321,38 @@ var variables = {
   groupNames: ['initialValueIsEmptyString', 'initialValueIsFalse', 'movieTimeOptions', 'movieViewsOptions']
 };
 exports.default = variables;
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=script&lang=js":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=script&lang=js ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+var _default = {
+  name: 'phantom-button',
+  props: {
+    label: {
+      required: false,
+      type: String,
+      "default": undefined
+    },
+    title: {
+      required: false,
+      type: String,
+      "default": null
+    }
+  }
+};
+exports.default = _default;
 
 /***/ }),
 
@@ -19637,17 +19743,18 @@ var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundl
 
 (0, _vue.pushScopeId)("data-v-5ab1f258");
 var _hoisted_1 = {
-  "class": "labeled-range"
-};
-var _hoisted_2 = {
   "class": "labeled-range__description"
 };
-var _hoisted_3 = ["min", "max", "value"];
-var _hoisted_4 = ["textContent"];
+var _hoisted_2 = ["min", "max", "value"];
+var _hoisted_3 = ["textContent"];
 (0, _vue.popScopeId)();
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("label", _hoisted_1, [(0, _vue.createElementVNode)("span", _hoisted_2, [(0, _vue.renderSlot)(_ctx.$slots, "default", {}, undefined, true)]), (0, _vue.createElementVNode)("input", {
+  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("label", {
+    "class": (0, _vue.normalizeClass)([{
+      containsData: $options.showsSelectedValue
+    }, "labeled-range"])
+  }, [(0, _vue.createElementVNode)("span", _hoisted_1, [(0, _vue.renderSlot)(_ctx.$slots, "default", {}, undefined, true)]), (0, _vue.createElementVNode)("input", {
     type: "range",
     min: $props.min,
     max: $props.max,
@@ -19658,12 +19765,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "labeled-range__value"
   }, null, 40
   /* PROPS, HYDRATE_EVENTS */
-  , _hoisted_3), (0, _vue.createElementVNode)("span", {
+  , _hoisted_2), (0, _vue.createElementVNode)("span", {
     "class": "labeled-range__displayed-value",
     textContent: (0, _vue.toDisplayString)($options.displayedValue)
   }, null, 8
   /* PROPS */
-  , _hoisted_4)]);
+  , _hoisted_3)], 2
+  /* CLASS */
+  );
 }
 
 /***/ }),
@@ -19791,6 +19900,42 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=template&id=99cf0926":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=template&id=99cf0926 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.render = render;
+
+var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = ["title"];
+var _hoisted_2 = ["textContent"];
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("button", {
+    title: $props.title,
+    "class": "phantom-button"
+  }, [(0, _vue.renderSlot)(_ctx.$slots, "default"), $props.label ? ((0, _vue.openBlock)(), (0, _vue.createElementBlock)("span", {
+    key: 0,
+    textContent: (0, _vue.toDisplayString)($props.label),
+    "class": "phantom-button-description"
+  }, null, 8
+  /* PROPS */
+  , _hoisted_2)) : (0, _vue.createCommentVNode)("v-if", true)], 8
+  /* PROPS */
+  , _hoisted_1);
+}
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/reset_button.vue?vue&type=template&id=63ec9faa&scoped=true":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/reset_button.vue?vue&type=template&id=63ec9faa&scoped=true ***!
@@ -19838,16 +19983,17 @@ var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundl
 
 (0, _vue.pushScopeId)("data-v-0a577a4c");
 var _hoisted_1 = {
-  "class": "container"
-};
-var _hoisted_2 = {
   "class": "container__description"
 };
-var _hoisted_3 = ["disabled", "name", "required", "placeholder", "value", "type", "min", "max"];
+var _hoisted_2 = ["disabled", "name", "required", "placeholder", "value", "type", "min", "max"];
 (0, _vue.popScopeId)();
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("label", _hoisted_1, [(0, _vue.createElementVNode)("span", _hoisted_2, [(0, _vue.renderSlot)(_ctx.$slots, "default", {}, undefined, true)]), (0, _vue.createElementVNode)("input", {
+  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("label", {
+    "class": (0, _vue.normalizeClass)([{
+      containsData: _ctx.showsSelectedValue
+    }, "container"])
+  }, [(0, _vue.createElementVNode)("span", _hoisted_1, [(0, _vue.renderSlot)(_ctx.$slots, "default", {}, undefined, true)]), (0, _vue.createElementVNode)("input", {
     disabled: _ctx.isDisabled,
     name: _ctx.name,
     required: _ctx.inputIsRequired,
@@ -19862,7 +20008,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     max: _ctx.maximumValue
   }, null, 40
   /* PROPS, HYDRATE_EVENTS */
-  , _hoisted_3)]);
+  , _hoisted_2)], 2
+  /* CLASS */
+  );
 }
 
 /***/ }),
@@ -19885,20 +20033,21 @@ var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundl
 
 (0, _vue.pushScopeId)("data-v-a60ce9c8");
 var _hoisted_1 = {
-  "class": "select-container"
-};
-var _hoisted_2 = {
   "class": "select-container__description"
 };
-var _hoisted_3 = ["name", "disabled", "value"];
-var _hoisted_4 = {
+var _hoisted_2 = ["name", "disabled", "value"];
+var _hoisted_3 = {
   value: ""
 };
-var _hoisted_5 = ["value"];
+var _hoisted_4 = ["value"];
 (0, _vue.popScopeId)();
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("label", _hoisted_1, [(0, _vue.createElementVNode)("span", _hoisted_2, [(0, _vue.renderSlot)(_ctx.$slots, "default", {}, undefined, true)]), (0, _vue.createElementVNode)("select", {
+  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("label", {
+    "class": (0, _vue.normalizeClass)([{
+      containsData: _ctx.showsSelectedValue
+    }, "select-container"])
+  }, [(0, _vue.createElementVNode)("span", _hoisted_1, [(0, _vue.renderSlot)(_ctx.$slots, "default", {}, undefined, true)]), (0, _vue.createElementVNode)("select", {
     name: _ctx.name,
     disabled: _ctx.isDisabled,
     onInput: _cache[0] || (_cache[0] = function () {
@@ -19906,19 +20055,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     value: _ctx.modelValue,
     "class": "select-container__select"
-  }, [(0, _vue.createElementVNode)("option", _hoisted_4, (0, _vue.toDisplayString)(_ctx.initialValue), 1
+  }, [(0, _vue.createElementVNode)("option", _hoisted_3, (0, _vue.toDisplayString)(_ctx.initialValue), 1
   /* TEXT */
   ), ((0, _vue.openBlock)(true), (0, _vue.createElementBlock)(_vue.Fragment, null, (0, _vue.renderList)(_ctx.selectOptions, function (option, value) {
     return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("option", {
       value: value
     }, (0, _vue.toDisplayString)(option), 9
     /* TEXT, PROPS */
-    , _hoisted_5);
+    , _hoisted_4);
   }), 256
   /* UNKEYED_FRAGMENT */
   ))], 40
   /* PROPS, HYDRATE_EVENTS */
-  , _hoisted_3)]);
+  , _hoisted_2)], 2
+  /* CLASS */
+  );
 }
 
 /***/ }),
@@ -20005,7 +20156,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_accept_button = (0, _vue.resolveComponent)("accept-button");
 
   return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("div", null, [(0, _vue.createElementVNode)("form", null, [(0, _vue.createVNode)(_component_simple_labeled_input, {
-    "class": "movie-title",
+    "class": "movie-description",
     modelValue: $data.title,
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.title = $event;
@@ -20021,11 +20172,28 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
+  , ["modelValue"]), (0, _vue.createVNode)(_component_simple_labeled_input, {
+    "class": "movie-description",
+    modelValue: $data.description,
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+      return $data.description = $event;
+    })
+  }, {
+    "default": (0, _vue.withCtx)(function () {
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['description']) + " : ", 1
+      /* TEXT */
+      )];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
   , ["modelValue"]), (0, _vue.createElementVNode)("div", _hoisted_1, [(0, _vue.createElementVNode)("fieldset", _hoisted_2, [(0, _vue.createElementVNode)("legend", _hoisted_3, (0, _vue.toDisplayString)($data.descriptionsTranslations['actress_body_and_type']), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.titsSize,
-    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.titsSize = $event;
     }),
     options: $data.movieCreatorTranslations['titsSize']
@@ -20042,7 +20210,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.assSize,
-    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.assSize = $event;
     }),
     options: $data.movieCreatorTranslations['assSize']
@@ -20059,7 +20227,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.thicknessSize,
-    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.thicknessSize = $event;
     }),
     options: $data.movieCreatorTranslations['thicknessSize']
@@ -20076,7 +20244,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.ageRange,
-    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
       return $data.ageRange = $event;
     }),
     options: $data.movieCreatorTranslations['ageRange']
@@ -20093,7 +20261,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.hairColor,
-    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
       return $data.hairColor = $event;
     }),
     options: $data.movieCreatorTranslations['hairColor']
@@ -20110,7 +20278,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.race,
-    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.race = $event;
     }),
     options: $data.movieCreatorTranslations['race']
@@ -20127,7 +20295,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.nationality,
-    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
+    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
       return $data.nationality = $event;
     }),
     options: $data.movieCreatorTranslations['nationality']
@@ -20144,7 +20312,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.shavedPussy,
-    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
       return $data.shavedPussy = $event;
     }),
     options: $data.movieCreatorTranslations['binaryOptions']
@@ -20163,7 +20331,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.abundanceType,
-    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
       return $data.abundanceType = $event;
     }),
     options: $data.movieCreatorTranslations['abundanceType']
@@ -20181,7 +20349,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.analAmount,
-    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
+    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
       return $data.analAmount = $event;
     }),
     unit: "%"
@@ -20199,7 +20367,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.blowjobAmount,
-    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
+    "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
       return $data.blowjobAmount = $event;
     }),
     unit: "%"
@@ -20217,7 +20385,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.vaginalAmount,
-    "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
+    "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
       return $data.vaginalAmount = $event;
     }),
     unit: "%"
@@ -20235,7 +20403,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.handjobAmount,
-    "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
+    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
       return $data.handjobAmount = $event;
     }),
     unit: "%"
@@ -20253,7 +20421,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.pussyLickingAmount,
-    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
+    "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
       return $data.pussyLickingAmount = $event;
     }),
     unit: "%"
@@ -20271,7 +20439,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.titfuckAmount,
-    "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
+    "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
       return $data.titfuckAmount = $event;
     }),
     unit: "%"
@@ -20289,7 +20457,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.feetPettingAmount,
-    "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
+    "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
       return $data.feetPettingAmount = $event;
     }),
     unit: "%"
@@ -20307,7 +20475,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.doublePenetrationAmount,
-    "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
+    "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {
       return $data.doublePenetrationAmount = $event;
     }),
     unit: "%"
@@ -20325,7 +20493,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
     modelValue: $data.position69amount,
-    "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {
+    "onUpdate:modelValue": _cache[19] || (_cache[19] = function ($event) {
       return $data.position69amount = $event;
     }),
     unit: "%"
@@ -20342,7 +20510,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.cumshotType,
-    "onUpdate:modelValue": _cache[19] || (_cache[19] = function ($event) {
+    "onUpdate:modelValue": _cache[20] || (_cache[20] = function ($event) {
       return $data.cumshotType = $event;
     }),
     options: $data.movieCreatorTranslations['cumshotType']
@@ -20359,7 +20527,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.isCumshotCompilation,
-    "onUpdate:modelValue": _cache[20] || (_cache[20] = function ($event) {
+    "onUpdate:modelValue": _cache[21] || (_cache[21] = function ($event) {
       return $data.isCumshotCompilation = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20379,7 +20547,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.location,
-    "onUpdate:modelValue": _cache[21] || (_cache[21] = function ($event) {
+    "onUpdate:modelValue": _cache[22] || (_cache[22] = function ($event) {
       return $data.location = $event;
     }),
     options: $data.movieCreatorTranslations['location']
@@ -20396,7 +20564,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.cameraStyle,
-    "onUpdate:modelValue": _cache[22] || (_cache[22] = function ($event) {
+    "onUpdate:modelValue": _cache[23] || (_cache[23] = function ($event) {
       return $data.cameraStyle = $event;
     }),
     options: $data.movieCreatorTranslations['cameraStyle']
@@ -20413,7 +20581,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.storyOrCostume,
-    "onUpdate:modelValue": _cache[23] || (_cache[23] = function ($event) {
+    "onUpdate:modelValue": _cache[24] || (_cache[24] = function ($event) {
       return $data.storyOrCostume = $event;
     }),
     options: $data.movieCreatorTranslations['storyOrCostume']
@@ -20430,7 +20598,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.professionalismLevel,
-    "onUpdate:modelValue": _cache[24] || (_cache[24] = function ($event) {
+    "onUpdate:modelValue": _cache[25] || (_cache[25] = function ($event) {
       return $data.professionalismLevel = $event;
     }),
     options: $data.movieCreatorTranslations['professionalismLevel']
@@ -20447,7 +20615,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.hasStory,
-    "onUpdate:modelValue": _cache[25] || (_cache[25] = function ($event) {
+    "onUpdate:modelValue": _cache[26] || (_cache[26] = function ($event) {
       return $data.hasStory = $event;
     }),
     options: $data.movieCreatorTranslations['binaryOptions']
@@ -20464,7 +20632,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.recordedBySpyCamera,
-    "onUpdate:modelValue": _cache[26] || (_cache[26] = function ($event) {
+    "onUpdate:modelValue": _cache[27] || (_cache[27] = function ($event) {
       return $data.recordedBySpyCamera = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20482,7 +20650,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.isSadisticOrMasochistic,
-    "onUpdate:modelValue": _cache[27] || (_cache[27] = function ($event) {
+    "onUpdate:modelValue": _cache[28] || (_cache[28] = function ($event) {
       return $data.isSadisticOrMasochistic = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20500,7 +20668,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.isFemaleDomination,
-    "onUpdate:modelValue": _cache[28] || (_cache[28] = function ($event) {
+    "onUpdate:modelValue": _cache[29] || (_cache[29] = function ($event) {
       return $data.isFemaleDomination = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20518,7 +20686,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.isTranslatedToPolish,
-    "onUpdate:modelValue": _cache[29] || (_cache[29] = function ($event) {
+    "onUpdate:modelValue": _cache[30] || (_cache[30] = function ($event) {
       return $data.isTranslatedToPolish = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20538,7 +20706,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   ), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showPantyhose,
-    "onUpdate:modelValue": _cache[30] || (_cache[30] = function ($event) {
+    "onUpdate:modelValue": _cache[31] || (_cache[31] = function ($event) {
       return $data.showPantyhose = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20556,7 +20724,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showStockings,
-    "onUpdate:modelValue": _cache[31] || (_cache[31] = function ($event) {
+    "onUpdate:modelValue": _cache[32] || (_cache[32] = function ($event) {
       return $data.showStockings = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20574,7 +20742,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showGlasses,
-    "onUpdate:modelValue": _cache[32] || (_cache[32] = function ($event) {
+    "onUpdate:modelValue": _cache[33] || (_cache[33] = function ($event) {
       return $data.showGlasses = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20592,7 +20760,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showHighHeels,
-    "onUpdate:modelValue": _cache[33] || (_cache[33] = function ($event) {
+    "onUpdate:modelValue": _cache[34] || (_cache[34] = function ($event) {
       return $data.showHighHeels = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20610,7 +20778,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showHugeCock,
-    "onUpdate:modelValue": _cache[34] || (_cache[34] = function ($event) {
+    "onUpdate:modelValue": _cache[35] || (_cache[35] = function ($event) {
       return $data.showHugeCock = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20628,7 +20796,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showWhips,
-    "onUpdate:modelValue": _cache[35] || (_cache[35] = function ($event) {
+    "onUpdate:modelValue": _cache[36] || (_cache[36] = function ($event) {
       return $data.showWhips = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20646,7 +20814,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.showSexToys,
-    "onUpdate:modelValue": _cache[36] || (_cache[36] = function ($event) {
+    "onUpdate:modelValue": _cache[37] || (_cache[37] = function ($event) {
       return $data.showSexToys = $event;
     }),
     "class": "movie-panel-checkbox",
@@ -20666,7 +20834,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   ), (0, _vue.createVNode)(_component_multiselect, {
     modelValue: $data.pornstarsList,
-    "onUpdate:modelValue": _cache[37] || (_cache[37] = function ($event) {
+    "onUpdate:modelValue": _cache[38] || (_cache[38] = function ($event) {
       return $data.pornstarsList = $event;
     }),
     "main-label": $data.descriptionsTranslations['choose_from_pornstars_list'],
@@ -20676,7 +20844,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue", "main-label"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_12, [(0, _vue.createElementVNode)("legend", _hoisted_13, (0, _vue.toDisplayString)($data.descriptionsTranslations['movie_duration']), 1
   /* TEXT */
   ), (0, _vue.withDirectives)((0, _vue.createElementVNode)("input", {
-    "onUpdate:modelValue": _cache[38] || (_cache[38] = function ($event) {
+    "onUpdate:modelValue": _cache[39] || (_cache[39] = function ($event) {
       return $data.movieDuration = $event;
     }),
     "class": "movie-duration",
@@ -20716,6 +20884,105 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["onClick"])])])])]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.render = render;
+
+var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+(0, _vue.pushScopeId)("data-v-5a490c4f");
+var _hoisted_1 = ["data-transform-at"];
+var _hoisted_2 = {
+  "class": "table-headers"
+};
+var _hoisted_3 = {
+  colspan: "2",
+  "class": "resource-header"
+};
+var _hoisted_4 = ["data-aditional-header"];
+var _hoisted_5 = {
+  "class": "resource-cell"
+};
+var _hoisted_6 = {
+  "class": "resource-cell"
+};
+(0, _vue.popScopeId)();
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_phantom_button = (0, _vue.resolveComponent)("phantom-button");
+
+  return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("table", {
+    "data-transform-at": $props.transformAtWidth,
+    "class": "resource-table"
+  }, [(0, _vue.createElementVNode)("thead", _hoisted_2, [((0, _vue.openBlock)(true), (0, _vue.createElementBlock)(_vue.Fragment, null, (0, _vue.renderList)($data.headers, function (header) {
+    return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("th", {
+      "class": "resource-header",
+      key: header
+    }, (0, _vue.toDisplayString)(header), 1
+    /* TEXT */
+    );
+  }), 128
+  /* KEYED_FRAGMENT */
+  )), (0, _vue.createElementVNode)("th", _hoisted_3, (0, _vue.toDisplayString)($data.translator.translate('actions')), 1
+  /* TEXT */
+  )]), (0, _vue.createElementVNode)("tbody", null, [((0, _vue.openBlock)(true), (0, _vue.createElementBlock)(_vue.Fragment, null, (0, _vue.renderList)($data.resourceInstances, function (resource, index) {
+    return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("tr", {
+      "class": "resource-row",
+      key: index
+    }, [((0, _vue.openBlock)(true), (0, _vue.createElementBlock)(_vue.Fragment, null, (0, _vue.renderList)($data.headers, function (header) {
+      return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("td", {
+        "data-aditional-header": header,
+        "class": "resource-cell",
+        key: header
+      }, (0, _vue.toDisplayString)(resource[header]), 9
+      /* TEXT, PROPS */
+      , _hoisted_4);
+    }), 128
+    /* KEYED_FRAGMENT */
+    )), (0, _vue.createElementVNode)("td", _hoisted_5, [(0, _vue.createVNode)(_component_phantom_button, {
+      onClick: function onClick($event) {
+        return $options.emitEditEvent(resource);
+      }
+    }, {
+      "default": (0, _vue.withCtx)(function () {
+        return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.translator.translate('edit')), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"])]), (0, _vue.createElementVNode)("td", _hoisted_6, [(0, _vue.createVNode)(_component_phantom_button, null, {
+      "default": (0, _vue.withCtx)(function () {
+        return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.translator.translate('delete')), 1
+        /* TEXT */
+        )];
+      }),
+      _: 1
+      /* STABLE */
+
+    })])]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))])], 8
+  /* PROPS */
+  , _hoisted_1);
 }
 
 /***/ }),
@@ -20875,7 +21142,8 @@ var _default = {
   save_movie: _translator["default"].translate('save_movie'),
   title: _translator["default"].translate('title'),
   cumshot: _translator["default"].translate('cumshot'),
-  gadgets_and_clothing: _translator["default"].translate('gadgets_and_clothing')
+  gadgets_and_clothing: _translator["default"].translate('gadgets_and_clothing'),
+  description: _translator["default"].translate('description')
 };
 exports.default = _default;
 
@@ -21135,7 +21403,7 @@ var _default = {
     gadgets_and_clothing: "Ubiór i gadżety",
     cumshot: "Wytrysk",
     login_to_sex_empire_manager: "Menager Sex-Imperium"
-  }, _defineProperty(_pl, "login_to_sex_empire_manager", "Zaloguj do Menagera Sex-Imperium"), _defineProperty(_pl, "tits_size", "Rozmiar cycków"), _defineProperty(_pl, "ass_size", "Rozmiar tyłka"), _defineProperty(_pl, "hair_color", "Kolor włosów"), _defineProperty(_pl, "race", "Rasa"), _defineProperty(_pl, "nationality", "Narodowość"), _defineProperty(_pl, "shaved_pussy", "Wygolona cipka"), _defineProperty(_pl, "sex_type", "Typ seksu"), _defineProperty(_pl, "abundance", "Liczebność"), _defineProperty(_pl, "age", "Wiek"), _defineProperty(_pl, "thickness", "Tusza"), _defineProperty(_pl, "login", "Login"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "email", "Email"), _defineProperty(_pl, "delete", 'usuń'), _defineProperty(_pl, "cancel", 'anuluj'), _defineProperty(_pl, "answear_comment", 'Odpowiedz'), _defineProperty(_pl, "error_during_fetching_pornstars_list", "Podczas pobierania listy gwiazd pojawił się błąd"), _defineProperty(_pl, "account_deletion_warning", "Czy na pewno chcesz usunąć konto? Znikną wszystkie komentarze i wystawione oceny. Nie będzie można tego cofnąć. Jeżeli jesteś pewny/a wpisz hasło i kliknij usuń"), _defineProperty(_pl, "email_has_already_been_taken", "Adres email jest już zajęty"), _defineProperty(_pl, "current_number_of_votes", "Liczba oddanych głosów"), _defineProperty(_pl, "file_size_exceeds_limit", "Rozmiar pliku przekracza dopuszczalny limit (2 MB)"), _defineProperty(_pl, "an_error_occured_while_fetching_pornstar_rating", "Podczas próby pobrania rankingu gwiazdy pojawił się niespodziewany bład"), _defineProperty(_pl, "i_forgot_password", "Zapomniałem hasła"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "email_is_invalid", "Adres email jest nieprawidłowy"), _defineProperty(_pl, "the_user_type_is_incorrect", "Niepoprawny typ użytkownika. Należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_attempts", "Za dużo prób w ciągu jednej minuty"), _defineProperty(_pl, "the_sexual_orientation_is_incorrect", "Niepoprawna orientacja seksualna należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_user_settings_change_attempts", "Za dużo prób w ciągu jednej minuty. Ze względów bezpieczeństwa liczba prób jest ograniczona. Proszę spróbować za chwilę."), _defineProperty(_pl, "undefined_error", "Bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "show_next_answears", "Wczytaj kolejne odpowiedzi"), _defineProperty(_pl, "user_data_has_been_modified_successfully", "Pomyślnie zmodyfikowano dane użytkownika"), _defineProperty(_pl, "password_must_contain_at_least_3_characters", "Hasło musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "password_must_not_exceed_20_characters", "Hasło nie może przekraczać 20 znaków"), _defineProperty(_pl, "password_is_missing", "Nie podano hasła"), _defineProperty(_pl, "password_is_required", "Należy podać hasło"), _defineProperty(_pl, "the_given_password_is_incorrect", "Wprowadzone hasło jest nieprawidłowe"), _defineProperty(_pl, "the_following_errors_occured", "Wykryto następujące problemy : "), _defineProperty(_pl, "data_has_been_changed_successfully", "Pomyślnie zmieniono dane użytkownika."), _defineProperty(_pl, "the_requested_data_is_probably_ok_but_a_server_error_occured", "Wprowadzone dane są prawdopodobnie w porządku jednak wystąpił błąd po stronie serwera"), _defineProperty(_pl, "the_requested_data_is_ok_but_a_server_error_occured", "Wprowadzone dane są poprawne jednak serwer napotkał nieoczekiwany błąd. Prosimy spróbować później lub skontaktować się z obsługą"), _defineProperty(_pl, "please_type_in_a_valid_password", "Proszę wprowadzić swoje hasło o długości od 3 do 20 znaków"), _defineProperty(_pl, "no_data_has_been_changed", "Żadne pole nie zostało zmienione."), _defineProperty(_pl, "this_input_must_not_be_changed", "Tego pola nie można edytować"), _defineProperty(_pl, "you_have_to_choose_one_option", "Należy wybrać jedną opcję"), _defineProperty(_pl, "information", "Informacja"), _defineProperty(_pl, "error", "Błąd"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "login_to_sex_empire", "Zaloguj się do Sex-Imperium"), _defineProperty(_pl, "incorrect_image_dimensions", "Szerokość lub wysokość obrazu przekracza 128px"), _defineProperty(_pl, "invalid_file_extension", "Niewłaściwe rozszerzenie pliku. Dozwolone rozszerzenia to : jpg, jpeg, svg, bmp, png, gif, webp"), _defineProperty(_pl, "url_address", "Adres URL"), _defineProperty(_pl, "incorrect_extension", "Niewłaściwe rozszerzenie pliku"), _defineProperty(_pl, "invalid_image_url", "Wygląda na to, że podany adres URL obrazu jest nieprawidłowy. Jeżeli jesteś przekonany, że jest inaczej zawsze możesz pobrać obraz na dysk i stamtąd wczytać"), _defineProperty(_pl, "invalid_image_extension", "Wygląda na to, że plik ma niewłaściwe rozszerzenie"), _defineProperty(_pl, "invalid_image_dimensions", "Wprowadzony adres odnosi się do obrazu z właściwym rozszerzeniem jednak szerokość lub wysokość przekracza 128px"), _defineProperty(_pl, "operation_in_progress", "Operacja w toku"), _defineProperty(_pl, "checking_image", "Sprawdzam obraz"), _defineProperty(_pl, "checking_the_email", "Sprawdzam email"), _defineProperty(_pl, "changing_user_data", "Pracuję nad zmianą danych"), _defineProperty(_pl, "server_error", "Błąd serwera"), _defineProperty(_pl, "invalid_image_url_or_another_error", "Prawdopodobnie adres URL jest nieprawidłowy lub wystąpił inny bliżej niezidentyfikowany problem"), _defineProperty(_pl, "deleting_the_avatar", "Usuwam avatar"), _defineProperty(_pl, "message_exceeds_1000_characters", "Wiadomość przekracza 1000 znaków"), _defineProperty(_pl, "message_contains_less_then_3_characters", "Wiadomość zawiera mniej niż 3 znaki"), _defineProperty(_pl, "this_email_address_does_not_exist", "Taki adres email nie istnieje"), _defineProperty(_pl, "to_many_attemts_during_one_minute", "Za dużo prób w ciągu 1 minuty"), _defineProperty(_pl, "password_has_less_then_3_characters", "Hasło ma mniej niż 3 znaki"), _defineProperty(_pl, "password_has_more_then_20_characters", "Hasło ma więcej niż 20 znaków"), _defineProperty(_pl, "passwords_do_not_match", "Hasła nie pokrywają się"), _defineProperty(_pl, "login_has_already_been_taken", "Login jest już zajęty"), _defineProperty(_pl, "login_contains_less_then_3_characters", "Login ma mniej niż 3 znaki"), _defineProperty(_pl, "login_contains_more_then_20_characters", "Login ma więcej niż 20 znaków"), _defineProperty(_pl, "email_has_already_been_taken", "Email jest już zajęty"), _defineProperty(_pl, "email_seems_to_be_incorrect", "Email wygląda na nieprawidłowy"), _defineProperty(_pl, "subject_exceeds_40_characters", "Temat przekracza 40 znaków"), _defineProperty(_pl, "you_are_under_18", "Nie ukończyłeś 18 lat"), _defineProperty(_pl, "the_user_has_no_avatar", "Użytkownik nie posiada avataru"), _defineProperty(_pl, "password_change_attempt", "Próba zmiany hasła"), _defineProperty(_pl, "password_changed_successfully", "Pomyślnie zmieniono hasło"), _defineProperty(_pl, "please_type_in_new_valid_password_as_described", "Proszę wprowadzić nowe hasło zgodnie z wytycznymi"), _defineProperty(_pl, "please_type_in_current_password_as_described", "Proszę wprowadzić aktualne hasło zgodnie z wytycznymi"), _defineProperty(_pl, "new_password_does_not_match", "Wprowadzone nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password_is_required", "Nie podano nowego hasła(środkowe pole)"), _defineProperty(_pl, "new_password_must_contain_at_least_3_characters", "Nowe hasło musi zawierać co najmniej 3 znaki(środkowe pole)"), _defineProperty(_pl, "the_given_new_passwords_do_not_match", "Podane nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password__confirmation_must_contain_at_least_3_characters", "Potwierdzenie nowego hasła musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "new_password__confirmation_must_not_exceed_20_characters", "Potwierdzenie nowego hasła przekracza 20 znaków"), _defineProperty(_pl, "no_image_has_been_selected", "Nie wybrano żadnego prawidłowego obrazu"), _defineProperty(_pl, "the_file_selected_from_hard_drive_is_not_an_image", "Plik wybrany z dysku nie jest obrazem"), _defineProperty(_pl, "invalid_image_dimensions", "Niewłaściwe wymiary obrazu"), _defineProperty(_pl, "the_data_looks_ok_but_an_unexpected_error_occured", "Wprowadzone dane są w porządku jednak pojawił się nieoczekiwany błąd"), _defineProperty(_pl, "settings_change_attempt", "Próba zmiany ustawień"), _defineProperty(_pl, "settings_changed_successfully", "Pomyślnie zmieniono ustawienia"), _defineProperty(_pl, "the_shows_birthday_field_is_missing", "Brak informacji o tym czy wyświetlać datę urodzenia innym użytkownikom"), _defineProperty(_pl, "the_shows_birthday_field_must_be_a_boolean_value", "Pole pokazuj datę urodzenia musi zawierać wartość typu logicznego"), _defineProperty(_pl, "fetching_movies", "Pobieram filmy"), _defineProperty(_pl, "movies", "Filmy"), _defineProperty(_pl, "views", "Odsłon"), _defineProperty(_pl, "preview", "Podgląd"), _defineProperty(_pl, "pornstars", "Gwiazdy"), _defineProperty(_pl, "pornstars_navbar_caption", "Gwiazdy porno"), _defineProperty(_pl, "scroll_previous_links", "Przewijaj listę podstron do tyłu"), _defineProperty(_pl, "movie_frame", "Kadr z filmu"), _defineProperty(_pl, "close_movie_preview", "Zamknij podgląd filmu"), _defineProperty(_pl, "play_movie_preview", "Uruchom podgląd filmu"), _defineProperty(_pl, "launching_in_progress", "Trwa uruchamianie"), _defineProperty(_pl, "click_to_play_the_video", "Kliknij aby uruchomić film"), _defineProperty(_pl, "stop_movie_preview", "Zatrzymaj odtwarzanie podglądu filmu"), _defineProperty(_pl, "sex_empire", "Sex-Imperium"), _defineProperty(_pl, "movie_translated_to_polish", "Film przetłumaczony na język polski"), _defineProperty(_pl, "scroll_next_links", "Przewijaj listę podstron do przodu"), _defineProperty(_pl, "hide_side_bar", "Schowaj boczny pasek"), _defineProperty(_pl, "previous_page", "poprzednia"), _defineProperty(_pl, "next_page", "następna"), _defineProperty(_pl, "further", "dalej"), _defineProperty(_pl, "back", "wstecz"), _defineProperty(_pl, "up", "góra"), _defineProperty(_pl, "first_page", "pierwsza"), _defineProperty(_pl, "profile", "Profil"), _defineProperty(_pl, "profile_settings", "Ustawienia profilu"), _defineProperty(_pl, "messages", "Wiadomości"), _defineProperty(_pl, "favourites", "Ulubione"), _defineProperty(_pl, "friends", "Znajomi"), _defineProperty(_pl, "logout", "Wyloguj"), _defineProperty(_pl, "porn", "Porno"), _defineProperty(_pl, "user_avatar_description", "Avatar użytkownika o nicku"), _defineProperty(_pl, "default_avatar", "Domyślny avatar, przedstawia bliżej niezidentyfikowanego użytkownika"), _defineProperty(_pl, "hide", "Schowaj"), _defineProperty(_pl, "element_has_been_rated", "Ocena została wystawiona. Możesz zawsze zmienić zdanie i ocenić ponownie."), _defineProperty(_pl, "pornstar_rate_data_is_invalid", "Niepoprawne dane oceny lub gwiazdy"), _defineProperty(_pl, "movie_rate_data_is_invalid", "Niepoprawne dane oceny lub filmu"), _defineProperty(_pl, "nickname_is_missing", "Nie podano pseudonimu"), _defineProperty(_pl, "unexpected_error_occured_while_fetching_comments", "Niestety pojawił się bliżej niezidentyfikowany błąd podczas pobierania komentarzy"), _defineProperty(_pl, "nickname", "Pseudonim"), _defineProperty(_pl, "answears", "Odpowiedzi"), _defineProperty(_pl, "add_comment", "Dodaj komentarz"), _defineProperty(_pl, "add", "dodaj"), _defineProperty(_pl, "contents", "Treść"), _defineProperty(_pl, "comment_added", "Dodano komentarz"), _defineProperty(_pl, "unregistered_user", "Niezarejestrowany"), _defineProperty(_pl, "register", "Rejestruj"), _defineProperty(_pl, "add_comment_short", "Komentuj"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "adding_comment", "Dodaję komentarz"), _defineProperty(_pl, "fetching_comments", "Pobieram komentarze"), _defineProperty(_pl, "comment_text_is_missing", "Nie podano treści komentarza"), _defineProperty(_pl, "comment_text_exceeds_1000_characters", "Treść komentarza przekracza 1000 znaków"), _defineProperty(_pl, "the_nickname_must_be_between_2_and_20_characters", "Pseudonim musi mieć minimum 2 znaki ale nie więcej niż 20"), _defineProperty(_pl, "no_comments_available", "Brak komentarzy"), _defineProperty(_pl, "because_of_safety_reasons_adding_comments_is_limited_to_2_per_minute", "Z powodów bezpieczeństwa ograniczono liczbę dodawanych komentarzy do 2 na minutę"), _defineProperty(_pl, "total_comments", "Liczba wszystkich komentarzy"), _defineProperty(_pl, "publish_comment", "Opublikuj komentarz"), _defineProperty(_pl, "show_comments_sub_page_with_number", "Pokaż podstronę komentarzy o numerze"), _defineProperty(_pl, "sex_empire_short", "SI"), _defineProperty(_pl, "small_ass", "mały"), _defineProperty(_pl, "medium_ass", "średni"), _defineProperty(_pl, "big_ass", "duży"), _defineProperty(_pl, "small_tits", "małe"), _defineProperty(_pl, "medium_tits", "średnie"), _defineProperty(_pl, "big_tits", "duże"), _defineProperty(_pl, "skinny_tchickness", "chuda"), _defineProperty(_pl, "medium_tchickness", "średnia"), _defineProperty(_pl, "fat_tchickness", "gruba"), _defineProperty(_pl, "teenagers", "nastolatki(18 - 19)"), _defineProperty(_pl, "age_range_young", "młode (20 -29)"), _defineProperty(_pl, "age_range_mature", "dojrzałe(30 - 50)"), _defineProperty(_pl, "dark_hair", "czarny"), _defineProperty(_pl, "blonde_hair", "blond"), _defineProperty(_pl, "brown_hair", "brązowy"), _defineProperty(_pl, "red_hair", "rudy"), _defineProperty(_pl, "white_race", "biała"), _defineProperty(_pl, "asian_race", "azjatki"), _defineProperty(_pl, "ebony_race", "murzynki"), _defineProperty(_pl, "latin_race", "latynoski"), _defineProperty(_pl, "arabic_race", "arabki"), _defineProperty(_pl, "yes", "tak"), _defineProperty(_pl, "no", "nie"), _defineProperty(_pl, "one_male_one_female", "facet i kobieta"), _defineProperty(_pl, "bukkake", "bukkake"), _defineProperty(_pl, "single_female", "kobieta solo"), _defineProperty(_pl, "lesbians", "lesbijki"), _defineProperty(_pl, "group_sex", "grupowy"), _defineProperty(_pl, "one_male_many_females", "facet i wiele kobiet"), _defineProperty(_pl, "GangBang", "GangBang"), _defineProperty(_pl, "one_female_two_males", "Na 2 baty"), _defineProperty(_pl, "lesbian_group_sex", "Lesbijki grupowo"), _defineProperty(_pl, "only", "tylko i wyłącznie"), _defineProperty(_pl, "maximum", "maximum"), _defineProperty(_pl, "a_lot", "dużo"), _defineProperty(_pl, "medium", "średnio"), _defineProperty(_pl, "a_little", "trochę"), _defineProperty(_pl, "exclude", "wyklucz"), _defineProperty(_pl, "on_face", "na twarz"), _defineProperty(_pl, "cum_swallow", "z połykiem"), _defineProperty(_pl, "creampie", "w cipkę"), _defineProperty(_pl, "anal", "Anal"), _defineProperty(_pl, "blowjob", "Obciąganie"), _defineProperty(_pl, "vaginal", "Waginalny"), _defineProperty(_pl, "handjob", "Walenie konika"), _defineProperty(_pl, "tittfuck", "Na hiszpana"), _defineProperty(_pl, "feet", "Stópki"), _defineProperty(_pl, "double_penetration", "Wtyczka"), _defineProperty(_pl, "position_69", "Pozycja 69"), _defineProperty(_pl, "cumshot_compilation", "Kompilacja wytrysków"), _defineProperty(_pl, "circumstances_and_style", "Okoliczności i styl"), _defineProperty(_pl, "location", "Lokalizacja"), _defineProperty(_pl, "camera_style", "Ujęcie kamery"), _defineProperty(_pl, "story_or_costume_type", "fabuła, kostium"), _defineProperty(_pl, "movie_level", "Poziom filmu"), _defineProperty(_pl, "has_story", "Zawiera fabuła"), _defineProperty(_pl, "spy_camera", "Kamera szpiegowska"), _defineProperty(_pl, "sadistic_or_masochistic", "Sado-maso"), _defineProperty(_pl, "female_domination", "Kobieca dominacja"), _defineProperty(_pl, "polish_language_version", "Polska wersja językowa"), _defineProperty(_pl, "pantyhose", "Rajstopy"), _defineProperty(_pl, "stockings", "Pończochy"), _defineProperty(_pl, "glasses", "Okulary"), _defineProperty(_pl, "high_heels", "Szpile"), _defineProperty(_pl, "huge_cock", "Wielki kutas"), _defineProperty(_pl, "whips", "Bicze"), _defineProperty(_pl, "sex_toys", "Sex-zabawki"), _defineProperty(_pl, "choose_from_pornstars_list", "Wybierz z listy gwiazd"), _defineProperty(_pl, "reset_panel", "Resetuj panel"), _defineProperty(_pl, "save_movie", "Zapisz film"), _defineProperty(_pl, "title", "Tytuł"), _defineProperty(_pl, "controls", "Sterowanie"), _defineProperty(_pl, "movie_duration", "Czas trwania filmu"), _defineProperty(_pl, "anal_creampie", "w dupkę"), _defineProperty(_pl, "on_tits", "na cycki"), _defineProperty(_pl, "on_pussy", "na cipkę"), _defineProperty(_pl, "on_ass", "na dupkę"), _defineProperty(_pl, "on_feet", "na stopy"), _defineProperty(_pl, "on_many_places", "na wiele miejsc"), _defineProperty(_pl, "on_other_body_parts", "na inne miejsca"), _defineProperty(_pl, "american_nationality", "amerykańska"), _defineProperty(_pl, "japanese_nationality", "japońska"), _defineProperty(_pl, "german_nationality", "niemiecka"), _defineProperty(_pl, "czech_nationality", "czeska"), _defineProperty(_pl, "russian_nationality", "rosyjska"), _defineProperty(_pl, "british_nationality", "brytyjska"), _defineProperty(_pl, "swedish_nationality", "szwedzka"), _defineProperty(_pl, "ukrainian_nationality", "ukraińska"), _defineProperty(_pl, "slovac_nationality", "słowacka"), _defineProperty(_pl, "hanguarian_nationality", "węgierska"), _defineProperty(_pl, "polish_nationality", "polska"), _defineProperty(_pl, "dutch_nationality", "holenderska"), _defineProperty(_pl, "hindu_nationality", "hinduska"), _defineProperty(_pl, "french_nationality", "francuska"), _defineProperty(_pl, "spanish_nationality", "hiszpańska"), _defineProperty(_pl, "italian_nationality", "włoska"), _defineProperty(_pl, "canadian_nationality", "kanadyjska"), _defineProperty(_pl, "argentinian_nationality", "argentyńska"), _defineProperty(_pl, "house", "dom"), _defineProperty(_pl, "bathroom", "łazienka"), _defineProperty(_pl, "office", "biuro"), _defineProperty(_pl, "school", "szkoła"), _defineProperty(_pl, "public_place", "miejsca publiczne"), _defineProperty(_pl, "car", "samochód"), _defineProperty(_pl, "nature", "łono natury"), _defineProperty(_pl, "solarium", "solarium"), _defineProperty(_pl, "elevator", "winda"), _defineProperty(_pl, "beach", "plaża"), _defineProperty(_pl, "gym", "siłownia"), _defineProperty(_pl, "POV", "POV"), _defineProperty(_pl, "outside_camera_style", "z zewnątrz"), _defineProperty(_pl, "mixed_camera_style", "mieszane"), _defineProperty(_pl, "female_pupil", "uczennica"), _defineProperty(_pl, "female_employee", "pracownica"), _defineProperty(_pl, "female_student", "studentka"), _defineProperty(_pl, "wife", "żona"), _defineProperty(_pl, "female_teacher", "nauczycielka"), _defineProperty(_pl, "nurse", "pielęgniarka"), _defineProperty(_pl, "female_slave", "niewolnica"), _defineProperty(_pl, "nun", "zakonnica"), _defineProperty(_pl, "female_police_officer", "policjantka"), _defineProperty(_pl, "prostitute", "prostytutka"), _defineProperty(_pl, "female_boss", "szefowa"), _defineProperty(_pl, "cleaner", "sprzątaczka"), _defineProperty(_pl, "mommy", "mamusia"), _defineProperty(_pl, "amateur", "amatorski"), _defineProperty(_pl, "professional", "profesjonalny"), _defineProperty(_pl, "choose_options", "wybierz opcje"), _defineProperty(_pl, "search", "szukaj"), _defineProperty(_pl, "remove_option", "usuń opcję"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd, w razie potrzeby prosimy odświeżyć stronę"), _defineProperty(_pl, "fetching_pornstars", "Pobieram listę gwiazd"), _defineProperty(_pl, "not_selected", "nie wybrano"), _defineProperty(_pl, "minutes_inflected", "minut(y)"), _defineProperty(_pl, "views_inflected", "wyświetleń"), _defineProperty(_pl, "unexpected_error_occured", "Pojawił się bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "titsSize", "rozmiar cycków"), _defineProperty(_pl, "assSize", "rozmiar dupci"), _defineProperty(_pl, "thicknessSize", "tusza"), _defineProperty(_pl, "ageRange", "przedział wiekowy"), _defineProperty(_pl, "hairColor", "kolor włosów"), _defineProperty(_pl, "race", "rasa"), _defineProperty(_pl, "abundanceType", "liczebność"), _defineProperty(_pl, "cumshotType", "typ wytrysku"), _defineProperty(_pl, "nationality", "narodowość"), _defineProperty(_pl, "location", "lokalizacja"), _defineProperty(_pl, "cameraStyle", "ujęcie kamery"), _defineProperty(_pl, "storyOrCostume", "motyw fabularno kostiumowy"), _defineProperty(_pl, "professionalismLevel", "poziom filmu"), _defineProperty(_pl, "shavedPussy", "wygolona cipka"), _defineProperty(_pl, "analAmount", "anal"), _defineProperty(_pl, "blowjob", "obciąganie"), _defineProperty(_pl, "handjob", "walenie konika"), _defineProperty(_pl, "blondes", "blondynki"), _defineProperty(_pl, "tittfuck", "na hiszpana"), _defineProperty(_pl, "pussy_licking", "minetka"), _defineProperty(_pl, "feet", "stopy"), _defineProperty(_pl, "femdom", "kobieca dominacja"), _defineProperty(_pl, "brunettes", "brunetki"), _defineProperty(_pl, "redheads", "rude"), _defineProperty(_pl, "milfs", "dojrzałe"), _defineProperty(_pl, "teens", 'nastolatki'), _defineProperty(_pl, "amateur", "amatorskie"), _defineProperty(_pl, "asian", 'azjatki'), _defineProperty(_pl, "latins", 'latynoski'), _defineProperty(_pl, "ebony", 'murzynki'), _defineProperty(_pl, "lesbians", 'lesbijki'), _defineProperty(_pl, "group", 'grupowy'), _defineProperty(_pl, "cumshot_compilation", 'kompilacja wytrysków'), _defineProperty(_pl, "cumshot_compilations", 'kompilacje wytrysków'), _defineProperty(_pl, "cum_on_face", 'wytrysk na twarz'), _defineProperty(_pl, "cum_swallow", 'połykanie spermy'), _defineProperty(_pl, "cum_on_feet", 'wytrysk na stopy'), _defineProperty(_pl, "creampie", 'wytrysk w cipkę'), _defineProperty(_pl, "cum_in_ass", 'wytrysk w dupkę'), _defineProperty(_pl, "cum_on_titts", 'wytrysk na cycki'), _defineProperty(_pl, "pantyhose", 'rajstopki'), _defineProperty(_pl, "high_heels", 'szpile'), _defineProperty(_pl, "nurses", 'pielęgniarki'), _defineProperty(_pl, "teachers", 'nauczycielki'), _defineProperty(_pl, "japanese", 'japonki'), _defineProperty(_pl, "russian", 'rosjanki'), _defineProperty(_pl, "pornstars", 'gwiazdy porno'), _defineProperty(_pl, "blowjobAmount", 'obciąganie'), _defineProperty(_pl, "handjobAmount", 'walenie konika'), _defineProperty(_pl, "doublePenetrationAmount", "wtyczka"), _defineProperty(_pl, "vaginalAmount", "waginalny"), _defineProperty(_pl, "pussyLickingAmount", 'minetka'), _defineProperty(_pl, "feetPettingAmount", 'pieszczenie stóp'), _defineProperty(_pl, "position69amount", 'pozycja 69'), _defineProperty(_pl, "titfuckAmount", "na hiszpana"), _defineProperty(_pl, "isCumshotCompilation", 'kompilacja wytrysków'), _defineProperty(_pl, "recordedBySpyCamera", 'nagrany kamerą szpiegowską'), _defineProperty(_pl, "isSadisticOrMasochistic", 'sado-masochostyczny'), _defineProperty(_pl, "isFemaleDomination", 'kobieca dominacja'), _defineProperty(_pl, "isTranslatedToPolish", 'polska wersja językowa'), _defineProperty(_pl, "showPantyhose", 'rajstopy'), _defineProperty(_pl, "showStockings", 'pończochy'), _defineProperty(_pl, "showGlasses", 'okulary'), _defineProperty(_pl, "showHighHeels", 'szpile'), _defineProperty(_pl, "showHugeCock", 'wielki kutas'), _defineProperty(_pl, "showWhips", 'bicze'), _defineProperty(_pl, "showSexToys", 'sex-zabawki'), _defineProperty(_pl, "minimumMovieTime", "minimalny czas"), _defineProperty(_pl, "maximumMovieTime", "maksymalny czas"), _defineProperty(_pl, "minimumMovieViews", 'minimalna liczba wyświetleń'), _defineProperty(_pl, "maximumMovieViews", 'maksymalna liczba wyświetleń'), _defineProperty(_pl, "hasStory", 'zawiera fabułę'), _defineProperty(_pl, "total_movies_found", "Ilość znalezionych filmów"), _defineProperty(_pl, "movie_with_following_pornstars", "występują jednocześnie następujące gwiazdy"), _defineProperty(_pl, "last_page", "ostatnia"), _defineProperty(_pl, "movie_with_pornstar", "Film w którym występuje"), _defineProperty(_pl, "no_movies_have_been_found", "Nie znaleziono żadnych filmów pasujących do wybranych kryteriów"), _defineProperty(_pl, "no_options_have_been_selected", "Nie wybrano żadnych opcji"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd"), _defineProperty(_pl, "because_of_security_reasons_search_was_blocked", "Ze względów bezpieczeństwa ilość zapytań do wyszukiwarki w ciągu minuty jest ograniczona. Prosimy zaczekać chwilę i spróbować ponownie."), _defineProperty(_pl, "popular_categories", "Popularne kategorie"), _defineProperty(_pl, "categories_list", "Lista kategorii"), _defineProperty(_pl, "big_titts", "duże cycki"), _defineProperty(_pl, "categories", "Kategorie"), _defineProperty(_pl, "teenagers", "nastolatki"), _defineProperty(_pl, "spermatozoid_has_been_asigned", "Przyznano plemnika. Musisz odczekać minimum pół godziny aby przyznać kolejnego."), _defineProperty(_pl, "you_have_exceeded_cum_limit", "Możesz przyznać maksymalnie jednego plemnika na pół godziny niezależnie od filmu"), _defineProperty(_pl, "spermatozoid_rate_data_is_incorrect", "Niepoprawne dane filmu"), _defineProperty(_pl, "movie_views", "Liczba wyświetleń"), _defineProperty(_pl, "movie_added_at", "Data dodania"), _defineProperty(_pl, "movie_average_rating", "Średnia ocen"), _defineProperty(_pl, "this_pornstar_does_not_have_enough_votes_to_calculate_average", "Ta gwiazda ma za mało głosów aby policzyć średnią (wymagane minimum to 10)"), _defineProperty(_pl, "fetching_rating_in_progress", "Pobieram dane rankingu"), _defineProperty(_pl, "average_rate_not_available_yet", "jeszcze niedostępna"), _defineProperty(_pl, "ammount_of_spermatozoids", "Liczba plemników"), _defineProperty(_pl, "your_spermatozoids", "twoich"), _defineProperty(_pl, "number_of_likes", "Polubień"), _defineProperty(_pl, "failed_to_load_movie_data", "Nie udało się pobrać szczegółowych danych filmu"), _defineProperty(_pl, "failed_to_load_similar_movies", "Nie udało się załadować podobnych filmów"), _defineProperty(_pl, "you_like_it", "Lubisz to"), _defineProperty(_pl, "you_already_like_this_movie", "Już wcześniej polubiłeś ten film"), _defineProperty(_pl, "you_and", "Ty i"), _defineProperty(_pl, "people_like_it", "osób lubi to"), _defineProperty(_pl, "no_comments", "Brak komentarzy"), _defineProperty(_pl, "cookie_notification_header", "Ta strona wykorzystuje pliki cookie"), _defineProperty(_pl, "cookie_notification_body", "Poprzez dalsze korzystanie z portalu lub naci\u015Bni\u0119cie przycisku \"Akceptuj\u0119\" wyra\u017Casz zgod\u0119 na przechowywanie plik\xF3w cookie na Twej maszynie"), _defineProperty(_pl, "accept_button_caption", "Akceptuję - zamknij"), _defineProperty(_pl, "show_content_side_bar_title", "Rozwiń nawigację strony dla wersji mobilnej"), _defineProperty(_pl, "show_content_side_bar_caption", "Menu"), _defineProperty(_pl, "cancel_like", "cofnij like'a"), _defineProperty(_pl, "show_authenticated_user_sidebar_title", "Rozwiń menu użytkownika, ustawienia profilu, wylogowanie itp."), _defineProperty(_pl, "show_authenticated_user_sidebar_caption", "Profil"), _defineProperty(_pl, "selected_avatar", "Nowy avatar"), _defineProperty(_pl, "no_avatar_has_been_choosen", "Nie wybrano avataru"), _defineProperty(_pl, "current_avatar", "Wybrany avatar"), _defineProperty(_pl, "the_latest", "Najnowsze"), _defineProperty(_pl, "the_most_popular", "Najpopularniejsze"), _defineProperty(_pl, "advanced_search", "Szukanie zaawansowane"), _defineProperty(_pl, "remember_me", "Zapamiętaj mnie"), _defineProperty(_pl, "scroll_movies_list_left", "Przewiń listę filmów w lewo"), _defineProperty(_pl, "scroll_movies_list_right", "Przewiń listę filmów w prawo"), _defineProperty(_pl, "dictionary", "Słownik"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "added_movie", "Dodano film"), _defineProperty(_pl, "employee_added_incorrect_parameters", "Podano nieprawidłowe parametry, lista problemów"), _defineProperty(_pl, "packages", {
+  }, _defineProperty(_pl, "login_to_sex_empire_manager", "Zaloguj do Menagera Sex-Imperium"), _defineProperty(_pl, "tits_size", "Rozmiar cycków"), _defineProperty(_pl, "ass_size", "Rozmiar tyłka"), _defineProperty(_pl, "hair_color", "Kolor włosów"), _defineProperty(_pl, "race", "Rasa"), _defineProperty(_pl, "nationality", "Narodowość"), _defineProperty(_pl, "shaved_pussy", "Wygolona cipka"), _defineProperty(_pl, "sex_type", "Typ seksu"), _defineProperty(_pl, "abundance", "Liczebność"), _defineProperty(_pl, "age", "Wiek"), _defineProperty(_pl, "thickness", "Tusza"), _defineProperty(_pl, "login", "Login"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "actions", "Akcje"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "email", "Email"), _defineProperty(_pl, "delete", 'Usuń'), _defineProperty(_pl, "cancel", 'anuluj'), _defineProperty(_pl, "answear_comment", 'Odpowiedz'), _defineProperty(_pl, "error_during_fetching_pornstars_list", "Podczas pobierania listy gwiazd pojawił się błąd"), _defineProperty(_pl, "account_deletion_warning", "Czy na pewno chcesz usunąć konto? Znikną wszystkie komentarze i wystawione oceny. Nie będzie można tego cofnąć. Jeżeli jesteś pewny/a wpisz hasło i kliknij usuń"), _defineProperty(_pl, "email_has_already_been_taken", "Adres email jest już zajęty"), _defineProperty(_pl, "current_number_of_votes", "Liczba oddanych głosów"), _defineProperty(_pl, "file_size_exceeds_limit", "Rozmiar pliku przekracza dopuszczalny limit (2 MB)"), _defineProperty(_pl, "an_error_occured_while_fetching_pornstar_rating", "Podczas próby pobrania rankingu gwiazdy pojawił się niespodziewany bład"), _defineProperty(_pl, "i_forgot_password", "Zapomniałem hasła"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "email_is_invalid", "Adres email jest nieprawidłowy"), _defineProperty(_pl, "the_user_type_is_incorrect", "Niepoprawny typ użytkownika. Należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_attempts", "Za dużo prób w ciągu jednej minuty"), _defineProperty(_pl, "the_sexual_orientation_is_incorrect", "Niepoprawna orientacja seksualna należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_user_settings_change_attempts", "Za dużo prób w ciągu jednej minuty. Ze względów bezpieczeństwa liczba prób jest ograniczona. Proszę spróbować za chwilę."), _defineProperty(_pl, "undefined_error", "Bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "show_next_answears", "Wczytaj kolejne odpowiedzi"), _defineProperty(_pl, "user_data_has_been_modified_successfully", "Pomyślnie zmodyfikowano dane użytkownika"), _defineProperty(_pl, "password_must_contain_at_least_3_characters", "Hasło musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "password_must_not_exceed_20_characters", "Hasło nie może przekraczać 20 znaków"), _defineProperty(_pl, "password_is_missing", "Nie podano hasła"), _defineProperty(_pl, "password_is_required", "Należy podać hasło"), _defineProperty(_pl, "the_given_password_is_incorrect", "Wprowadzone hasło jest nieprawidłowe"), _defineProperty(_pl, "the_following_errors_occured", "Wykryto następujące problemy : "), _defineProperty(_pl, "data_has_been_changed_successfully", "Pomyślnie zmieniono dane użytkownika."), _defineProperty(_pl, "the_requested_data_is_probably_ok_but_a_server_error_occured", "Wprowadzone dane są prawdopodobnie w porządku jednak wystąpił błąd po stronie serwera"), _defineProperty(_pl, "the_requested_data_is_ok_but_a_server_error_occured", "Wprowadzone dane są poprawne jednak serwer napotkał nieoczekiwany błąd. Prosimy spróbować później lub skontaktować się z obsługą"), _defineProperty(_pl, "please_type_in_a_valid_password", "Proszę wprowadzić swoje hasło o długości od 3 do 20 znaków"), _defineProperty(_pl, "no_data_has_been_changed", "Żadne pole nie zostało zmienione."), _defineProperty(_pl, "this_input_must_not_be_changed", "Tego pola nie można edytować"), _defineProperty(_pl, "edit", "Edycja"), _defineProperty(_pl, "you_have_to_choose_one_option", "Należy wybrać jedną opcję"), _defineProperty(_pl, "information", "Informacja"), _defineProperty(_pl, "error", "Błąd"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "login_to_sex_empire", "Zaloguj się do Sex-Imperium"), _defineProperty(_pl, "incorrect_image_dimensions", "Szerokość lub wysokość obrazu przekracza 128px"), _defineProperty(_pl, "invalid_file_extension", "Niewłaściwe rozszerzenie pliku. Dozwolone rozszerzenia to : jpg, jpeg, svg, bmp, png, gif, webp"), _defineProperty(_pl, "url_address", "Adres URL"), _defineProperty(_pl, "incorrect_extension", "Niewłaściwe rozszerzenie pliku"), _defineProperty(_pl, "invalid_image_url", "Wygląda na to, że podany adres URL obrazu jest nieprawidłowy. Jeżeli jesteś przekonany, że jest inaczej zawsze możesz pobrać obraz na dysk i stamtąd wczytać"), _defineProperty(_pl, "invalid_image_extension", "Wygląda na to, że plik ma niewłaściwe rozszerzenie"), _defineProperty(_pl, "invalid_image_dimensions", "Wprowadzony adres odnosi się do obrazu z właściwym rozszerzeniem jednak szerokość lub wysokość przekracza 128px"), _defineProperty(_pl, "operation_in_progress", "Operacja w toku"), _defineProperty(_pl, "checking_image", "Sprawdzam obraz"), _defineProperty(_pl, "checking_the_email", "Sprawdzam email"), _defineProperty(_pl, "changing_user_data", "Pracuję nad zmianą danych"), _defineProperty(_pl, "server_error", "Błąd serwera"), _defineProperty(_pl, "invalid_image_url_or_another_error", "Prawdopodobnie adres URL jest nieprawidłowy lub wystąpił inny bliżej niezidentyfikowany problem"), _defineProperty(_pl, "deleting_the_avatar", "Usuwam avatar"), _defineProperty(_pl, "message_exceeds_1000_characters", "Wiadomość przekracza 1000 znaków"), _defineProperty(_pl, "message_contains_less_then_3_characters", "Wiadomość zawiera mniej niż 3 znaki"), _defineProperty(_pl, "this_email_address_does_not_exist", "Taki adres email nie istnieje"), _defineProperty(_pl, "to_many_attemts_during_one_minute", "Za dużo prób w ciągu 1 minuty"), _defineProperty(_pl, "password_has_less_then_3_characters", "Hasło ma mniej niż 3 znaki"), _defineProperty(_pl, "password_has_more_then_20_characters", "Hasło ma więcej niż 20 znaków"), _defineProperty(_pl, "passwords_do_not_match", "Hasła nie pokrywają się"), _defineProperty(_pl, "login_has_already_been_taken", "Login jest już zajęty"), _defineProperty(_pl, "login_contains_less_then_3_characters", "Login ma mniej niż 3 znaki"), _defineProperty(_pl, "login_contains_more_then_20_characters", "Login ma więcej niż 20 znaków"), _defineProperty(_pl, "email_has_already_been_taken", "Email jest już zajęty"), _defineProperty(_pl, "email_seems_to_be_incorrect", "Email wygląda na nieprawidłowy"), _defineProperty(_pl, "subject_exceeds_40_characters", "Temat przekracza 40 znaków"), _defineProperty(_pl, "you_are_under_18", "Nie ukończyłeś 18 lat"), _defineProperty(_pl, "the_user_has_no_avatar", "Użytkownik nie posiada avataru"), _defineProperty(_pl, "password_change_attempt", "Próba zmiany hasła"), _defineProperty(_pl, "password_changed_successfully", "Pomyślnie zmieniono hasło"), _defineProperty(_pl, "please_type_in_new_valid_password_as_described", "Proszę wprowadzić nowe hasło zgodnie z wytycznymi"), _defineProperty(_pl, "please_type_in_current_password_as_described", "Proszę wprowadzić aktualne hasło zgodnie z wytycznymi"), _defineProperty(_pl, "new_password_does_not_match", "Wprowadzone nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password_is_required", "Nie podano nowego hasła(środkowe pole)"), _defineProperty(_pl, "new_password_must_contain_at_least_3_characters", "Nowe hasło musi zawierać co najmniej 3 znaki(środkowe pole)"), _defineProperty(_pl, "the_given_new_passwords_do_not_match", "Podane nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password__confirmation_must_contain_at_least_3_characters", "Potwierdzenie nowego hasła musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "new_password__confirmation_must_not_exceed_20_characters", "Potwierdzenie nowego hasła przekracza 20 znaków"), _defineProperty(_pl, "no_image_has_been_selected", "Nie wybrano żadnego prawidłowego obrazu"), _defineProperty(_pl, "the_file_selected_from_hard_drive_is_not_an_image", "Plik wybrany z dysku nie jest obrazem"), _defineProperty(_pl, "invalid_image_dimensions", "Niewłaściwe wymiary obrazu"), _defineProperty(_pl, "the_data_looks_ok_but_an_unexpected_error_occured", "Wprowadzone dane są w porządku jednak pojawił się nieoczekiwany błąd"), _defineProperty(_pl, "settings_change_attempt", "Próba zmiany ustawień"), _defineProperty(_pl, "settings_changed_successfully", "Pomyślnie zmieniono ustawienia"), _defineProperty(_pl, "the_shows_birthday_field_is_missing", "Brak informacji o tym czy wyświetlać datę urodzenia innym użytkownikom"), _defineProperty(_pl, "the_shows_birthday_field_must_be_a_boolean_value", "Pole pokazuj datę urodzenia musi zawierać wartość typu logicznego"), _defineProperty(_pl, "fetching_movies", "Pobieram filmy"), _defineProperty(_pl, "movies", "Filmy"), _defineProperty(_pl, "views", "Odsłon"), _defineProperty(_pl, "preview", "Podgląd"), _defineProperty(_pl, "pornstars", "Gwiazdy"), _defineProperty(_pl, "pornstars_navbar_caption", "Gwiazdy porno"), _defineProperty(_pl, "scroll_previous_links", "Przewijaj listę podstron do tyłu"), _defineProperty(_pl, "movie_frame", "Kadr z filmu"), _defineProperty(_pl, "close_movie_preview", "Zamknij podgląd filmu"), _defineProperty(_pl, "play_movie_preview", "Uruchom podgląd filmu"), _defineProperty(_pl, "launching_in_progress", "Trwa uruchamianie"), _defineProperty(_pl, "click_to_play_the_video", "Kliknij aby uruchomić film"), _defineProperty(_pl, "stop_movie_preview", "Zatrzymaj odtwarzanie podglądu filmu"), _defineProperty(_pl, "sex_empire", "Sex-Imperium"), _defineProperty(_pl, "movie_translated_to_polish", "Film przetłumaczony na język polski"), _defineProperty(_pl, "scroll_next_links", "Przewijaj listę podstron do przodu"), _defineProperty(_pl, "hide_side_bar", "Schowaj boczny pasek"), _defineProperty(_pl, "previous_page", "poprzednia"), _defineProperty(_pl, "next_page", "następna"), _defineProperty(_pl, "further", "dalej"), _defineProperty(_pl, "back", "wstecz"), _defineProperty(_pl, "up", "góra"), _defineProperty(_pl, "first_page", "pierwsza"), _defineProperty(_pl, "profile", "Profil"), _defineProperty(_pl, "profile_settings", "Ustawienia profilu"), _defineProperty(_pl, "messages", "Wiadomości"), _defineProperty(_pl, "favourites", "Ulubione"), _defineProperty(_pl, "friends", "Znajomi"), _defineProperty(_pl, "logout", "Wyloguj"), _defineProperty(_pl, "porn", "Porno"), _defineProperty(_pl, "user_avatar_description", "Avatar użytkownika o nicku"), _defineProperty(_pl, "description", "Opis"), _defineProperty(_pl, "default_avatar", "Domyślny avatar, przedstawia bliżej niezidentyfikowanego użytkownika"), _defineProperty(_pl, "hide", "Schowaj"), _defineProperty(_pl, "element_has_been_rated", "Ocena została wystawiona. Możesz zawsze zmienić zdanie i ocenić ponownie."), _defineProperty(_pl, "pornstar_rate_data_is_invalid", "Niepoprawne dane oceny lub gwiazdy"), _defineProperty(_pl, "movie_rate_data_is_invalid", "Niepoprawne dane oceny lub filmu"), _defineProperty(_pl, "nickname_is_missing", "Nie podano pseudonimu"), _defineProperty(_pl, "unexpected_error_occured_while_fetching_comments", "Niestety pojawił się bliżej niezidentyfikowany błąd podczas pobierania komentarzy"), _defineProperty(_pl, "nickname", "Pseudonim"), _defineProperty(_pl, "answears", "Odpowiedzi"), _defineProperty(_pl, "add_comment", "Dodaj komentarz"), _defineProperty(_pl, "add", "dodaj"), _defineProperty(_pl, "contents", "Treść"), _defineProperty(_pl, "comment_added", "Dodano komentarz"), _defineProperty(_pl, "unregistered_user", "Niezarejestrowany"), _defineProperty(_pl, "register", "Rejestruj"), _defineProperty(_pl, "add_comment_short", "Komentuj"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "adding_comment", "Dodaję komentarz"), _defineProperty(_pl, "fetching_comments", "Pobieram komentarze"), _defineProperty(_pl, "comment_text_is_missing", "Nie podano treści komentarza"), _defineProperty(_pl, "comment_text_exceeds_1000_characters", "Treść komentarza przekracza 1000 znaków"), _defineProperty(_pl, "the_nickname_must_be_between_2_and_20_characters", "Pseudonim musi mieć minimum 2 znaki ale nie więcej niż 20"), _defineProperty(_pl, "no_comments_available", "Brak komentarzy"), _defineProperty(_pl, "because_of_safety_reasons_adding_comments_is_limited_to_2_per_minute", "Z powodów bezpieczeństwa ograniczono liczbę dodawanych komentarzy do 2 na minutę"), _defineProperty(_pl, "total_comments", "Liczba wszystkich komentarzy"), _defineProperty(_pl, "publish_comment", "Opublikuj komentarz"), _defineProperty(_pl, "show_comments_sub_page_with_number", "Pokaż podstronę komentarzy o numerze"), _defineProperty(_pl, "sex_empire_short", "SI"), _defineProperty(_pl, "small_ass", "mały"), _defineProperty(_pl, "medium_ass", "średni"), _defineProperty(_pl, "big_ass", "duży"), _defineProperty(_pl, "small_tits", "małe"), _defineProperty(_pl, "medium_tits", "średnie"), _defineProperty(_pl, "big_tits", "duże"), _defineProperty(_pl, "skinny_tchickness", "chuda"), _defineProperty(_pl, "medium_tchickness", "średnia"), _defineProperty(_pl, "fat_tchickness", "gruba"), _defineProperty(_pl, "teenagers", "nastolatki(18 - 19)"), _defineProperty(_pl, "age_range_young", "młode (20 -29)"), _defineProperty(_pl, "age_range_mature", "dojrzałe(30 - 50)"), _defineProperty(_pl, "dark_hair", "czarny"), _defineProperty(_pl, "blonde_hair", "blond"), _defineProperty(_pl, "brown_hair", "brązowy"), _defineProperty(_pl, "red_hair", "rudy"), _defineProperty(_pl, "white_race", "biała"), _defineProperty(_pl, "asian_race", "azjatki"), _defineProperty(_pl, "ebony_race", "murzynki"), _defineProperty(_pl, "latin_race", "latynoski"), _defineProperty(_pl, "arabic_race", "arabki"), _defineProperty(_pl, "yes", "tak"), _defineProperty(_pl, "no", "nie"), _defineProperty(_pl, "one_male_one_female", "facet i kobieta"), _defineProperty(_pl, "bukkake", "bukkake"), _defineProperty(_pl, "single_female", "kobieta solo"), _defineProperty(_pl, "lesbians", "lesbijki"), _defineProperty(_pl, "group_sex", "grupowy"), _defineProperty(_pl, "one_male_many_females", "facet i wiele kobiet"), _defineProperty(_pl, "GangBang", "GangBang"), _defineProperty(_pl, "one_female_two_males", "Na 2 baty"), _defineProperty(_pl, "lesbian_group_sex", "Lesbijki grupowo"), _defineProperty(_pl, "only", "tylko i wyłącznie"), _defineProperty(_pl, "maximum", "maximum"), _defineProperty(_pl, "a_lot", "dużo"), _defineProperty(_pl, "medium", "średnio"), _defineProperty(_pl, "a_little", "trochę"), _defineProperty(_pl, "exclude", "wyklucz"), _defineProperty(_pl, "on_face", "na twarz"), _defineProperty(_pl, "cum_swallow", "z połykiem"), _defineProperty(_pl, "creampie", "w cipkę"), _defineProperty(_pl, "anal", "Anal"), _defineProperty(_pl, "blowjob", "Obciąganie"), _defineProperty(_pl, "vaginal", "Waginalny"), _defineProperty(_pl, "handjob", "Walenie konika"), _defineProperty(_pl, "tittfuck", "Na hiszpana"), _defineProperty(_pl, "feet", "Stópki"), _defineProperty(_pl, "double_penetration", "Wtyczka"), _defineProperty(_pl, "position_69", "Pozycja 69"), _defineProperty(_pl, "cumshot_compilation", "Kompilacja wytrysków"), _defineProperty(_pl, "circumstances_and_style", "Okoliczności i styl"), _defineProperty(_pl, "location", "Lokalizacja"), _defineProperty(_pl, "camera_style", "Ujęcie kamery"), _defineProperty(_pl, "story_or_costume_type", "fabuła, kostium"), _defineProperty(_pl, "movie_level", "Poziom filmu"), _defineProperty(_pl, "has_story", "Zawiera fabuła"), _defineProperty(_pl, "spy_camera", "Kamera szpiegowska"), _defineProperty(_pl, "sadistic_or_masochistic", "Sado-maso"), _defineProperty(_pl, "female_domination", "Kobieca dominacja"), _defineProperty(_pl, "polish_language_version", "Polska wersja językowa"), _defineProperty(_pl, "pantyhose", "Rajstopy"), _defineProperty(_pl, "stockings", "Pończochy"), _defineProperty(_pl, "glasses", "Okulary"), _defineProperty(_pl, "high_heels", "Szpile"), _defineProperty(_pl, "huge_cock", "Wielki kutas"), _defineProperty(_pl, "whips", "Bicze"), _defineProperty(_pl, "sex_toys", "Sex-zabawki"), _defineProperty(_pl, "choose_from_pornstars_list", "Wybierz z listy gwiazd"), _defineProperty(_pl, "reset_panel", "Resetuj panel"), _defineProperty(_pl, "save_movie", "Zapisz film"), _defineProperty(_pl, "title", "Tytuł"), _defineProperty(_pl, "controls", "Sterowanie"), _defineProperty(_pl, "movie_duration", "Czas trwania filmu"), _defineProperty(_pl, "anal_creampie", "w dupkę"), _defineProperty(_pl, "on_tits", "na cycki"), _defineProperty(_pl, "on_pussy", "na cipkę"), _defineProperty(_pl, "on_ass", "na dupkę"), _defineProperty(_pl, "on_feet", "na stopy"), _defineProperty(_pl, "on_many_places", "na wiele miejsc"), _defineProperty(_pl, "on_other_body_parts", "na inne miejsca"), _defineProperty(_pl, "american_nationality", "amerykańska"), _defineProperty(_pl, "japanese_nationality", "japońska"), _defineProperty(_pl, "german_nationality", "niemiecka"), _defineProperty(_pl, "czech_nationality", "czeska"), _defineProperty(_pl, "russian_nationality", "rosyjska"), _defineProperty(_pl, "british_nationality", "brytyjska"), _defineProperty(_pl, "swedish_nationality", "szwedzka"), _defineProperty(_pl, "ukrainian_nationality", "ukraińska"), _defineProperty(_pl, "slovac_nationality", "słowacka"), _defineProperty(_pl, "hanguarian_nationality", "węgierska"), _defineProperty(_pl, "polish_nationality", "polska"), _defineProperty(_pl, "dutch_nationality", "holenderska"), _defineProperty(_pl, "hindu_nationality", "hinduska"), _defineProperty(_pl, "french_nationality", "francuska"), _defineProperty(_pl, "spanish_nationality", "hiszpańska"), _defineProperty(_pl, "italian_nationality", "włoska"), _defineProperty(_pl, "canadian_nationality", "kanadyjska"), _defineProperty(_pl, "argentinian_nationality", "argentyńska"), _defineProperty(_pl, "house", "dom"), _defineProperty(_pl, "bathroom", "łazienka"), _defineProperty(_pl, "office", "biuro"), _defineProperty(_pl, "school", "szkoła"), _defineProperty(_pl, "public_place", "miejsca publiczne"), _defineProperty(_pl, "car", "samochód"), _defineProperty(_pl, "nature", "łono natury"), _defineProperty(_pl, "solarium", "solarium"), _defineProperty(_pl, "elevator", "winda"), _defineProperty(_pl, "beach", "plaża"), _defineProperty(_pl, "gym", "siłownia"), _defineProperty(_pl, "POV", "POV"), _defineProperty(_pl, "outside_camera_style", "z zewnątrz"), _defineProperty(_pl, "mixed_camera_style", "mieszane"), _defineProperty(_pl, "female_pupil", "uczennica"), _defineProperty(_pl, "female_employee", "pracownica"), _defineProperty(_pl, "female_student", "studentka"), _defineProperty(_pl, "wife", "żona"), _defineProperty(_pl, "female_teacher", "nauczycielka"), _defineProperty(_pl, "nurse", "pielęgniarka"), _defineProperty(_pl, "female_slave", "niewolnica"), _defineProperty(_pl, "nun", "zakonnica"), _defineProperty(_pl, "female_police_officer", "policjantka"), _defineProperty(_pl, "prostitute", "prostytutka"), _defineProperty(_pl, "female_boss", "szefowa"), _defineProperty(_pl, "cleaner", "sprzątaczka"), _defineProperty(_pl, "mommy", "mamusia"), _defineProperty(_pl, "amateur", "amatorski"), _defineProperty(_pl, "professional", "profesjonalny"), _defineProperty(_pl, "choose_options", "wybierz opcje"), _defineProperty(_pl, "search", "szukaj"), _defineProperty(_pl, "remove_option", "usuń opcję"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd, w razie potrzeby prosimy odświeżyć stronę"), _defineProperty(_pl, "fetching_pornstars", "Pobieram listę gwiazd"), _defineProperty(_pl, "not_selected", "nie wybrano"), _defineProperty(_pl, "minutes_inflected", "minut(y)"), _defineProperty(_pl, "views_inflected", "wyświetleń"), _defineProperty(_pl, "unexpected_error_occured", "Pojawił się bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "titsSize", "rozmiar cycków"), _defineProperty(_pl, "assSize", "rozmiar dupci"), _defineProperty(_pl, "thicknessSize", "tusza"), _defineProperty(_pl, "ageRange", "przedział wiekowy"), _defineProperty(_pl, "hairColor", "kolor włosów"), _defineProperty(_pl, "race", "rasa"), _defineProperty(_pl, "abundanceType", "liczebność"), _defineProperty(_pl, "cumshotType", "typ wytrysku"), _defineProperty(_pl, "nationality", "narodowość"), _defineProperty(_pl, "location", "lokalizacja"), _defineProperty(_pl, "cameraStyle", "ujęcie kamery"), _defineProperty(_pl, "storyOrCostume", "motyw fabularno kostiumowy"), _defineProperty(_pl, "professionalismLevel", "poziom filmu"), _defineProperty(_pl, "shavedPussy", "wygolona cipka"), _defineProperty(_pl, "analAmount", "anal"), _defineProperty(_pl, "blowjob", "obciąganie"), _defineProperty(_pl, "handjob", "walenie konika"), _defineProperty(_pl, "blondes", "blondynki"), _defineProperty(_pl, "tittfuck", "na hiszpana"), _defineProperty(_pl, "pussy_licking", "minetka"), _defineProperty(_pl, "feet", "stopy"), _defineProperty(_pl, "femdom", "kobieca dominacja"), _defineProperty(_pl, "brunettes", "brunetki"), _defineProperty(_pl, "redheads", "rude"), _defineProperty(_pl, "milfs", "dojrzałe"), _defineProperty(_pl, "teens", 'nastolatki'), _defineProperty(_pl, "amateur", "amatorskie"), _defineProperty(_pl, "asian", 'azjatki'), _defineProperty(_pl, "latins", 'latynoski'), _defineProperty(_pl, "ebony", 'murzynki'), _defineProperty(_pl, "lesbians", 'lesbijki'), _defineProperty(_pl, "group", 'grupowy'), _defineProperty(_pl, "cumshot_compilation", 'kompilacja wytrysków'), _defineProperty(_pl, "cumshot_compilations", 'kompilacje wytrysków'), _defineProperty(_pl, "cum_on_face", 'wytrysk na twarz'), _defineProperty(_pl, "cum_swallow", 'połykanie spermy'), _defineProperty(_pl, "cum_on_feet", 'wytrysk na stopy'), _defineProperty(_pl, "creampie", 'wytrysk w cipkę'), _defineProperty(_pl, "cum_in_ass", 'wytrysk w dupkę'), _defineProperty(_pl, "cum_on_titts", 'wytrysk na cycki'), _defineProperty(_pl, "pantyhose", 'rajstopki'), _defineProperty(_pl, "high_heels", 'szpile'), _defineProperty(_pl, "nurses", 'pielęgniarki'), _defineProperty(_pl, "teachers", 'nauczycielki'), _defineProperty(_pl, "japanese", 'japonki'), _defineProperty(_pl, "russian", 'rosjanki'), _defineProperty(_pl, "pornstars", 'gwiazdy porno'), _defineProperty(_pl, "blowjobAmount", 'obciąganie'), _defineProperty(_pl, "handjobAmount", 'walenie konika'), _defineProperty(_pl, "doublePenetrationAmount", "wtyczka"), _defineProperty(_pl, "vaginalAmount", "waginalny"), _defineProperty(_pl, "pussyLickingAmount", 'minetka'), _defineProperty(_pl, "feetPettingAmount", 'pieszczenie stóp'), _defineProperty(_pl, "position69amount", 'pozycja 69'), _defineProperty(_pl, "titfuckAmount", "na hiszpana"), _defineProperty(_pl, "isCumshotCompilation", 'kompilacja wytrysków'), _defineProperty(_pl, "recordedBySpyCamera", 'nagrany kamerą szpiegowską'), _defineProperty(_pl, "isSadisticOrMasochistic", 'sado-masochostyczny'), _defineProperty(_pl, "isFemaleDomination", 'kobieca dominacja'), _defineProperty(_pl, "isTranslatedToPolish", 'polska wersja językowa'), _defineProperty(_pl, "showPantyhose", 'rajstopy'), _defineProperty(_pl, "showStockings", 'pończochy'), _defineProperty(_pl, "showGlasses", 'okulary'), _defineProperty(_pl, "showHighHeels", 'szpile'), _defineProperty(_pl, "showHugeCock", 'wielki kutas'), _defineProperty(_pl, "showWhips", 'bicze'), _defineProperty(_pl, "showSexToys", 'sex-zabawki'), _defineProperty(_pl, "minimumMovieTime", "minimalny czas"), _defineProperty(_pl, "maximumMovieTime", "maksymalny czas"), _defineProperty(_pl, "minimumMovieViews", 'minimalna liczba wyświetleń'), _defineProperty(_pl, "maximumMovieViews", 'maksymalna liczba wyświetleń'), _defineProperty(_pl, "hasStory", 'zawiera fabułę'), _defineProperty(_pl, "total_movies_found", "Ilość znalezionych filmów"), _defineProperty(_pl, "movie_with_following_pornstars", "występują jednocześnie następujące gwiazdy"), _defineProperty(_pl, "last_page", "ostatnia"), _defineProperty(_pl, "movie_with_pornstar", "Film w którym występuje"), _defineProperty(_pl, "no_movies_have_been_found", "Nie znaleziono żadnych filmów pasujących do wybranych kryteriów"), _defineProperty(_pl, "no_options_have_been_selected", "Nie wybrano żadnych opcji"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd"), _defineProperty(_pl, "because_of_security_reasons_search_was_blocked", "Ze względów bezpieczeństwa ilość zapytań do wyszukiwarki w ciągu minuty jest ograniczona. Prosimy zaczekać chwilę i spróbować ponownie."), _defineProperty(_pl, "popular_categories", "Popularne kategorie"), _defineProperty(_pl, "categories_list", "Lista kategorii"), _defineProperty(_pl, "big_titts", "duże cycki"), _defineProperty(_pl, "categories", "Kategorie"), _defineProperty(_pl, "teenagers", "nastolatki"), _defineProperty(_pl, "spermatozoid_has_been_asigned", "Przyznano plemnika. Musisz odczekać minimum pół godziny aby przyznać kolejnego."), _defineProperty(_pl, "you_have_exceeded_cum_limit", "Możesz przyznać maksymalnie jednego plemnika na pół godziny niezależnie od filmu"), _defineProperty(_pl, "spermatozoid_rate_data_is_incorrect", "Niepoprawne dane filmu"), _defineProperty(_pl, "movie_views", "Liczba wyświetleń"), _defineProperty(_pl, "movie_added_at", "Data dodania"), _defineProperty(_pl, "movie_average_rating", "Średnia ocen"), _defineProperty(_pl, "this_pornstar_does_not_have_enough_votes_to_calculate_average", "Ta gwiazda ma za mało głosów aby policzyć średnią (wymagane minimum to 10)"), _defineProperty(_pl, "fetching_rating_in_progress", "Pobieram dane rankingu"), _defineProperty(_pl, "average_rate_not_available_yet", "jeszcze niedostępna"), _defineProperty(_pl, "ammount_of_spermatozoids", "Liczba plemników"), _defineProperty(_pl, "your_spermatozoids", "twoich"), _defineProperty(_pl, "number_of_likes", "Polubień"), _defineProperty(_pl, "failed_to_load_movie_data", "Nie udało się pobrać szczegółowych danych filmu"), _defineProperty(_pl, "failed_to_load_similar_movies", "Nie udało się załadować podobnych filmów"), _defineProperty(_pl, "you_like_it", "Lubisz to"), _defineProperty(_pl, "you_already_like_this_movie", "Już wcześniej polubiłeś ten film"), _defineProperty(_pl, "you_and", "Ty i"), _defineProperty(_pl, "people_like_it", "osób lubi to"), _defineProperty(_pl, "no_comments", "Brak komentarzy"), _defineProperty(_pl, "cookie_notification_header", "Ta strona wykorzystuje pliki cookie"), _defineProperty(_pl, "cookie_notification_body", "Poprzez dalsze korzystanie z portalu lub naci\u015Bni\u0119cie przycisku \"Akceptuj\u0119\" wyra\u017Casz zgod\u0119 na przechowywanie plik\xF3w cookie na Twej maszynie"), _defineProperty(_pl, "accept_button_caption", "Akceptuję - zamknij"), _defineProperty(_pl, "show_content_side_bar_title", "Rozwiń nawigację strony dla wersji mobilnej"), _defineProperty(_pl, "show_content_side_bar_caption", "Menu"), _defineProperty(_pl, "cancel_like", "cofnij like'a"), _defineProperty(_pl, "show_authenticated_user_sidebar_title", "Rozwiń menu użytkownika, ustawienia profilu, wylogowanie itp."), _defineProperty(_pl, "show_authenticated_user_sidebar_caption", "Profil"), _defineProperty(_pl, "selected_avatar", "Nowy avatar"), _defineProperty(_pl, "no_avatar_has_been_choosen", "Nie wybrano avataru"), _defineProperty(_pl, "current_avatar", "Wybrany avatar"), _defineProperty(_pl, "the_latest", "Najnowsze"), _defineProperty(_pl, "the_most_popular", "Najpopularniejsze"), _defineProperty(_pl, "advanced_search", "Szukanie zaawansowane"), _defineProperty(_pl, "remember_me", "Zapamiętaj mnie"), _defineProperty(_pl, "scroll_movies_list_left", "Przewiń listę filmów w lewo"), _defineProperty(_pl, "scroll_movies_list_right", "Przewiń listę filmów w prawo"), _defineProperty(_pl, "dictionary", "Słownik"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "added_movie", "Dodano film"), _defineProperty(_pl, "employee_added_incorrect_parameters", "Podano nieprawidłowe parametry, lista problemów"), _defineProperty(_pl, "packages", {
     content_sidebar: {
       hide_side_bar_title: "Schowaj boczne menu",
       hide_side_bar_caption: "Schowaj",
@@ -21346,7 +21614,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".labeled-range[data-v-5ab1f258] {\n  -webkit-border-radius: 7px;\n     -moz-border-radius: 7px;\n          border-radius: 7px;\n  padding: 3px 10px;\n  color: white;\n  background: #242229;\n  position: relative;\n  border: 2px solid transparent;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  height: 2em;\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n  -webkit-align-items: center;\n     -moz-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n@media (max-width: 1200px) {\n.labeled-range[data-v-5ab1f258] {\n      font-size: 16px;\n}\n}\n.labeled-range__description[data-v-5ab1f258] {\n    line-height: 1em;\n    white-space: nowrap;\n}\n.labeled-range__displayed-value[data-v-5ab1f258] {\n    white-space: nowrap;\n}\n.labeled-range__value[data-v-5ab1f258] {\n    height: 25px;\n    -webkit-appearance: none;\n    margin: 6px;\n    width: 100%;\n}\n.labeled-range__value[data-v-5ab1f258]:focus {\n      outline: none;\n}\n.labeled-range__value[data-v-5ab1f258]::-webkit-slider-runnable-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      animate: 0.2s;\n      -webkit-box-shadow: 0px 0px 0px #000000;\n              box-shadow: 0px 0px 0px #000000;\n      background: #2497e3;\n      -webkit-border-radius: 1px;\n              border-radius: 1px;\n      border: 0px solid #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-webkit-slider-thumb {\n      -webkit-box-shadow: 0px 0px 0px #000000;\n              box-shadow: 0px 0px 0px #000000;\n      border: 1px solid #2497e3;\n      height: 18px;\n      width: 18px;\n      -webkit-border-radius: 25px;\n              border-radius: 25px;\n      background: #a1d0ff;\n      cursor: pointer;\n      -webkit-appearance: none;\n      margin-top: -7px;\n}\n.labeled-range__value[data-v-5ab1f258]:focus::-webkit-slider-runnable-track {\n      background: #2497e3;\n}\n.labeled-range__value[data-v-5ab1f258]::-moz-range-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      animate: 0.2s;\n      -moz-box-shadow: 0px 0px 0px #000000;\n           box-shadow: 0px 0px 0px #000000;\n      background: #2497e3;\n      -moz-border-radius: 1px;\n           border-radius: 1px;\n      border: 0px solid #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-moz-range-thumb {\n      -moz-box-shadow: 0px 0px 0px #000000;\n           box-shadow: 0px 0px 0px #000000;\n      border: 1px solid #2497e3;\n      height: 18px;\n      width: 18px;\n      -moz-border-radius: 25px;\n           border-radius: 25px;\n      background: #a1d0ff;\n      cursor: pointer;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      animate: 0.2s;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-fill-lower {\n      background: #2497e3;\n      border: 0px solid #000000;\n      border-radius: 2px;\n      box-shadow: 0px 0px 0px #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-fill-upper {\n      background: #2497e3;\n      border: 0px solid #000000;\n      border-radius: 2px;\n      box-shadow: 0px 0px 0px #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-thumb {\n      margin-top: 1px;\n      box-shadow: 0px 0px 0px #000000;\n      border: 1px solid #2497e3;\n      height: 18px;\n      width: 18px;\n      border-radius: 25px;\n      background: #a1d0ff;\n      cursor: pointer;\n}\n.labeled-range__value[data-v-5ab1f258]:focus::-ms-fill-lower {\n      background: #2497e3;\n}\n.labeled-range__value[data-v-5ab1f258]:focus::-ms-fill-upper {\n      background: #2497e3;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".labeled-range[data-v-5ab1f258] {\n  -webkit-border-radius: 7px;\n     -moz-border-radius: 7px;\n          border-radius: 7px;\n  padding: 3px 10px;\n  color: white;\n  background: #242229;\n  position: relative;\n  border: 2px solid transparent;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  height: 2em;\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n  -webkit-align-items: center;\n     -moz-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n@media (max-width: 1200px) {\n.labeled-range[data-v-5ab1f258] {\n      font-size: 16px;\n}\n}\n.labeled-range__description[data-v-5ab1f258] {\n    line-height: 1em;\n    white-space: nowrap;\n}\n.labeled-range__displayed-value[data-v-5ab1f258] {\n    white-space: nowrap;\n}\n.labeled-range__value[data-v-5ab1f258] {\n    height: 25px;\n    -webkit-appearance: none;\n    margin: 6px;\n    width: 100%;\n}\n.labeled-range__value[data-v-5ab1f258]:focus {\n      outline: none;\n}\n.labeled-range__value[data-v-5ab1f258]::-webkit-slider-runnable-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      animate: 0.2s;\n      -webkit-box-shadow: 0px 0px 0px #000000;\n              box-shadow: 0px 0px 0px #000000;\n      background: #2497e3;\n      -webkit-border-radius: 1px;\n              border-radius: 1px;\n      border: 0px solid #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-webkit-slider-thumb {\n      -webkit-box-shadow: 0px 0px 0px #000000;\n              box-shadow: 0px 0px 0px #000000;\n      border: 1px solid #2497e3;\n      height: 18px;\n      width: 18px;\n      -webkit-border-radius: 25px;\n              border-radius: 25px;\n      background: #a1d0ff;\n      cursor: pointer;\n      -webkit-appearance: none;\n      margin-top: -7px;\n}\n.labeled-range__value[data-v-5ab1f258]:focus::-webkit-slider-runnable-track {\n      background: #2497e3;\n}\n.labeled-range__value[data-v-5ab1f258]::-moz-range-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      animate: 0.2s;\n      -moz-box-shadow: 0px 0px 0px #000000;\n           box-shadow: 0px 0px 0px #000000;\n      background: #2497e3;\n      -moz-border-radius: 1px;\n           border-radius: 1px;\n      border: 0px solid #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-moz-range-thumb {\n      -moz-box-shadow: 0px 0px 0px #000000;\n           box-shadow: 0px 0px 0px #000000;\n      border: 1px solid #2497e3;\n      height: 18px;\n      width: 18px;\n      -moz-border-radius: 25px;\n           border-radius: 25px;\n      background: #a1d0ff;\n      cursor: pointer;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-track {\n      width: 100%;\n      height: 5px;\n      cursor: pointer;\n      animate: 0.2s;\n      background: transparent;\n      border-color: transparent;\n      color: transparent;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-fill-lower {\n      background: #2497e3;\n      border: 0px solid #000000;\n      border-radius: 2px;\n      box-shadow: 0px 0px 0px #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-fill-upper {\n      background: #2497e3;\n      border: 0px solid #000000;\n      border-radius: 2px;\n      box-shadow: 0px 0px 0px #000000;\n}\n.labeled-range__value[data-v-5ab1f258]::-ms-thumb {\n      margin-top: 1px;\n      box-shadow: 0px 0px 0px #000000;\n      border: 1px solid #2497e3;\n      height: 18px;\n      width: 18px;\n      border-radius: 25px;\n      background: #a1d0ff;\n      cursor: pointer;\n}\n.labeled-range__value[data-v-5ab1f258]:focus::-ms-fill-lower {\n      background: #2497e3;\n}\n.labeled-range__value[data-v-5ab1f258]:focus::-ms-fill-upper {\n      background: #2497e3;\n}\n.containsData[data-v-5ab1f258] {\n  border: 2px solid #15b115;\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -21368,6 +21636,27 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".option-checkbox[data-v-439bbafc] {\n  color: white;\n}\n.multiselect[data-v-439bbafc] {\n  position: relative;\n  padding: 4px;\n  -webkit-border-radius: 7px;\n     -moz-border-radius: 7px;\n          border-radius: 7px;\n  background: #242229;\n  cursor: pointer;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n}\n@media (max-width: 1200px) {\n.multiselect[data-v-439bbafc] {\n      font-size: 16px;\n}\n}\n.multiselect__search-input-caption[data-v-439bbafc] {\n    text-align: center;\n    color: white;\n}\n.multiselect__label[data-v-439bbafc] {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -moz-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -webkit-justify-content: space-between;\n       -moz-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    -webkit-box-align: center;\n    -webkit-align-items: center;\n       -moz-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n.multiselect__caption[data-v-439bbafc] {\n    color: white;\n}\n.multiselect__options[data-v-439bbafc] {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n.multiselect__option[data-v-439bbafc] {\n    margin: 5px 0;\n}\n.multiselect__menu[data-v-439bbafc] {\n    position: absolute;\n    width: 100%;\n    left: 0;\n    top: 100%;\n    overflow-y: auto;\n    z-index: 5;\n    padding: 0;\n    background: black;\n    max-height: 0;\n}\n.multiselect__menu--visible[data-v-439bbafc] {\n      max-height: 25vh;\n      padding: 0.5vw;\n}\n.multiselect__search-input[data-v-439bbafc] {\n    background: #f7ecf0;\n    border: 2px solid transparent;\n    outline: none;\n    -webkit-border-radius: 3px;\n       -moz-border-radius: 3px;\n            border-radius: 3px;\n    width: 100%;\n    font-size: 1.2vw;\n    font-family: \"Exo 2\", sans-serif;\n    margin: 5px 0;\n}\n@media (max-width: 1200px) {\n.multiselect__search-input[data-v-439bbafc] {\n        font-size: 16px;\n}\n}\n.multiselect__search-input[data-v-439bbafc]:focus {\n      border: none;\n      border: 2px solid crimson;\n      outline: none;\n}\n.multiselect__selected-options-list[data-v-439bbafc] {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    max-height: 8em;\n    overflow: auto;\n}\n@media (max-width: 1200px) {\n.multiselect__selected-options-list[data-v-439bbafc] {\n        font-size: 13px;\n}\n}\n.multiselect__selected-option[data-v-439bbafc] {\n    display: inline-block;\n    background: -webkit-gradient(linear, left top, left bottom, from(#12d012), to(#265005));\n    background: -webkit-linear-gradient(#12d012, #265005);\n    background: -moz-linear-gradient(#12d012, #265005);\n    background: -o-linear-gradient(#12d012, #265005);\n    background: linear-gradient(#12d012, #265005);\n    -webkit-border-radius: 3px;\n       -moz-border-radius: 3px;\n            border-radius: 3px;\n    padding: 2px 4px;\n    margin: 4px 2px;\n    color: white;\n}\n.button-close--smaller[data-v-439bbafc] {\n  min-width: 20px;\n  min-height: 20px;\n  width: 1.5vw;\n  height: 1.5vw;\n  vertical-align: middle;\n  margin-left: 3px;\n}\n.multiselect__menu[data-v-439bbafc]::-webkit-scrollbar {\n  width: 1.1vw;\n}\n@media (max-width: 1200px) {\n.multiselect__menu[data-v-439bbafc]::-webkit-scrollbar {\n      width: 15px;\n}\n}\n.multiselect__menu[data-v-439bbafc]::-webkit-scrollbar-track {\n  background: #131212;\n}\n.multiselect__menu[data-v-439bbafc]::-webkit-scrollbar-thumb {\n  background: -webkit-gradient(linear, left top, left bottom, from(#bdb7b5), to(#585454)) #131212;\n  background: -webkit-linear-gradient(#bdb7b5, #585454) #131212;\n  background: linear-gradient(#bdb7b5, #585454) #131212;\n  -webkit-border-radius: 0 0 5px 5px;\n          border-radius: 0 0 5px 5px;\n}\n.multiselect__menu[data-v-439bbafc] {\n  scrollbar-color: linear-gradient(#bdb7b5, #585454) #131212;\n  scrollbar-width: 1.1vw;\n}\n@media (max-width: 1200px) {\n.multiselect__menu[data-v-439bbafc] {\n      scrollbar-width: 15px;\n}\n}\n.multiselect__selected-options-list[data-v-439bbafc]::-webkit-scrollbar {\n  width: 1.1vw;\n}\n@media (max-width: 1200px) {\n.multiselect__selected-options-list[data-v-439bbafc]::-webkit-scrollbar {\n      width: 15px;\n}\n}\n.multiselect__selected-options-list[data-v-439bbafc]::-webkit-scrollbar-track {\n  background: #131212;\n}\n.multiselect__selected-options-list[data-v-439bbafc]::-webkit-scrollbar-thumb {\n  background: -webkit-gradient(linear, left top, left bottom, from(#bdb7b5), to(#585454)) #131212;\n  background: -webkit-linear-gradient(#bdb7b5, #585454) #131212;\n  background: linear-gradient(#bdb7b5, #585454) #131212;\n  -webkit-border-radius: 0 0 5px 5px;\n          border-radius: 0 0 5px 5px;\n}\n.multiselect__selected-options-list[data-v-439bbafc] {\n  scrollbar-color: linear-gradient(#bdb7b5, #585454) #131212;\n  scrollbar-width: 1.1vw;\n}\n@media (max-width: 1200px) {\n.multiselect__selected-options-list[data-v-439bbafc] {\n      scrollbar-width: 15px;\n}\n}\n", ""]);
+// Exports
+/* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".phantom-button {\n  background: transparent;\n  border: none;\n  margin: 0;\n  padding: 0;\n  outline: none;\n  display: inline-block;\n  cursor: pointer;\n  font: inherit;\n  color: inherit;\n}\n.phantom-button:active {\n    border: none;\n    outline: none;\n}\n.phantom-button-description {\n  position: absolute;\n  top: -9999px;\n  left: 0;\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -21409,7 +21698,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".container[data-v-0a577a4c] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: baseline;\n  -webkit-align-items: baseline;\n     -moz-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  background: #242229;\n  padding: 3px 10px;\n  -webkit-border-radius: 8px;\n     -moz-border-radius: 8px;\n          border-radius: 8px;\n  color: white;\n  width: 95%;\n  border: 2px solid transparent;\n  position: relative;\n  height: 2em;\n}\n.container__description[data-v-0a577a4c] {\n  white-space: nowrap;\n}\n.container__input[data-v-0a577a4c] {\n  background: #242229;\n  border: none;\n  border-bottom: 1px solid transparent;\n  color: #fff;\n  width: 1%;\n  -webkit-box-flex: 10;\n  -webkit-flex-grow: 10;\n     -moz-box-flex: 10;\n      -ms-flex-positive: 10;\n          flex-grow: 10;\n  padding-left: 4px;\n  -webkit-box-shadow: 0 0 0 1000px #242229 inset;\n     -moz-box-shadow: 0 0 0 1000px #242229 inset;\n          box-shadow: 0 0 0 1000px #242229 inset;\n}\n.container__input[data-v-0a577a4c],\n.container__description[data-v-0a577a4c],\n.container[data-v-0a577a4c] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n}\n@media (max-width: 1200px) {\n.container__input[data-v-0a577a4c],\n    .container__description[data-v-0a577a4c],\n    .container[data-v-0a577a4c] {\n      font-size: 16px;\n}\n}\n.container__input[data-v-0a577a4c]:focus {\n  outline: none;\n  border-bottom: 1px solid #86838f;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".container[data-v-0a577a4c] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: baseline;\n  -webkit-align-items: baseline;\n     -moz-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  background: #242229;\n  padding: 3px 10px;\n  -webkit-border-radius: 8px;\n     -moz-border-radius: 8px;\n          border-radius: 8px;\n  color: white;\n  width: 95%;\n  border: 2px solid transparent;\n  position: relative;\n  height: 2em;\n}\n.container__description[data-v-0a577a4c] {\n  white-space: nowrap;\n}\n.container__input[data-v-0a577a4c] {\n  background: #242229;\n  border: none;\n  border-bottom: 1px solid transparent;\n  color: #fff;\n  width: 1%;\n  -webkit-box-flex: 10;\n  -webkit-flex-grow: 10;\n     -moz-box-flex: 10;\n      -ms-flex-positive: 10;\n          flex-grow: 10;\n  padding-left: 4px;\n  -webkit-box-shadow: 0 0 0 1000px #242229 inset;\n     -moz-box-shadow: 0 0 0 1000px #242229 inset;\n          box-shadow: 0 0 0 1000px #242229 inset;\n}\n.container__input[data-v-0a577a4c],\n.container__description[data-v-0a577a4c],\n.container[data-v-0a577a4c] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n}\n@media (max-width: 1200px) {\n.container__input[data-v-0a577a4c],\n    .container__description[data-v-0a577a4c],\n    .container[data-v-0a577a4c] {\n      font-size: 16px;\n}\n}\n.container__input[data-v-0a577a4c]:focus {\n  outline: none;\n  border-bottom: 1px solid #86838f;\n}\n.containsData[data-v-0a577a4c] {\n  border: 2px solid #15b115;\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -21430,7 +21719,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".select-container[data-v-a60ce9c8] {\n  display: -webkit-inline-box;\n  display: -webkit-inline-flex;\n  display: -moz-inline-box;\n  display: -ms-inline-flexbox;\n  display: inline-flex;\n  -webkit-box-align: baseline;\n  -webkit-align-items: baseline;\n     -moz-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  -webkit-border-radius: 7px;\n     -moz-border-radius: 7px;\n          border-radius: 7px;\n  padding: 3px 10px;\n  color: white;\n  background: #242229;\n  position: relative;\n  border: 2px solid transparent;\n  height: 2em;\n}\n.select-container__description[data-v-a60ce9c8] {\n  white-space: nowrap;\n}\n.select-container__select[data-v-a60ce9c8] {\n  color: white;\n  border: none;\n  background: #242229;\n  outline: none;\n  margin-left: 4px;\n  -webkit-box-flex: 100;\n  -webkit-flex-grow: 100;\n     -moz-box-flex: 100;\n      -ms-flex-positive: 100;\n          flex-grow: 100;\n}\n.select-container__select[data-v-a60ce9c8],\n.select-container__description[data-v-a60ce9c8],\n.select-container[data-v-a60ce9c8] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n}\n@media (max-width: 1200px) {\n.select-container__select[data-v-a60ce9c8],\n    .select-container__description[data-v-a60ce9c8],\n    .select-container[data-v-a60ce9c8] {\n      font-size: 16px;\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".select-container[data-v-a60ce9c8] {\n  display: -webkit-inline-box;\n  display: -webkit-inline-flex;\n  display: -moz-inline-box;\n  display: -ms-inline-flexbox;\n  display: inline-flex;\n  -webkit-box-align: baseline;\n  -webkit-align-items: baseline;\n     -moz-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  -webkit-border-radius: 7px;\n     -moz-border-radius: 7px;\n          border-radius: 7px;\n  padding: 3px 10px;\n  color: white;\n  background: #242229;\n  position: relative;\n  border: 2px solid transparent;\n  height: 2em;\n}\n.select-container__description[data-v-a60ce9c8] {\n  white-space: nowrap;\n}\n.select-container__select[data-v-a60ce9c8] {\n  color: white;\n  border: none;\n  background: #242229;\n  outline: none;\n  margin-left: 4px;\n  -webkit-box-flex: 100;\n  -webkit-flex-grow: 100;\n     -moz-box-flex: 100;\n      -ms-flex-positive: 100;\n          flex-grow: 100;\n}\n.select-container__select[data-v-a60ce9c8],\n.select-container__description[data-v-a60ce9c8],\n.select-container[data-v-a60ce9c8] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n}\n@media (max-width: 1200px) {\n.select-container__select[data-v-a60ce9c8],\n    .select-container__description[data-v-a60ce9c8],\n    .select-container[data-v-a60ce9c8] {\n      font-size: 16px;\n}\n}\n.containsData[data-v-a60ce9c8] {\n  border: 2px solid #15b115;\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -21451,7 +21740,28 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/***\n    The new CSS reset - version 1.6.1 (last updated 25.5.2022)\n    GitHub page: https://github.com/elad2412/the-new-css-reset\n***/\n/*\n    Remove all the styles of the \"User-Agent-Stylesheet\", except for the 'display' property\n    - The \"symbol *\" part is to solve Firefox SVG sprite bug\n */\n*[data-v-6f3fdaf2]:where(:not(html, iframe, canvas, img, svg, video):not(svg *, symbol *)) {\n  all: unset;\n  display: revert;\n}\n\n/* Preferred box-sizing value */\n*[data-v-6f3fdaf2],\n*[data-v-6f3fdaf2]::before,\n*[data-v-6f3fdaf2]::after {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\n\n/* Reapply the pointer cursor for anchor tags */\na[data-v-6f3fdaf2], button[data-v-6f3fdaf2] {\n  cursor: revert;\n}\n\n/* Remove list styles (bullets/numbers) */\nol[data-v-6f3fdaf2], ul[data-v-6f3fdaf2], menu[data-v-6f3fdaf2] {\n  list-style: none;\n}\n\n/* For images to not be able to exceed their container */\nimg[data-v-6f3fdaf2] {\n  max-width: 100%;\n}\n\n/* removes spacing between cells in tables */\ntable[data-v-6f3fdaf2] {\n  border-collapse: collapse;\n}\n\n/* revert the 'white-space' property for textarea elements on Safari */\ntextarea[data-v-6f3fdaf2] {\n  white-space: revert;\n}\n\n/* minimum style to allow to style meter element */\nmeter[data-v-6f3fdaf2] {\n  -webkit-appearance: revert;\n  -moz-appearance: revert;\n       appearance: revert;\n}\n\n/* reset default text opacity of input placeholder */\n[data-v-6f3fdaf2]::-webkit-input-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]::-moz-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]:-ms-input-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]::-ms-input-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]::placeholder {\n  color: unset;\n}\n\n/* fix the feature of 'hidden' attribute.\n   display:revert; revert to element instead of attribute */\n[data-v-6f3fdaf2]:where([hidden]) {\n  display: none;\n}\n\n/* revert for bug in Chromium browsers\n   - fix for the content editable attribute will work properly. */\n[data-v-6f3fdaf2]:where([contenteditable]:not([contenteditable=\"false\"])) {\n  -moz-user-modify: read-write;\n  -webkit-user-modify: read-write;\n  overflow-wrap: break-word;\n  -webkit-line-break: after-white-space;\n}\n\n/* apply back the draggable feature - exist only in Chromium and Safari */\n[data-v-6f3fdaf2]:where([draggable=\"true\"]) {\n  -webkit-user-drag: element;\n}\n.movie-title[data-v-6f3fdaf2] {\n  margin: 0 auto;\n  max-width: 1400px;\n}\n.sex-ammount[data-v-6f3fdaf2] {\n  margin: 10px 0;\n}\n.movie-duration[data-v-6f3fdaf2] {\n  width: 100%;\n  background: #e1104a;\n  border: none;\n  color: white;\n  padding: 4px;\n}\n.add-movie-panel[data-v-6f3fdaf2] {\n  display: grid;\n  padding: -webkit-calc(30px + 1vw) 0 5px 0;\n  padding: -moz-calc(30px + 1vw) 0 5px 0;\n  padding: calc(30px + 1vw) 0 5px 0;\n  grid-template-columns: repeat(4, 23%);\n  grid-template-rows: auto;\n  -webkit-box-pack: space-evenly;\n  -webkit-justify-content: space-evenly;\n     -moz-box-pack: space-evenly;\n      -ms-flex-pack: space-evenly;\n          justify-content: space-evenly;\n  max-height: 3000px;\n  -webkit-transition: max-height 1s;\n  -o-transition: max-height 1s;\n  -moz-transition: max-height 1s;\n  transition: max-height 1s;\n}\n@media (max-width: 541) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      margin-top: 70px;\n}\n}\n@media (max-width: 1250px) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      grid-template-columns: repeat(2, 43%);\n}\n}\n@media (max-width: 700px) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      grid-template-columns: 65%;\n}\n}\n@media (max-width: 420px) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      grid-template-columns: 98%;\n}\n}\n.add-movie-panel--hidden[data-v-6f3fdaf2] {\n    max-height: 0;\n}\n.information-content[data-v-6f3fdaf2] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  margin: 0;\n  padding: 0 0 7px 0;\n  text-align: center;\n}\n@media (max-width: 1200px) {\n.information-content[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.panel-group[data-v-6f3fdaf2] {\n  -webkit-border-radius: 1vw;\n     -moz-border-radius: 1vw;\n          border-radius: 1vw;\n  padding: 6px;\n  margin: 0;\n  border: 2px solid #35363a;\n}\n.panel-group--relative[data-v-6f3fdaf2] {\n    -webkit-border-radius: 1vw;\n       -moz-border-radius: 1vw;\n            border-radius: 1vw;\n    padding: 6px;\n    margin: 0;\n    border: 2px solid #35363a;\n    position: relative;\n}\n.panel-group-legend[data-v-6f3fdaf2] {\n  font-size: 1.8vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: silver;\n}\n@media (max-width: 1200px) {\n.panel-group-legend[data-v-6f3fdaf2] {\n      font-size: 25px;\n}\n}\n.info-decoration-icon[data-v-6f3fdaf2] {\n  width: 1.8vw;\n  margin: 0 3px;\n  vertical-align: middle;\n  fill: #ec1515;\n  height: auto;\n}\n@media (max-width: 1200px) {\n.info-decoration-icon[data-v-6f3fdaf2] {\n      width: 25px;\n}\n}\n#app .select_container[data-v-6f3fdaf2] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n#app .select-container[data-v-6f3fdaf2] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n#app .select-container__select[data-v-6f3fdaf2] {\n  -webkit-box-flex: 10;\n  -webkit-flex-grow: 10;\n     -moz-box-flex: 10;\n      -ms-flex-positive: 10;\n          flex-grow: 10;\n}\n.select-container[data-v-6f3fdaf2] {\n  margin: 10px 0;\n}\n.labeled-checkbox-description[data-v-6f3fdaf2] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n}\n@media (max-width: 1200px) {\n.labeled-checkbox-description[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.movie-panel-checkbox[data-v-6f3fdaf2] {\n  margin: 8px 0;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n}\n@media (max-width: 1200px) {\n.movie-panel-checkbox[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.range-selection[data-v-6f3fdaf2] {\n  margin: 10px;\n}\n.range-selection-description[data-v-6f3fdaf2] {\n  text-align: center;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  display: block;\n  padding: 7px;\n}\n@media (max-width: 1200px) {\n.range-selection-description[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2] {\n  -webkit-appearance: none;\n  /* Hides the slider so that custom slider can be made */\n  width: 100%;\n  /* Specific width is required for Firefox. */\n  background: transparent;\n  /* Otherwise white in Chrome */\n}\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-thumb {\n  -webkit-appearance: none;\n}\n.range-selection__input[data-v-6f3fdaf2]:focus {\n  outline: none;\n  /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-track {\n  width: 100%;\n  cursor: pointer;\n  /* Hides the slider so custom styles can be added */\n  background: transparent;\n  border-color: transparent;\n  color: transparent;\n}\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-runnable-track {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  -webkit-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  -webkit-border-radius: 4px;\n          border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-runnable-track {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-track {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  -moz-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n       box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  -moz-border-radius: 4px;\n       border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-track {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-track {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-track {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-upper {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-upper {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-lower {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-lower {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-thumb {\n  -webkit-appearance: none;\n  border: none;\n  height: 1.6vw;\n  width: 1vw;\n  min-width: 10px;\n  -webkit-border-radius: 4px;\n          border-radius: 4px;\n  background: crimson;\n  cursor: pointer;\n  margin-top: -0.3vw;\n  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */\n  -webkit-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-thumb {\n      height: 16px;\n      margin-top: -3px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-thumb {\n  border: none;\n  height: 1.6vw;\n  width: 1vw;\n  min-width: 10px;\n  -moz-border-radius: 4px;\n       border-radius: 4px;\n  background: crimson;\n  cursor: pointer;\n  margin-top: -0.3vw;\n  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */\n  -moz-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n       box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-thumb {\n      height: 16px;\n      margin-top: -3px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-thumb {\n  border: none;\n  height: 1.6vw;\n  width: 1vw;\n  min-width: 10px;\n  border-radius: 4px;\n  background: crimson;\n  cursor: pointer;\n  margin-top: -0.3vw;\n  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-thumb {\n      height: 16px;\n      margin-top: -3px;\n}\n}\n#app .control-panel-button--type-reset[data-v-6f3fdaf2] {\n  line-height: 1.5em;\n}\n#app .control-panel-button--type-reset[data-v-6f3fdaf2]:hover {\n    -webkit-filter: saturate(1.7);\n            filter: saturate(1.7);\n}\n#app .control-panel-button--type-reset[data-v-6f3fdaf2]:hover {\n    background: -webkit-gradient(linear, left top, left bottom, from(#ec1515), to(#8a240a));\n    background: -webkit-linear-gradient(#ec1515, #8a240a);\n    background: -moz-linear-gradient(#ec1515, #8a240a);\n    background: -o-linear-gradient(#ec1515, #8a240a);\n    background: linear-gradient(#ec1515, #8a240a);\n}\n#app .control-panel-button--type-submit[data-v-6f3fdaf2] {\n  margin: 20px auto;\n  line-height: 1.5em;\n}\n#app .control-panel-button--type-submit[data-v-6f3fdaf2]:hover {\n    -webkit-filter: saturate(1.7);\n            filter: saturate(1.7);\n}\n#app .control-panel-button--type-submit[data-v-6f3fdaf2]:hover {\n    background: -webkit-gradient(linear, left top, left bottom, from(#0fe00b), to(#054004));\n    background: -webkit-linear-gradient(#0fe00b, #054004);\n    background: -moz-linear-gradient(#0fe00b, #054004);\n    background: -o-linear-gradient(#0fe00b, #054004);\n    background: linear-gradient(#0fe00b, #054004);\n}\n.control-panel-button__icon[data-v-6f3fdaf2] {\n  width: 1em;\n  vertical-align: middle;\n  margin: 0 2px;\n  min-width: 12px;\n  fill: white;\n  height: auto;\n}\n.control-panel-button__icon--bigger[data-v-6f3fdaf2] {\n    width: 1.5em;\n    vertical-align: middle;\n    margin: 0 2px;\n    min-width: 12px;\n    fill: white;\n    height: auto;\n}\n.control-panel-button__icon--arrow-down[data-v-6f3fdaf2] {\n    vertical-align: middle;\n    margin: 0 2px;\n    min-width: 12px;\n    fill: white;\n    height: auto;\n    width: 15%;\n}\n.control-panel-button__icon--reset[data-v-6f3fdaf2] {\n    vertical-align: middle;\n    margin: 0 2px;\n    min-width: 12px;\n    fill: white;\n    height: auto;\n    width: 1.5em;\n}\n.aditional-control-panel[data-v-6f3fdaf2] {\n  position: fixed;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n     -moz-transform: translateX(-50%);\n      -ms-transform: translateX(-50%);\n       -o-transform: translateX(-50%);\n          transform: translateX(-50%);\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n  top: -webkit-calc(35px + 1vw);\n  top: -moz-calc(35px + 1vw);\n  top: calc(35px + 1vw);\n  padding: 4px 0;\n  -webkit-box-shadow: 1px 1px 1px 1px black;\n     -moz-box-shadow: 1px 1px 1px 1px black;\n          box-shadow: 1px 1px 1px 1px black;\n  z-index: 1;\n  border: 1px solid black;\n  -webkit-border-radius: 5px 0 0 5px;\n     -moz-border-radius: 5px 0 0 5px;\n          border-radius: 5px 0 0 5px;\n  overflow: hidden;\n  background: #151314;\n  opacity: 1;\n  -webkit-transition: opacity 1.5s;\n  -o-transition: opacity 1.5s;\n  -moz-transition: opacity 1.5s;\n  transition: opacity 1.5s;\n}\n.aditional-control-panel--hidden[data-v-6f3fdaf2] {\n    opacity: 0;\n}\n.aditional-control-panel__description[data-v-6f3fdaf2] {\n    position: absolute;\n    top: -9999px;\n    left: -9999px;\n}\n.aditional-control-panel__button--green[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: -webkit-gradient(linear, left top, left bottom, from(#0fe00b), to(#054004));\n    background: -webkit-linear-gradient(#0fe00b, #054004);\n    background: -moz-linear-gradient(#0fe00b, #054004);\n    background: -o-linear-gradient(#0fe00b, #054004);\n    background: linear-gradient(#0fe00b, #054004);\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--green[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--green[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n.aditional-control-panel__button--red[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: -webkit-gradient(linear, left top, left bottom, from(#ec1515), to(#8a240a));\n    background: -webkit-linear-gradient(#ec1515, #8a240a);\n    background: -moz-linear-gradient(#ec1515, #8a240a);\n    background: -o-linear-gradient(#ec1515, #8a240a);\n    background: linear-gradient(#ec1515, #8a240a);\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--red[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--red[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n.aditional-control-panel__button--up[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: #1d42d2;\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--up[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--up[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n.aditional-control-panel__button--light-red[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: -webkit-gradient(linear, left top, right top, from(#b31f45), to(#da1047));\n    background: -webkit-linear-gradient(left, #b31f45, #da1047);\n    background: -moz-linear-gradient(left, #b31f45, #da1047);\n    background: -o-linear-gradient(left, #b31f45, #da1047);\n    background: linear-gradient(to right, #b31f45, #da1047);\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--light-red[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--light-red[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "/***\n    The new CSS reset - version 1.6.1 (last updated 25.5.2022)\n    GitHub page: https://github.com/elad2412/the-new-css-reset\n***/\n/*\n    Remove all the styles of the \"User-Agent-Stylesheet\", except for the 'display' property\n    - The \"symbol *\" part is to solve Firefox SVG sprite bug\n */\n*[data-v-6f3fdaf2]:where(:not(html, iframe, canvas, img, svg, video):not(svg *, symbol *)) {\n  all: unset;\n  display: revert;\n}\n\n/* Preferred box-sizing value */\n*[data-v-6f3fdaf2],\n*[data-v-6f3fdaf2]::before,\n*[data-v-6f3fdaf2]::after {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\n\n/* Reapply the pointer cursor for anchor tags */\na[data-v-6f3fdaf2], button[data-v-6f3fdaf2] {\n  cursor: revert;\n}\n\n/* Remove list styles (bullets/numbers) */\nol[data-v-6f3fdaf2], ul[data-v-6f3fdaf2], menu[data-v-6f3fdaf2] {\n  list-style: none;\n}\n\n/* For images to not be able to exceed their container */\nimg[data-v-6f3fdaf2] {\n  max-width: 100%;\n}\n\n/* removes spacing between cells in tables */\ntable[data-v-6f3fdaf2] {\n  border-collapse: collapse;\n}\n\n/* revert the 'white-space' property for textarea elements on Safari */\ntextarea[data-v-6f3fdaf2] {\n  white-space: revert;\n}\n\n/* minimum style to allow to style meter element */\nmeter[data-v-6f3fdaf2] {\n  -webkit-appearance: revert;\n  -moz-appearance: revert;\n       appearance: revert;\n}\n\n/* reset default text opacity of input placeholder */\n[data-v-6f3fdaf2]::-webkit-input-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]::-moz-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]:-ms-input-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]::-ms-input-placeholder {\n  color: unset;\n}\n[data-v-6f3fdaf2]::placeholder {\n  color: unset;\n}\n\n/* fix the feature of 'hidden' attribute.\n   display:revert; revert to element instead of attribute */\n[data-v-6f3fdaf2]:where([hidden]) {\n  display: none;\n}\n\n/* revert for bug in Chromium browsers\n   - fix for the content editable attribute will work properly. */\n[data-v-6f3fdaf2]:where([contenteditable]:not([contenteditable=\"false\"])) {\n  -moz-user-modify: read-write;\n  -webkit-user-modify: read-write;\n  overflow-wrap: break-word;\n  -webkit-line-break: after-white-space;\n}\n\n/* apply back the draggable feature - exist only in Chromium and Safari */\n[data-v-6f3fdaf2]:where([draggable=\"true\"]) {\n  -webkit-user-drag: element;\n}\n.movie-description[data-v-6f3fdaf2] {\n  margin: 8px auto;\n  max-width: 1400px;\n}\n.sex-ammount[data-v-6f3fdaf2] {\n  margin: 10px 0;\n}\n.movie-duration[data-v-6f3fdaf2] {\n  width: 100%;\n  background: #e1104a;\n  border: none;\n  color: white;\n  padding: 4px;\n}\n.add-movie-panel[data-v-6f3fdaf2] {\n  display: grid;\n  padding: -webkit-calc(30px + 1vw) 0 5px 0;\n  padding: -moz-calc(30px + 1vw) 0 5px 0;\n  padding: calc(30px + 1vw) 0 5px 0;\n  grid-template-columns: repeat(4, 23%);\n  grid-template-rows: auto;\n  -webkit-box-pack: space-evenly;\n  -webkit-justify-content: space-evenly;\n     -moz-box-pack: space-evenly;\n      -ms-flex-pack: space-evenly;\n          justify-content: space-evenly;\n  max-height: 3000px;\n  -webkit-transition: max-height 1s;\n  -o-transition: max-height 1s;\n  -moz-transition: max-height 1s;\n  transition: max-height 1s;\n}\n@media (max-width: 541) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      margin-top: 70px;\n}\n}\n@media (max-width: 1250px) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      grid-template-columns: repeat(2, 43%);\n}\n}\n@media (max-width: 700px) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      grid-template-columns: 65%;\n}\n}\n@media (max-width: 420px) {\n.add-movie-panel[data-v-6f3fdaf2] {\n      grid-template-columns: 98%;\n}\n}\n.add-movie-panel--hidden[data-v-6f3fdaf2] {\n    max-height: 0;\n}\n.information-content[data-v-6f3fdaf2] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  margin: 0;\n  padding: 0 0 7px 0;\n  text-align: center;\n}\n@media (max-width: 1200px) {\n.information-content[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.panel-group[data-v-6f3fdaf2] {\n  -webkit-border-radius: 1vw;\n     -moz-border-radius: 1vw;\n          border-radius: 1vw;\n  padding: 6px;\n  margin: 0;\n  border: 2px solid #35363a;\n}\n.panel-group--relative[data-v-6f3fdaf2] {\n    -webkit-border-radius: 1vw;\n       -moz-border-radius: 1vw;\n            border-radius: 1vw;\n    padding: 6px;\n    margin: 0;\n    border: 2px solid #35363a;\n    position: relative;\n}\n.panel-group-legend[data-v-6f3fdaf2] {\n  font-size: 1.8vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: silver;\n}\n@media (max-width: 1200px) {\n.panel-group-legend[data-v-6f3fdaf2] {\n      font-size: 25px;\n}\n}\n.info-decoration-icon[data-v-6f3fdaf2] {\n  width: 1.8vw;\n  margin: 0 3px;\n  vertical-align: middle;\n  fill: #ec1515;\n  height: auto;\n}\n@media (max-width: 1200px) {\n.info-decoration-icon[data-v-6f3fdaf2] {\n      width: 25px;\n}\n}\n#app .select_container[data-v-6f3fdaf2] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n#app .select-container[data-v-6f3fdaf2] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n#app .select-container__select[data-v-6f3fdaf2] {\n  -webkit-box-flex: 10;\n  -webkit-flex-grow: 10;\n     -moz-box-flex: 10;\n      -ms-flex-positive: 10;\n          flex-grow: 10;\n}\n.select-container[data-v-6f3fdaf2] {\n  margin: 10px 0;\n}\n.labeled-checkbox-description[data-v-6f3fdaf2] {\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n}\n@media (max-width: 1200px) {\n.labeled-checkbox-description[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.movie-panel-checkbox[data-v-6f3fdaf2] {\n  margin: 8px 0;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n}\n@media (max-width: 1200px) {\n.movie-panel-checkbox[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.range-selection[data-v-6f3fdaf2] {\n  margin: 10px;\n}\n.range-selection-description[data-v-6f3fdaf2] {\n  text-align: center;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  display: block;\n  padding: 7px;\n}\n@media (max-width: 1200px) {\n.range-selection-description[data-v-6f3fdaf2] {\n      font-size: 16px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2] {\n  -webkit-appearance: none;\n  /* Hides the slider so that custom slider can be made */\n  width: 100%;\n  /* Specific width is required for Firefox. */\n  background: transparent;\n  /* Otherwise white in Chrome */\n}\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-thumb {\n  -webkit-appearance: none;\n}\n.range-selection__input[data-v-6f3fdaf2]:focus {\n  outline: none;\n  /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-track {\n  width: 100%;\n  cursor: pointer;\n  /* Hides the slider so custom styles can be added */\n  background: transparent;\n  border-color: transparent;\n  color: transparent;\n}\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-runnable-track {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  -webkit-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  -webkit-border-radius: 4px;\n          border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-runnable-track {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-track {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  -moz-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n       box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  -moz-border-radius: 4px;\n       border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-track {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-track {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-track {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-upper {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-upper {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-lower {\n  width: 100%;\n  height: 1vw;\n  cursor: pointer;\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n  background: #242229;\n  border-radius: 4px;\n  border: none;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-fill-lower {\n      height: 10px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-thumb {\n  -webkit-appearance: none;\n  border: none;\n  height: 1.6vw;\n  width: 1vw;\n  min-width: 10px;\n  -webkit-border-radius: 4px;\n          border-radius: 4px;\n  background: crimson;\n  cursor: pointer;\n  margin-top: -0.3vw;\n  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */\n  -webkit-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n          box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-webkit-slider-thumb {\n      height: 16px;\n      margin-top: -3px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-thumb {\n  border: none;\n  height: 1.6vw;\n  width: 1vw;\n  min-width: 10px;\n  -moz-border-radius: 4px;\n       border-radius: 4px;\n  background: crimson;\n  cursor: pointer;\n  margin-top: -0.3vw;\n  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */\n  -moz-box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n       box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-moz-range-thumb {\n      height: 16px;\n      margin-top: -3px;\n}\n}\n.range-selection__input[data-v-6f3fdaf2]::-ms-thumb {\n  border: none;\n  height: 1.6vw;\n  width: 1vw;\n  min-width: 10px;\n  border-radius: 4px;\n  background: crimson;\n  cursor: pointer;\n  margin-top: -0.3vw;\n  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */\n  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;\n}\n@media (max-width: 1000px) {\n.range-selection__input[data-v-6f3fdaf2]::-ms-thumb {\n      height: 16px;\n      margin-top: -3px;\n}\n}\n#app .control-panel-button--type-reset[data-v-6f3fdaf2] {\n  line-height: 1.5em;\n}\n#app .control-panel-button--type-reset[data-v-6f3fdaf2]:hover {\n    -webkit-filter: saturate(1.7);\n            filter: saturate(1.7);\n}\n#app .control-panel-button--type-reset[data-v-6f3fdaf2]:hover {\n    background: -webkit-gradient(linear, left top, left bottom, from(#ec1515), to(#8a240a));\n    background: -webkit-linear-gradient(#ec1515, #8a240a);\n    background: -moz-linear-gradient(#ec1515, #8a240a);\n    background: -o-linear-gradient(#ec1515, #8a240a);\n    background: linear-gradient(#ec1515, #8a240a);\n}\n#app .control-panel-button--type-submit[data-v-6f3fdaf2] {\n  margin: 20px auto;\n  line-height: 1.5em;\n}\n#app .control-panel-button--type-submit[data-v-6f3fdaf2]:hover {\n    -webkit-filter: saturate(1.7);\n            filter: saturate(1.7);\n}\n#app .control-panel-button--type-submit[data-v-6f3fdaf2]:hover {\n    background: -webkit-gradient(linear, left top, left bottom, from(#0fe00b), to(#054004));\n    background: -webkit-linear-gradient(#0fe00b, #054004);\n    background: -moz-linear-gradient(#0fe00b, #054004);\n    background: -o-linear-gradient(#0fe00b, #054004);\n    background: linear-gradient(#0fe00b, #054004);\n}\n.control-panel-button__icon[data-v-6f3fdaf2] {\n  width: 1em;\n  vertical-align: middle;\n  margin: 0 2px;\n  min-width: 12px;\n  fill: white;\n  height: auto;\n}\n.control-panel-button__icon--bigger[data-v-6f3fdaf2] {\n    width: 1.5em;\n    vertical-align: middle;\n    margin: 0 2px;\n    min-width: 12px;\n    fill: white;\n    height: auto;\n}\n.control-panel-button__icon--arrow-down[data-v-6f3fdaf2] {\n    vertical-align: middle;\n    margin: 0 2px;\n    min-width: 12px;\n    fill: white;\n    height: auto;\n    width: 15%;\n}\n.control-panel-button__icon--reset[data-v-6f3fdaf2] {\n    vertical-align: middle;\n    margin: 0 2px;\n    min-width: 12px;\n    fill: white;\n    height: auto;\n    width: 1.5em;\n}\n.aditional-control-panel[data-v-6f3fdaf2] {\n  position: fixed;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n     -moz-transform: translateX(-50%);\n      -ms-transform: translateX(-50%);\n       -o-transform: translateX(-50%);\n          transform: translateX(-50%);\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: flex;\n  top: -webkit-calc(35px + 1vw);\n  top: -moz-calc(35px + 1vw);\n  top: calc(35px + 1vw);\n  padding: 4px 0;\n  -webkit-box-shadow: 1px 1px 1px 1px black;\n     -moz-box-shadow: 1px 1px 1px 1px black;\n          box-shadow: 1px 1px 1px 1px black;\n  z-index: 1;\n  border: 1px solid black;\n  -webkit-border-radius: 5px 0 0 5px;\n     -moz-border-radius: 5px 0 0 5px;\n          border-radius: 5px 0 0 5px;\n  overflow: hidden;\n  background: #151314;\n  opacity: 1;\n  -webkit-transition: opacity 1.5s;\n  -o-transition: opacity 1.5s;\n  -moz-transition: opacity 1.5s;\n  transition: opacity 1.5s;\n}\n.aditional-control-panel--hidden[data-v-6f3fdaf2] {\n    opacity: 0;\n}\n.aditional-control-panel__description[data-v-6f3fdaf2] {\n    position: absolute;\n    top: -9999px;\n    left: -9999px;\n}\n.aditional-control-panel__button--green[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: -webkit-gradient(linear, left top, left bottom, from(#0fe00b), to(#054004));\n    background: -webkit-linear-gradient(#0fe00b, #054004);\n    background: -moz-linear-gradient(#0fe00b, #054004);\n    background: -o-linear-gradient(#0fe00b, #054004);\n    background: linear-gradient(#0fe00b, #054004);\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--green[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--green[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n.aditional-control-panel__button--red[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: -webkit-gradient(linear, left top, left bottom, from(#ec1515), to(#8a240a));\n    background: -webkit-linear-gradient(#ec1515, #8a240a);\n    background: -moz-linear-gradient(#ec1515, #8a240a);\n    background: -o-linear-gradient(#ec1515, #8a240a);\n    background: linear-gradient(#ec1515, #8a240a);\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--red[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--red[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n.aditional-control-panel__button--up[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: #1d42d2;\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--up[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--up[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n.aditional-control-panel__button--light-red[data-v-6f3fdaf2] {\n    border: none;\n    outline: none;\n    display: block;\n    padding: 2px;\n    text-align: center;\n    margin: 0 2px;\n    -webkit-border-radius: 0;\n       -moz-border-radius: 0;\n            border-radius: 0;\n    cursor: pointer;\n    white-space: nowrap;\n    font-size: 1.1vw;\n    font-family: \"Exo 2\", sans-serif;\n    line-height: 1.5em;\n    color: white;\n    background: -webkit-gradient(linear, left top, right top, from(#b31f45), to(#da1047));\n    background: -webkit-linear-gradient(left, #b31f45, #da1047);\n    background: -moz-linear-gradient(left, #b31f45, #da1047);\n    background: -o-linear-gradient(left, #b31f45, #da1047);\n    background: linear-gradient(to right, #b31f45, #da1047);\n}\n@media (max-width: 1200px) {\n.aditional-control-panel__button--light-red[data-v-6f3fdaf2] {\n        font-size: 13px;\n}\n}\n.aditional-control-panel__button--light-red[data-v-6f3fdaf2]:hover {\n      -webkit-filter: saturate(1.7);\n              filter: saturate(1.7);\n}\n", ""]);
+// Exports
+/* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".resource-table[data-v-5a490c4f] {\n  margin: 0 auto;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-table[data-v-5a490c4f] {\n      font-size: 13px;\n}\n}\n.resource-header[data-v-5a490c4f] {\n  text-align: center;\n  font-size: 1.3vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  padding: 5px;\n  background: #06850a;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-header[data-v-5a490c4f] {\n      font-size: 15px;\n}\n}\n.resource-cell[data-v-5a490c4f] {\n  border: 1px solid white;\n  color: white;\n  padding: 4px 3px;\n}\n.resource-row[data-v-5a490c4f] {\n  cursor: pointer;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(even) {\n    background: black;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(odd) {\n    background: #3a3a3a;\n}\n.resource-row[data-v-5a490c4f]:hover {\n    background: darkred;\n}\n@media screen and (max-width: 600px) {\n.table-headers[data-v-5a490c4f] {\n    display: none;\n}\n.resource-cell[data-v-5a490c4f] {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -moz-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -webkit-justify-content: space-between;\n       -moz-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    -webkit-flex-wrap: wrap;\n        -ms-flex-wrap: wrap;\n            flex-wrap: wrap;\n}\n.resource-cell[data-v-5a490c4f]::before {\n      content: attr(data-aditional-header) \" : \";\n      color: #06850a;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -21810,6 +22120,33 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_style_index_0_id_99cf0926_lang_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_style_index_0_id_99cf0926_lang_scss__WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_style_index_0_id_99cf0926_lang_scss__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/reset_button.vue?vue&type=style&index=0&id=63ec9faa&lang=scss&scoped=true":
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/reset_button.vue?vue&type=style&index=0&id=63ec9faa&lang=scss&scoped=true ***!
@@ -21915,6 +22252,33 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_movie_edit_create_vue_vue_type_style_index_0_id_6f3fdaf2_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_style_index_0_id_5a490c4f_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_style_index_0_id_5a490c4f_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_style_index_0_id_5a490c4f_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
 
@@ -23079,6 +23443,35 @@ _multiselect_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default.__
 
 /***/ }),
 
+/***/ "./resources/js/components/form_controls/phantom_button.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/form_controls/phantom_button.vue ***!
+  \******************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "__esModule": function() { return /* reexport safe */ _phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.__esModule; }
+/* harmony export */ });
+/* harmony import */ var _phantom_button_vue_vue_type_template_id_99cf0926__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./phantom_button.vue?vue&type=template&id=99cf0926 */ "./resources/js/components/form_controls/phantom_button.vue?vue&type=template&id=99cf0926");
+/* harmony import */ var _phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./phantom_button.vue?vue&type=script&lang=js */ "./resources/js/components/form_controls/phantom_button.vue?vue&type=script&lang=js");
+/* harmony import */ var _phantom_button_vue_vue_type_style_index_0_id_99cf0926_lang_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss */ "./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss");
+
+
+
+
+;
+_phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.render = _phantom_button_vue_vue_type_template_id_99cf0926__WEBPACK_IMPORTED_MODULE_0__.render
+/* hot reload */
+if (false) {}
+
+_phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/components/form_controls/phantom_button.vue"
+
+/* harmony default export */ __webpack_exports__["default"] = (_phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
 /***/ "./resources/js/components/form_controls/reset_button.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/form_controls/reset_button.vue ***!
@@ -23196,6 +23589,36 @@ if (false) {}
 _movie_edit_create_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/components/movie_edit_create.vue"
 
 /* harmony default export */ __webpack_exports__["default"] = (_movie_edit_create_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
+/***/ "./resources/js/components/simple_resource_table.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/simple_resource_table.vue ***!
+  \***********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "__esModule": function() { return /* reexport safe */ _simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.__esModule; }
+/* harmony export */ });
+/* harmony import */ var _simple_resource_table_vue_vue_type_template_id_5a490c4f_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true */ "./resources/js/components/simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true");
+/* harmony import */ var _simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./simple_resource_table.vue?vue&type=script&lang=ts */ "./resources/js/components/simple_resource_table.vue?vue&type=script&lang=ts");
+/* harmony import */ var _simple_resource_table_vue_vue_type_style_index_0_id_5a490c4f_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true */ "./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true");
+
+
+
+
+;
+_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default.render = _simple_resource_table_vue_vue_type_template_id_5a490c4f_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render
+_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default.__scopeId = "data-v-5a490c4f"
+/* hot reload */
+if (false) {}
+
+_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/components/simple_resource_table.vue"
+
+/* harmony default export */ __webpack_exports__["default"] = (_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__.default);
 
 /***/ }),
 
@@ -23484,6 +23907,23 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/simple_resource_table.vue?vue&type=script&lang=ts":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/simple_resource_table.vue?vue&type=script&lang=ts ***!
+  \***********************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__.default; },
+/* harmony export */   "__esModule": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__.__esModule; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./simple_resource_table.vue?vue&type=script&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=script&lang=ts");
+ 
+
+/***/ }),
+
 /***/ "./resources/js/components/user_notification.vue?vue&type=script&lang=ts":
 /*!*******************************************************************************!*\
   !*** ./resources/js/components/user_notification.vue?vue&type=script&lang=ts ***!
@@ -23497,6 +23937,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "__esModule": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_user_notification_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__.__esModule; }
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_user_notification_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./user_notification.vue?vue&type=script&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/user_notification.vue?vue&type=script&lang=ts");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/components/form_controls/phantom_button.vue?vue&type=script&lang=js":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/form_controls/phantom_button.vue?vue&type=script&lang=js ***!
+  \******************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default; },
+/* harmony export */   "__esModule": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.__esModule; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./phantom_button.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=script&lang=js");
  
 
 /***/ }),
@@ -23688,6 +24145,23 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/form_controls/phantom_button.vue?vue&type=template&id=99cf0926":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/form_controls/phantom_button.vue?vue&type=template&id=99cf0926 ***!
+  \************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "__esModule": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_template_id_99cf0926__WEBPACK_IMPORTED_MODULE_0__.__esModule; },
+/* harmony export */   "render": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_template_id_99cf0926__WEBPACK_IMPORTED_MODULE_0__.render; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_template_id_99cf0926__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./phantom_button.vue?vue&type=template&id=99cf0926 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=template&id=99cf0926");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/form_controls/reset_button.vue?vue&type=template&id=63ec9faa&scoped=true":
 /*!**********************************************************************************************************!*\
   !*** ./resources/js/components/form_controls/reset_button.vue?vue&type=template&id=63ec9faa&scoped=true ***!
@@ -23752,6 +24226,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_movie_edit_create_vue_vue_type_template_id_6f3fdaf2_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render; }
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_movie_edit_create_vue_vue_type_template_id_6f3fdaf2_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./movie_edit_create.vue?vue&type=template&id=6f3fdaf2&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/movie_edit_create.vue?vue&type=template&id=6f3fdaf2&scoped=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true ***!
+  \*****************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "__esModule": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_template_id_5a490c4f_scoped_true__WEBPACK_IMPORTED_MODULE_0__.__esModule; },
+/* harmony export */   "render": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_template_id_5a490c4f_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_template_id_5a490c4f_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=template&id=5a490c4f&scoped=true");
 
 
 /***/ }),
@@ -23890,6 +24381,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss ***!
+  \***************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_phantom_button_vue_vue_type_style_index_0_id_99cf0926_lang_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/form_controls/phantom_button.vue?vue&type=style&index=0&id=99cf0926&lang=scss");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/form_controls/reset_button.vue?vue&type=style&index=0&id=63ec9faa&lang=scss&scoped=true":
 /*!*************************************************************************************************************************!*\
   !*** ./resources/js/components/form_controls/reset_button.vue?vue&type=style&index=0&id=63ec9faa&lang=scss&scoped=true ***!
@@ -23938,6 +24442,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_movie_edit_create_vue_vue_type_style_index_0_id_6f3fdaf2_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./movie_edit_create.vue?vue&type=style&index=0&id=6f3fdaf2&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/movie_edit_create.vue?vue&type=style&index=0&id=6f3fdaf2&lang=scss&scoped=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true ***!
+  \********************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_use_3_node_modules_vue_loader_dist_index_js_ruleSet_1_rules_18_use_0_simple_resource_table_vue_vue_type_style_index_0_id_5a490c4f_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[18].use[0]!./resources/js/components/simple_resource_table.vue?vue&type=style&index=0&id=5a490c4f&lang=scss&scoped=true");
 
 
 /***/ }),
@@ -24650,22 +25167,6 @@ var exports = __webpack_exports__;
   \***************************************/
 
 
-var __assign = void 0 && (void 0).__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
 var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -24821,230 +25322,59 @@ Object.defineProperty(exports, "__esModule", ({
 
 var vue_1 = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var simple_labeled_select_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/simple_labeled_select.vue */ "./resources/js/components/form_controls/simple_labeled_select.vue"));
-
-var labeled_checkbox_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents/form_controls/labeled_checkbox.vue */ "./resources/js/components/form_controls/labeled_checkbox.vue"));
-
 var expect_circle_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents/decoration/expect_circle.vue */ "./resources/js/components/decoration/expect_circle.vue"));
 
 var relative_shadow_container_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents/decoration/relative_shadow_container.vue */ "./resources/js/components/decoration/relative_shadow_container.vue"));
 
-var multiselect_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/multiselect.vue */ "./resources/js/components/form_controls/multiselect.vue"));
-
-var simple_labeled_input_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/simple_labeled_input.vue */ "./resources/js/components/form_controls/simple_labeled_input.vue"));
-
-var accept_button_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/accept_button.vue */ "./resources/js/components/form_controls/accept_button.vue"));
-
-var shutdown_icon_vue_1 = __importDefault(__webpack_require__(/*! @svgicon/shutdown_icon.vue */ "./resources/js/components/decoration/icons/svg/shutdown_icon.vue"));
-
-var reset_button_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/reset_button.vue */ "./resources/js/components/form_controls/reset_button.vue"));
-
-var movie_edit_create_js_1 = __importDefault(__webpack_require__(/*! @jsmodules/translations/movie_edit_create.js */ "./resources/js/modules/translations/movie_edit_create.js"));
-
-var translator_js_1 = __importDefault(__webpack_require__(/*! @jsmodules/translator.js */ "./resources/js/modules/translator.js"));
-
 var mitt_1 = __importDefault(__webpack_require__(/*! mitt */ "./node_modules/mitt/dist/mitt.js"));
-
-var labeled_range_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/labeled_range */ "./resources/js/components/form_controls/labeled_range.vue"));
-
-var search_engine_variables_ts_1 = __importDefault(__webpack_require__(/*! @jsmodules/search_engine_variables.ts */ "./resources/js/modules/search_engine_variables.ts"));
 
 var user_notification_vue_1 = __importDefault(__webpack_require__(/*! @jscomponents/user_notification.vue */ "./resources/js/components/user_notification.vue"));
 
-var notification_function_ts_1 = __importDefault(__webpack_require__(/*! @jsmodules/notification_function.ts */ "./resources/js/modules/notification_function.ts"));
-
 var movie_edit_create_1 = __importDefault(__webpack_require__(/*! @jscomponents/movie_edit_create */ "./resources/js/components/movie_edit_create.vue"));
 
+var simple_resource_table_1 = __importDefault(__webpack_require__(/*! @jscomponents/simple_resource_table */ "./resources/js/components/simple_resource_table.vue"));
+
+var user_notification_call_1 = __importDefault(__webpack_require__(/*! @js/mixins/user_notification_call */ "./resources/js/mixins/user_notification_call.ts"));
+
 var EventBus = mitt_1["default"]();
-var propertiesNotDescribingMovie = ['fetchingMoviesInProgress', 'advancedSearchPanelIsVisible', 'selectedOptionsVisibleForUser', 'totalMoviesFound', 'scrollYreactiveProperty', 'currentPage', 'movieCreatorTranslations', 'csrfToken', 'multiselectValues', 'translator', 'fetchingPornstarsInProgress'];
 var settings = {
+  mixins: [user_notification_call_1["default"]],
   components: {
-    SimpleLabeledSelect: simple_labeled_select_vue_1["default"],
-    LabeledCheckbox: labeled_checkbox_vue_1["default"],
     ExpectCircle: expect_circle_vue_1["default"],
     RelativeShadowContainer: relative_shadow_container_vue_1["default"],
-    Multiselect: multiselect_vue_1["default"],
-    SimpleLabeledInput: simple_labeled_input_vue_1["default"],
-    AcceptButton: accept_button_vue_1["default"],
-    ShutdownIcon: shutdown_icon_vue_1["default"],
-    ResetButton: reset_button_vue_1["default"],
-    LabeledRange: labeled_range_1["default"],
     UserNotification: user_notification_vue_1["default"],
-    MovieEditCreate: movie_edit_create_1["default"]
+    MovieEditCreate: movie_edit_create_1["default"],
+    SimpleResourceTable: simple_resource_table_1["default"]
   },
   data: function data() {
     return {
-      movieCreatorTranslations: movie_edit_create_js_1["default"],
-      csrfToken: undefined,
-      multiselectValues: [],
-      translator: translator_js_1["default"],
-      fetchingPornstarsInProgress: true,
-      abundanceType: "",
-      titsSize: "",
-      assSize: "",
-      thicknessSize: "",
-      ageRange: "",
-      hairColor: "",
-      race: "",
-      nationality: "",
-      shavedPussy: "",
-      analAmount: 0,
-      blowjobAmount: 0,
-      vaginalAmount: 0,
-      handjobAmount: 0,
-      pussyLickingAmount: 0,
-      titfuckAmount: 0,
-      feetPettingAmount: 0,
-      position69amount: 0,
-      doublePenetrationAmount: 0,
-      cumshotType: "",
-      isCumshotCompilation: false,
-      location: "",
-      cameraStyle: "",
-      storyOrCostume: "",
-      professionalismLevel: "",
-      hasStory: "",
-      recordedBySpyCamera: false,
-      isSadisticOrMasochistic: false,
-      isFemaleDomination: false,
-      isTranslatedToPolish: false,
-      showPantyhose: false,
-      showStockings: false,
-      showGlasses: false,
-      showHighHeels: false,
-      showHugeCock: false,
-      showWhips: false,
-      showSexToys: false,
-      pornstarsList: [],
-      fetchingMoviesInProgress: false,
-      advancedSearchPanelIsVisible: true,
-      selectedOptionsVisibleForUser: [],
-      totalMoviesFound: undefined,
-      scrollYreactiveProperty: 0,
-      currentPage: undefined,
-      movieDuration: '00:00:00',
-      title: ''
+      anyMovieCandidatesAvailable: false
     };
   },
   methods: {
-    resetPanel: function resetPanel(event) {
-      var _this = this;
-
-      event.preventDefault();
-      search_engine_variables_ts_1["default"]['initialValueIsFalse'].forEach(function (propertyName) {
-        _this[propertyName] = false;
-      });
-      this.analAmount = 0;
-      this.blowjobAmount = 0;
-      this.vaginalAmount = 0;
-      this.handjobAmount = 0;
-      this.pussyLickingAmount = 0;
-      this.titfuckAmount = 0;
-      this.feetPettingAmount = 0;
-      this.position69amount = 0;
-      this.doublePenetrationAmount = 0;
-      this.pornstarsList = [];
-      this.title = '';
-      this.movieDuration = '00:00:00';
-      this.abundanceType = '';
-      this.titsSize = '';
-      this.assSize = '', this.thicknessSize = '';
-      this.ageRange = '';
-      this.hairColor = '';
-      this.race = '';
-      this.nationality = '';
-      this.shavedPussy = '';
-      this.cumshotType = '';
-      this.location = '';
-      this.cameraStyle = '';
-      this.storyOrCostume = '';
-      this.professionalismLevel = '';
-      this.hasStory = '';
+    setMovieCandidatesListHeaders: function setMovieCandidatesListHeaders() {
+      var headers = ['id', 'title', 'duration', 'abundance', 'pornstars_list', 'created_at', 'updated_at'];
+      this.emitter.emit('updateResourceTableHeaders', headers);
     },
-    saveMovie: function saveMovie() {
+    getPendingMovieCandidates: function getPendingMovieCandidates() {
       return __awaiter(this, void 0, void 0, function () {
-        var movieData, requestData, response, _a, responseBody;
-
-        return __generator(this, function (_b) {
-          switch (_b.label) {
+        var requestData, response;
+        return __generator(this, function (_a) {
+          switch (_a.label) {
             case 0:
-              movieData = __assign({}, this.$data);
-              propertiesNotDescribingMovie.forEach(function (property) {
-                return delete movieData[property];
-              });
-              Object.keys(movieData).forEach(function (propertName) {
-                if (!movieData[propertName]) {
-                  delete movieData[propertName];
-                }
-              });
-
-              if (this.pornstarsList.length === 0) {
-                delete movieData.pornstarsList;
-              }
-
               requestData = {
-                method: 'POST',
-                body: JSON.stringify(movieData),
+                method: 'GET',
                 headers: {
-                  'X-CSRF-TOKEN': this.csrfToken,
-                  'Content-type': 'application/json; charset=UTF-8'
+                  'X-CSRF-TOKEN': this.csrfToken
                 }
               };
               return [4
               /*yield*/
-              , fetch('/employee-panel/movies', requestData)];
+              , fetch('/movie-candidate', requestData)];
 
             case 1:
-              response = _b.sent();
-              _a = response.status;
-
-              switch (_a) {
-                case 201:
-                  return [3
-                  /*break*/
-                  , 2];
-
-                case 400:
-                  return [3
-                  /*break*/
-                  , 3];
-
-                case 500:
-                  return [3
-                  /*break*/
-                  , 5];
-              }
-
-              return [3
-              /*break*/
-              , 6];
-
-            case 2:
-              this.notifyEmployee('added_movie');
-              return [3
-              /*break*/
-              , 6];
-
-            case 3:
-              return [4
-              /*yield*/
-              , response.json()];
-
-            case 4:
-              responseBody = _b.sent();
-              this.notifyEmployeeAboutBadRequest(responseBody);
-              return [3
-              /*break*/
-              , 6];
-
-            case 5:
-              console.log(response.body);
-              this.notifyEmployeeAboutServerError(response.body);
-              return [3
-              /*break*/
-              , 6];
-
-            case 6:
+              response = _a.sent();
+              this.processMovieCandidatesResponse(response);
               return [2
               /*return*/
               ];
@@ -25052,22 +25382,84 @@ var settings = {
         });
       });
     },
-    notifyEmployeeAboutBadRequest: function notifyEmployeeAboutBadRequest(responseBody) {
-      var errorMessage = translator_js_1["default"].translate('employee_added_incorrect_parameters');
-      errorMessage = errorMessage + " : " + responseBody.join(', ');
-      this.notifyEmployee(errorMessage, 'error');
+    updateResourcesTable: function updateResourcesTable(responseBody) {
+      responseBody = this.prepareResourcesData(responseBody);
+      this.emitter.emit('updateResourcesTable', responseBody);
     },
-    notifyEmployeeAboutServerError: function notifyEmployeeAboutServerError(response) {
-      var errorMessage = translator_js_1["default"].translate('the_requested_data_is_probably_ok_but_a_server_error_occured');
-      errorMessage = errorMessage + " : " + response;
-      this.notifyEmployee(errorMessage, 'error');
+    prepareResourcesData: function prepareResourcesData(responseBody) {
+      var responseData = this.changeHowDatesAreDisplayed(responseBody);
+      return responseData;
     },
-    notifyEmployee: notification_function_ts_1["default"]
+    changeHowDatesAreDisplayed: function changeHowDatesAreDisplayed(responseBody) {
+      var dateDisplayOptions = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      };
+      return responseBody.map(function (resource) {
+        //@ts-ignore
+        resource['created_at'] = new Date(resource['created_at']).toLocaleDateString('pl-PL', dateDisplayOptions); //@ts-ignore
+
+        resource['updated_at'] = new Date(resource['updated_at']).toLocaleDateString('pl-PL', dateDisplayOptions);
+        return resource;
+      });
+    },
+    processSuccessFullMovieCandidatesResponse: function processSuccessFullMovieCandidatesResponse(responseBody) {
+      if (Array.isArray(responseBody) && responseBody.length > 0) {
+        if (!this.anyMovieCandidatesAvailable) {
+          this.anyMovieCandidatesAvailable = true;
+          this.setMovieCandidatesListHeaders();
+        }
+
+        this.updateResourcesTable(responseBody);
+      }
+    },
+    processMovieCandidatesResponse: function processMovieCandidatesResponse(response) {
+      return __awaiter(this, void 0, void 0, function () {
+        var responseBody;
+        return __generator(this, function (_a) {
+          switch (_a.label) {
+            case 0:
+              return [4
+              /*yield*/
+              , response.json()];
+
+            case 1:
+              responseBody = _a.sent();
+
+              switch (response.status) {
+                case 200:
+                  this.processSuccessFullMovieCandidatesResponse(responseBody);
+                  break;
+
+                case 400:
+                  this.notifyEmployeeAboutBadRequest(responseBody);
+                  break;
+
+                case 500:
+                  this.notifyEmployeeAboutServerError(response.body);
+                  break;
+              }
+
+              return [2
+              /*return*/
+              ];
+          }
+        });
+      });
+    },
+    loadResourceValuesToEditor: function loadResourceValuesToEditor(resource) {
+      console.log(resource);
+    }
   },
   mounted: function mounted() {
     this.csrfToken = document.getElementById("csrf-token").content;
+    this.getPendingMovieCandidates();
   }
-};
+}; //@ts-ignore
+
 var app = vue_1.createApp(settings);
 app.config.globalProperties.emitter = EventBus;
 app.mount("#app");

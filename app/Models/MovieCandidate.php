@@ -12,7 +12,8 @@ class MovieCandidate extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['created_at', 'updated_at', 'deleted_at'];
+    protected $with = ['actressNationality', 'location', 'storyOrCostumeType'];
 
     public function actressNationality()
     {

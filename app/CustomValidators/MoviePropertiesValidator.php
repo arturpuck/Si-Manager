@@ -79,6 +79,8 @@ class MoviePropertiesValidator
         'amateur'
     ];
 
+    protected static bool $checkMovieID = false;
+
     public static function getRules(): array
     {
 
@@ -86,6 +88,7 @@ class MoviePropertiesValidator
 
         $rules = [
             'title' => ['required', 'string', 'min:3', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
 
             'abundanceType' => ['required', 'string', Rule::in(self::ABUNDANCE_TYPES)],
             'titsSize' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
@@ -132,7 +135,7 @@ class MoviePropertiesValidator
             'pornstarsList.*' => ['nullable', 'string', 'exists:pornstars,nickname']
         ];
 
-        return $rules;
+        return self::$checkMovieID ? array_merge($rules, ['id' => ['required', 'exists:movie_candidates,id']]) : $rules;
     }
 
     //if you wonder why I didn't use a custom request validation, that's because custom requests break
@@ -140,7 +143,7 @@ class MoviePropertiesValidator
 
     public static function validate(Request $request): array
     {
-        
+        self::$checkMovieID = $request->isMethod('PUT');
         $validator = Validator::make($request->all(), self::getRules());
         return $validator->fails() ? ['success' => false, 'errors' => $validator->errors()->all()]  : 
          ['success' => true, 'data' => $validator->validated()];

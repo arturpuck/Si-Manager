@@ -1,5 +1,5 @@
 <template>
-  <label class="labeled-range">
+  <label v-bind:class="{containsData : showsSelectedValue}" class="labeled-range">
     <span class="labeled-range__description">
       <slot></slot>
     </span>
@@ -41,6 +41,12 @@ export default {
       type: String,
       default: "",
     },
+
+    shouldShowWhenValueIsSelected : {
+      required : false,
+      type: Boolean,
+      default: true,
+    }
   },
 
   methods: {
@@ -53,6 +59,10 @@ export default {
     displayedValue(): string {
       return this.modelValue + " " + this.unit;
     },
+
+    showsSelectedValue() : boolean {
+     return Boolean(this.shouldShowWhenValueIsSelected && this.modelValue);
+  }
   },
 };
 </script>
@@ -170,5 +180,9 @@ export default {
       background: #2497e3;
     }
   }
+}
+
+.containsData {
+  border: 2px solid rgb(21, 177, 21);
 }
 </style>

@@ -15,6 +15,18 @@ export default {
 
             this.emitter.emit('showNotification', notificationStatus);
 
-        }
+        },
+
+        notifyEmployeeAboutBadRequest(responseBody) : void {
+            let errorMessage = Translator.translate('employee_added_incorrect_parameters');
+            errorMessage= `${errorMessage} : ${responseBody.errors.join(', ')}`;
+            this.showUserNotification(errorMessage, 'error', true);
+       },
+           
+       notifyEmployeeAboutServerError(errorDetails? : string) : void {
+             let errorMessage = Translator.translate('server_error');
+             errorMessage = errorDetails ? `${errorMessage} : ${Translator.translate(errorDetails)}` : errorMessage;
+             this.showUserNotification(errorMessage, 'error', true);
+       },
     }
 }

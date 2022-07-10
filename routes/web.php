@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Movies\MovieCreatorController;
+use App\Http\Controllers\Movies\MovieCandidateController;
 use App\Http\Controllers\Pornstars\PornstarsController;
 
 /*
@@ -21,16 +21,28 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'showDashboard'])
            ->name('dashboard');
 
-        Route::prefix('/movie')->name('movie.')->middleware(['role:movieCreator'])->group( function () {
+        Route::middleware(['role:movieCreator'])->group( function () {
+
+            Route::prefix('/movie')->name('movie.')->group( function () {
+
+                Route::get('/creator', [MovieCandidateController::class, 'showMovieCreatorPanel'])
+                    ->name('creator');
+    
+                Route::get('/submit/panel', [MovieCandidateController::class, 'showMovieSubmitPanel'])
+                    ->name('submit.panel');
+    
+            });
             
-            Route::get('/creator', [MovieCreatorController::class, 'showMovieCreatorPanel'])
-                ->name('creator');
+            Route::prefix('/movie-candidate')->name('movie-candidate.')->group(function () {
 
-            Route::get('/submit/panel', [MovieCreatorController::class, 'showMovieSubmitPanel'])
-                ->name('submit.panel');
+                Route::post('', [MovieCandidateController::class, 'addMovieCandidate'])
+                      ->name('create');
+    
+                Route::get('', [MovieCandidateController::class, 'getPendingMovieCandidates'])
+                     ->name('list');
+            });
 
-            Route::post('', [MovieCreatorController::class, 'addMovieCandidate'])
-                  ->name('create');
+                
 
          });
 

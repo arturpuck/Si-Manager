@@ -1,5 +1,5 @@
 <template>
-  <label class="container">
+  <label v-bind:class="{containsData : showsSelectedValue}" class="container">
     <span class="container__description"><slot></slot></span>
     <input
       v-bind:disabled="isDisabled"
@@ -77,8 +77,19 @@ export default class SimpleLabeledInput extends Vue {
   })
   readonly maximumValue: number;
 
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: true,
+  })
+  readonly shouldShowWhenValueIsSelected: boolean;
+
   updateModel(event){
      this.$emit("update:modelValue", event.target.value);
+  }
+
+  get showsSelectedValue() : boolean {
+     return Boolean(this.shouldShowWhenValueIsSelected && this.modelValue);
   }
 }
 </script>
@@ -123,5 +134,9 @@ export default class SimpleLabeledInput extends Vue {
 .container__input:focus {
   outline: none;
   border-bottom: 1px solid #86838f;
+}
+
+.containsData {
+  border: 2px solid rgb(21, 177, 21);
 }
 </style>

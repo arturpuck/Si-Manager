@@ -1,5 +1,5 @@
 <template>
-  <label class="select-container">
+  <label v-bind:class="{containsData : showsSelectedValue}"  class="select-container">
     <span class="select-container__description">
       <slot></slot>
     </span>
@@ -67,6 +67,17 @@ export default class SimpleLabeledSelect extends Vue {
   })
   readonly options: Object;
 
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: true,
+  })
+  readonly shouldShowWhenValueIsSelected: boolean;
+
+  get showsSelectedValue() : boolean {
+     return Boolean(this.shouldShowWhenValueIsSelected && this.modelValue);
+  }
+
   private selectOptions: Object = {};
 
   created() {
@@ -116,5 +127,9 @@ export default class SimpleLabeledSelect extends Vue {
 .select-container__description,
 .select-container {
   @include responsive-font;
+}
+
+.containsData {
+  border: 2px solid rgb(21, 177, 21);
 }
 </style>

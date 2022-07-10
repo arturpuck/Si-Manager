@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'migrations' => 'migrations',
+    'migrations' => 'sex_empire_manager_migrations',
 
     /*
     |--------------------------------------------------------------------------

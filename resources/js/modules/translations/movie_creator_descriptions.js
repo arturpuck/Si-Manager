@@ -47,4 +47,5 @@ export default {
     title : Translator.translate('title'),
     cumshot : Translator.translate('cumshot'),
     gadgets_and_clothing : Translator.translate('gadgets_and_clothing'),
+    description : Translator.translate('description')
 }
