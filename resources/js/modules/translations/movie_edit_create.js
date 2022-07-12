@@ -16,38 +16,38 @@ const sexamounts = {
 
 export default {
 
-  titsSize: {
+  actress_tits_size: {
     small: Translator.translate('small_tits'),
     medium: Translator.translate('medium_tits'),
     big: Translator.translate('big_tits')
   },
 
-  assSize: {
+  actress_ass_size: {
     small: Translator.translate('small_ass'),
     medium: Translator.translate('medium_ass'),
     big: Translator.translate('big_ass')
   },
 
-  thicknessSize: {
+  actress_thickness: {
     skinny: Translator.translate('skinny_tchickness'),
     medium: Translator.translate('medium_tchickness'),
     fat: Translator.translate('fat_tchickness')
   },
 
-  ageRange: {
+  actress_age_range: {
     teenagers: Translator.translate('teenagers'),
     young: Translator.translate('age_range_young'),
     mature: Translator.translate('age_range_mature')
   },
 
-  hairColor: {
+  actress_hair_color: {
     dark: Translator.translate('dark_hair'),
     blonde: Translator.translate('blonde_hair'),
     brown: Translator.translate('brown_hair'),
     red: Translator.translate('red_hair'),
   },
 
-  race: {
+  actress_race: {
     white: Translator.translate('white_race'),
     asian: Translator.translate('asian_race'),
     ebony: Translator.translate('ebony_race'),
@@ -56,10 +56,10 @@ export default {
   },
 
   binaryOptions: yesNoOptions,
-  shavedPussy: yesNoOptions,
-  hasStory: yesNoOptions,
+  shows_shaved_pussy: yesNoOptions,
+  has_story: yesNoOptions,
 
-  abundanceType: {
+  abundance: {
     one_male_one_female: Translator.translate('one_male_one_female'),
     bukkake: Translator.translate('bukkake'),
     single_female: Translator.translate('single_female'),
@@ -72,17 +72,17 @@ export default {
   },
 
   sexamounts,
-  analAmount: sexamounts,
-  blowjobAmount: sexamounts,
-  vaginalAmount: sexamounts,
-  pussyLickingAmount: sexamounts,
-  titfuckAmount: sexamounts,
-  position69amount: sexamounts,
-  feetPettingAmount: sexamounts,
-  doublePenetrationAmount: sexamounts,
-  handjobAmount: sexamounts,
+  anal_percentage: sexamounts,
+  blowjob_percentage: sexamounts,
+  pussy_fuck_percentage: sexamounts,
+  pussy_licking_percentage: sexamounts,
+  feet_petting_percentage: sexamounts,
+  position_69_percentage: sexamounts,
+  feet_petting_percentage: sexamounts,
+  double_penetration_percentage: sexamounts,
+  handjob_percentage: sexamounts,
 
-  cumshotType: {
+  actor_cumshot_type: {
     on_face: Translator.translate('on_face'),
     cum_swallow: Translator.translate('cum_swallow'),
     creampie: Translator.translate('creampie'),
@@ -96,7 +96,7 @@ export default {
     exclude: Translator.translate('exclude')
   },
 
-  nationality: {
+  actress_nationality: {
     american: Translator.translate('american_nationality'),
     japanese: Translator.translate('japanese_nationality'),
     german: Translator.translate('german_nationality'),
@@ -131,13 +131,13 @@ export default {
     gym: Translator.translate('gym'),
   },
 
-  cameraStyle: {
+  camera_style: {
     outside: Translator.translate('outside_camera_style'),
     POV: Translator.translate('POV'),
     mixed: Translator.translate('mixed_camera_style')
   },
 
-  storyOrCostume: {
+  story_or_costume_type: {
     female_pupil: Translator.translate('female_pupil'),
     female_employee: Translator.translate('female_employee'),
     female_student: Translator.translate('female_student'),
@@ -153,7 +153,7 @@ export default {
     mommy: Translator.translate('mommy')
   },
 
-  professionalismLevel: {
+  is_professional_production: {
     professional: Translator.translate("professional"),
     amateur: Translator.translate("amateur")
   },

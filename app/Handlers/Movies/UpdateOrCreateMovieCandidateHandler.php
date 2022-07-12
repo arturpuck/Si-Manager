@@ -10,109 +10,96 @@ use Throwable;
 use App\Models\Nationality;
 use App\Models\Location;
 use App\Models\StoryOrCostumeType;
+use App\Http\Exceptions\FailedValidationException;
 
 
 Class UpdateOrCreateMovieCandidateHandler
 {
 
-    public const MAP_PROPERTY_NAME_TO_COLUMN_NAME = [
-        'abundanceType' => 'abundance',
-        'ageRange' => 'actress_age_range',
-        'analAmount' => 'anal_percentage',
-        'assSize' => 'actress_ass_size',
-        'blowjobAmount' => 'blowjob_percentage',
-        'cameraStyle' => 'camera_style',
-        'cumshotType' => 'actor_cumshot_type',
-        'doublePenetrationAmount' => 'double_penetration_percentage',
-        'feetPettingAmount' => 'feet_petting_percentage',
-        'hairColor' => 'actress_hair_color',
-        'handjobAmount' => 'handjob_percentage',
-        'hasStory' => 'has_story',
-        'isCumshotCompilation' => 'is_cumshot_compilation_type',
-        'isFemaleDomination' => 'is_female_domination_type',
-        'isSadisticOrMasochistic' => 'is_sadistic_or_masochistic',
-        'isTranslatedToPolish' => 'is_translated_to_polish',
-        'movieDuration' => 'duration',
-        'position69amount' => 'position_69_percentage',
-        'professionalismLevel' => 'is_professional_production',
-        'pussyLickingAmount' => 'pussy_licking_percentage',
-        'race' => 'actress_race',
-        'recordedBySpyCamera' => 'recorded_by_spy_camera',
-        'shavedPussy' => 'shows_shaved_pussy',
-        'showGlasses' => 'actress_has_glasses',
-        'showHighHeels' => 'shows_high_heels',
-        'showHugeCock' => 'shows_big_cock',
-        'showPantyhose' => 'actress_has_pantyhose',
-        'showSexToys' => 'shows_sex_toys',
-        'showStockings' => 'actress_has_stockings',
-        'showWhips' => 'shows_wips',
-        'thicknessSize' => 'actress_thickness',
-        'titfuckAmount' => 'tittfuck_percentage',
-        'titsSize' => 'actress_tits_size',
-        'vaginalAmount' => 'pussy_fuck_percentage',
-        'title' => 'title'
-     ];
+private int $successFullResponseCode;
+private array $validatedData;
 
-    public function handle(Request $request) : JsonResponse
-    {
-        try {
-            $validationResult = MoviePropertiesValidator::validate($request);
-            if($validationResult['success']) {
-                $validatedData = $validationResult['data'];
-                $simpleValues = $this->getSimpleValues($validatedData); 
-                $movieCandidate = new MovieCandidate($simpleValues);
-                $this->getValuesForColumnsContainingForeignKeys($validatedData, $movieCandidate);
-                $this->parsePornstarsList($validatedData, $movieCandidate);
-                $movieCandidate->save();
-                return new JsonResponse($movieCandidate, 201);
-            } else {
-                return new JsonResponse(['errors' => $validationResult['errors']], 400);
-            }
-        } catch (Throwable $failure) {
-            return new JsonResponse(['errorMessage' => $failure->getMessage()], 500);
-        }
+const RELATIONAL_PROPERTIES = [
+    'actress_nationality', 
+    'location', 
+    'story_or_costume_type', 
+    'pornstars_list'
+];
+
+public function handle(Request $request) : JsonResponse
+{
+    try {
+        $this->initiateValidation();
+        $this->getValidatedMovieProperties();
+        $movieId = $this->validatedData['id'] ?? null;
+        $movieCandidate = MovieCandidate::firstOrNew(['id' => $movieId]);
+        $this->assignSimpleValues($movieCandidate);
+        $this->assignValuesForColumnsContainingForeignKeys($movieCandidate);
+        $this->assignPornstarsList($movieCandidate);
+        $movieCandidate->save();
+        return new JsonResponse($movieCandidate, $this->successFullResponseCode);
+    } catch (FailedValidationException $failedValidation) {
+        return new JsonResponse(['errors' => $failedValidation->getErrors()], 400);
     }
+    catch (Throwable $failure) {
+        return new JsonResponse(['errorMessage' => $failure->getMessage()], 500);
+    }
+}
 
-    protected function getValuesForColumnsContainingForeignKeys(array $validatedData, MovieCandidate $movieCandidate) : void
-    {
+private function initiateValidation() : void
+{
+    if(request()->isMethod('PUT')) {
+        MoviePropertiesValidator::$checkMovieID = true;
+        $this->successFullResponseCode = 200;
+    } else {
+        $this->successFullResponseCode = 201;
+    }
+}
+
+private function getValidatedMovieProperties() : void
+{
+    $this->validatedData = MoviePropertiesValidator::validate(request());
+}
+
+protected function assignValuesForColumnsContainingForeignKeys(MovieCandidate $movieCandidate) : void
+{
        
-        if(array_key_exists('nationality', $validatedData)) {
-            $nationality = Nationality::where(['name' => $validatedData['nationality']])->get()->first();
-            $movieCandidate->actressNationality()->associate($nationality);
-        }
-
-        if(array_key_exists('location', $validatedData)) {
-            $location = Location::where(['name' => $validatedData['location']])->get()->first();
-            $movieCandidate->location()->associate($location);
-        }
-
-        if(array_key_exists('storyOrCostume', $validatedData)) {
-            $storyOrCostumeType = StoryOrCostumeType::where(['name' => $validatedData['storyOrCostume']])->get()->first();
-            $movieCandidate->storyOrCostumeType()->associate($storyOrCostumeType);
-        }
-
+    if(array_key_exists('actress_nationality', $this->validatedData)) {
+        $nationality = Nationality::where(['name' => $this->validatedData['actress_nationality']])->get()->first();
+        $movieCandidate->actressNationality()->associate($nationality);
     }
 
-    protected function parsePornstarsList(array $validatedData, MovieCandidate $movieCandidate) : void
-    {
-        if(array_key_exists('pornstarsList', $validatedData)) {
-            $movieCandidate->pornstars_list = implode(',', $validatedData['pornstarsList']);
-        } 
+    if(array_key_exists('location', $this->validatedData)) {
+        $location = Location::where(['name' => $this->validatedData['location']])->get()->first();
+        $movieCandidate->location()->associate($location);
     }
 
-    protected function getSimpleValues(array $validatedData) : array {
-        $simpleValues = array_diff_key($validatedData, array_flip(['nationality', 'location', 'storyOrCostume', 'pornstarsList']));
-        if(array_key_exists('professionalismLevel', $simpleValues)){
-            $simpleValues['professionalismLevel'] = match($simpleValues['professionalismLevel']) {
-                'professional' => 1,
-                'amateur' => 0,
-                default => null
-            };
-        }
-        $dataWithTransformedNames = [];
-        foreach($simpleValues as $propertyName => $value) {
-            $dataWithTransformedNames[self::MAP_PROPERTY_NAME_TO_COLUMN_NAME[$propertyName]] = $value;
-        }
-       return $dataWithTransformedNames;
+    if(array_key_exists('story_or_costume_type', $this->validatedData)) {
+        $story_or_costume_typeType = StoryOrCostumeType::where(['name' => $this->validatedData['story_or_costume_type']])->get()->first();
+        $movieCandidate->storyOrCostumeType()->associate($story_or_costume_typeType);
     }
+
+}
+
+protected function assignPornstarsList(MovieCandidate $movieCandidate) : void
+{
+    if(array_key_exists('pornstars_list', $this->validatedData)) {
+        $movieCandidate->pornstars_list = implode(',', $this->validatedData['pornstars_list']);
+    } 
+}
+
+protected function assignSimpleValues(MovieCandidate $movieCandidate) : void
+{
+    $simpleValues = array_diff_key($this->validatedData, array_flip(self::RELATIONAL_PROPERTIES));
+    if(array_key_exists('is_professional_production', $simpleValues)) {
+        $simpleValues['is_professional_production'] = match($simpleValues['is_professional_production']) {
+            'professional' => 1,
+            'amateur' => 0,
+            default => null
+        };
+    }
+    foreach($simpleValues as $propertyName => $value) {
+       $movieCandidate->$propertyName = $value;
+    }
+}
 }

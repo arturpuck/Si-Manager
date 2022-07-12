@@ -101,8 +101,8 @@ const settings = {
       }
     },
 
-    loadResourceValuesToEditor(resource : object) {
-      console.log(resource);
+    loadResourceValuesToEditor(movie : object) {
+      this.emitter.emit('loadMovieProperties', movie);
     }
   },
 

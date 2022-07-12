@@ -7,11 +7,11 @@
     <tbody>
       <tr class="resource-row" v-for="(resource, index) in resourceInstances" v-bind:key="index">
         <td v-bind:data-aditional-header="header" class="resource-cell" v-for="header in headers" v-bind:key="header">{{resource[header]}}</td>
-        <td class="resource-cell">
-          <phantom-button v-on:click="emitEditEvent(resource)">{{translator.translate('edit')}}</phantom-button>
+        <td v-on:click="emitEditEvent(resource)" class="resource-cell">
+          <phantom-button class="action-button">{{translator.translate('edit')}}</phantom-button>
         </td>
         <td class="resource-cell">
-          <phantom-button>{{translator.translate('delete')}}</phantom-button>
+          <phantom-button class="action-button">{{translator.translate('delete')}}</phantom-button>
         </td>
       </tr>
     </tbody>
@@ -139,6 +139,10 @@ export default {
       content : attr(data-aditional-header) " : ";
       color:#06850a;
     }
+  }
+
+  .action-button {
+    flex-grow:100;
   }
 }
 

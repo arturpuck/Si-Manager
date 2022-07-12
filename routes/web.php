@@ -35,7 +35,10 @@ Route::middleware('auth')->group(function () {
             
             Route::prefix('/movie-candidate')->name('movie-candidate.')->group(function () {
 
-                Route::post('', [MovieCandidateController::class, 'addMovieCandidate'])
+                Route::post('', [MovieCandidateController::class, 'addOrEditMovieCandidate'])
+                      ->name('create');
+
+                Route::put('', [MovieCandidateController::class, 'addOrEditMovieCandidate'])
                       ->name('create');
     
                 Route::get('', [MovieCandidateController::class, 'getPendingMovieCandidates'])

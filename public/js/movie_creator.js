@@ -18709,7 +18709,10 @@ var user_notification_vue_1 = __importDefault(__webpack_require__(/*! @jscompone
 var user_notification_call_1 = __importDefault(__webpack_require__(/*! @js/mixins/user_notification_call */ "./resources/js/mixins/user_notification_call.ts"));
 
 var EventBus = mitt_1["default"]();
-var propertiesNotDescribingMovie = ['fetchingMoviesInProgress', 'advancedSearchPanelIsVisible', 'selectedOptionsVisibleForUser', 'totalMoviesFound', 'scrollYreactiveProperty', 'currentPage', 'movieCreatorTranslations', 'csrfToken', 'multiselectValues', 'translator', 'fetchingPornstarsInProgress'];
+var propertiesNotDescribingMovie = ['fetchingMoviesInProgress', 'advancedSearchPanelIsVisible', 'selectedOptionsVisibleForUser', 'totalMoviesFound', 'scrollYreactiveProperty', 'currentPage', 'movieCreatorTranslations', 'csrfToken', 'multiselectValues', 'translator', 'fetchingPornstarsInProgress', 'descriptionsTranslations', 'movieCreatorTranslations'];
+var propertiesToIgnoreDuringLoad = ['action_location_id', 'created_at', 'deleted_at', 'story_or_costume_type_id', 'actress_nationality_id'];
+var relationProperties = ['actress_nationality', 'location', 'story_or_costume_type'];
+var percentageProperties = ['anal_percentage', 'blowjob_percentage', 'handjob_percentage', 'double_penetration_percentage', 'pussy_fuck_percentage', 'pussy_licking_percentage', 'feet_petting_percentage', 'position_69_percentage', 'tittfuck_percentage'];
 exports.default = {
   name: "movie-edit-create",
   mixins: [user_notification_call_1["default"]],
@@ -18734,52 +18737,54 @@ exports.default = {
       multiselectValues: [],
       translator: translator_js_1["default"],
       fetchingPornstarsInProgress: true,
-      abundanceType: "",
-      titsSize: "",
-      assSize: "",
-      thicknessSize: "",
-      ageRange: "",
-      hairColor: "",
-      race: "",
-      nationality: "",
-      shavedPussy: "",
-      analAmount: 0,
-      blowjobAmount: 0,
-      vaginalAmount: 0,
-      handjobAmount: 0,
-      pussyLickingAmount: 0,
-      titfuckAmount: 0,
-      feetPettingAmount: 0,
-      position69amount: 0,
-      doublePenetrationAmount: 0,
-      cumshotType: "",
-      isCumshotCompilation: false,
+      abundance: "",
+      actress_tits_size: "",
+      actress_ass_size: "",
+      actress_thickness: "",
+      actress_age_range: "",
+      actress_hair_color: "",
+      actress_race: "",
+      actress_nationality: "",
+      shows_shaved_pussy: "",
+      anal_percentage: 0,
+      blowjob_percentage: 0,
+      pussy_fuck_percentage: 0,
+      handjob_percentage: 0,
+      pussy_licking_percentage: 0,
+      tittfuck_percentage: 0,
+      feet_petting_percentage: 0,
+      position_69_percentage: 0,
+      double_penetration_percentage: 0,
+      actor_cumshot_type: "",
+      is_cumshot_compilation_type: false,
       location: "",
-      cameraStyle: "",
-      storyOrCostume: "",
-      professionalismLevel: "",
-      hasStory: "",
-      recordedBySpyCamera: false,
-      isSadisticOrMasochistic: false,
-      isFemaleDomination: false,
-      isTranslatedToPolish: false,
-      showPantyhose: false,
-      showStockings: false,
-      showGlasses: false,
-      showHighHeels: false,
-      showHugeCock: false,
-      showWhips: false,
-      showSexToys: false,
-      pornstarsList: [],
+      camera_style: "",
+      story_or_costume_type: "",
+      is_professional_production: "",
+      has_story: "",
+      recorded_by_spy_camera: false,
+      is_sadistic_or_masochistic: false,
+      is_female_domination_type: false,
+      is_translated_to_polish: false,
+      actress_has_pantyhose: false,
+      actress_has_stockings: false,
+      actress_has_glasses: false,
+      shows_high_heels: false,
+      shows_big_cock: false,
+      shows_latex: false,
+      shows_whips: false,
+      shows_sex_toys: false,
+      pornstars_list: [],
       fetchingMoviesInProgress: false,
       advancedSearchPanelIsVisible: true,
       selectedOptionsVisibleForUser: [],
       totalMoviesFound: undefined,
       scrollYreactiveProperty: 0,
       currentPage: undefined,
-      movieDuration: '00:00:00',
+      duration: '00:00:00',
       title: '',
-      description: ''
+      description: '',
+      id: null
     };
   },
   methods: {
@@ -18790,33 +18795,34 @@ exports.default = {
       search_engine_variables_ts_1["default"]['initialValueIsFalse'].forEach(function (propertyName) {
         _this[propertyName] = false;
       });
-      this.analAmount = 0;
-      this.blowjobAmount = 0;
-      this.vaginalAmount = 0;
-      this.handjobAmount = 0;
-      this.pussyLickingAmount = 0;
-      this.titfuckAmount = 0;
-      this.feetPettingAmount = 0;
-      this.position69amount = 0;
-      this.doublePenetrationAmount = 0;
-      this.pornstarsList = [];
+      this.anal_percentage = 0;
+      this.blowjob_percentage = 0;
+      this.pussy_fuck_percentage = 0;
+      this.handjob_percentage = 0;
+      this.pussy_licking_percentage = 0;
+      this.feet_petting_percentage = 0;
+      this.feet_petting_percentage = 0;
+      this.position_69_percentage = 0;
+      this.double_penetration_percentage = 0;
+      this.pornstars_list = [];
       this.title = '';
-      this.movieDuration = '00:00:00';
-      this.abundanceType = '';
-      this.titsSize = '';
-      this.assSize = '', this.thicknessSize = '';
-      this.ageRange = '';
-      this.hairColor = '';
-      this.race = '';
-      this.nationality = '';
-      this.shavedPussy = '';
-      this.cumshotType = '';
+      this.duration = '00:00:00';
+      this.abundance = '';
+      this.actress_tits_size = '';
+      this.actress_ass_size = '', this.actress_thickness = '';
+      this.actress_age_range = '';
+      this.actress_hair_color = '';
+      this.actress_race = '';
+      this.actress_nationality = '';
+      this.shows_shaved_pussy = '';
+      this.actor_cumshot_type = '';
       this.location = '';
-      this.cameraStyle = '';
-      this.storyOrCostume = '';
-      this.professionalismLevel = '';
-      this.hasStory = '';
+      this.camera_style = '';
+      this.story_or_costume_type = '';
+      this.is_professional_production = '';
+      this.has_story = '';
       this.description = '';
+      this.id = null;
     },
     fetchPornstarsList: function fetchPornstarsList() {
       return __awaiter(this, void 0, void 0, function () {
@@ -18876,9 +18882,9 @@ exports.default = {
         });
       });
     },
-    loadPornstarsList: function loadPornstarsList(pornstarsList) {
+    loadPornstarsList: function loadPornstarsList(pornstars_list) {
       var processedNames = [];
-      pornstarsList.forEach(function (pornstarData) {
+      pornstars_list.forEach(function (pornstarData) {
         return processedNames.push(pornstarData.nickname);
       });
       this.emitter.emit('replaceAvailableOptionsForMultiselect', processedNames);
@@ -18891,12 +18897,16 @@ exports.default = {
       });
       Object.keys(movieData).forEach(function (propertName) {
         if (!movieData[propertName]) {
-          delete movieData[propertName];
+          movieData[propertName] = null;
         }
       });
 
-      if (this.pornstarsList.length === 0) {
-        delete movieData.pornstarsList;
+      if (this.pornstars_list.length === 0) {
+        delete movieData.pornstars_list;
+      }
+
+      if (this.id === null) {
+        delete movieData.id;
       }
 
       return movieData;
@@ -18918,7 +18928,7 @@ exports.default = {
               switch (response.status) {
                 case 201:
                   this.showMovieCandidateOnList(responseBody);
-                  this.showUserNotification('added_movie');
+                  this.showUserNotification('data_saved_successfully');
                   break;
 
                 case 400:
@@ -18942,13 +18952,14 @@ exports.default = {
     },
     saveMovie: function saveMovie() {
       return __awaiter(this, void 0, void 0, function () {
-        var movieData, requestData, response;
+        var movieData, httpMethod, requestData, response;
         return __generator(this, function (_a) {
           switch (_a.label) {
             case 0:
               movieData = this.getMovieDataForRequest();
+              httpMethod = this.id ? 'PUT' : 'POST';
               requestData = {
-                method: 'POST',
+                method: httpMethod,
                 body: JSON.stringify(movieData),
                 headers: {
                   'X-CSRF-TOKEN': this.csrfToken,
@@ -18971,6 +18982,41 @@ exports.default = {
     },
     addOnReadMovie: function addOnReadMovie() {
       this.emitter.on('loadMovieProperties', this.loadMovieProperties);
+    },
+    loadMovieProperties: function loadMovieProperties(movie) {
+      var _this = this;
+
+      Object.keys(movie).forEach(function (movieProperty) {
+        if (!propertiesToIgnoreDuringLoad.includes(movieProperty)) {
+          _this.assignMovieProperty(movie, movieProperty);
+        }
+      });
+    },
+    assignMovieProperty: function assignMovieProperty(movie, movieProperty) {
+      var propertyValue = movie[movieProperty];
+
+      switch (true) {
+        case percentageProperties.includes(movieProperty):
+          this[movieProperty] = Number(propertyValue);
+          break;
+
+        case relationProperties.includes(movieProperty):
+          this[movieProperty] = propertyValue === null || propertyValue === void 0 ? void 0 : propertyValue['name'];
+          break;
+
+        case movieProperty === 'pornstars_list':
+          this.pornstars_list = propertyValue ? propertyValue.split(',') : [];
+          break;
+
+        default:
+          this[movieProperty] = propertyValue;
+          break;
+      }
+    }
+  },
+  computed: {
+    saveOrEditMovieButtonCaption: function saveOrEditMovieButtonCaption() {
+      return this.id ? this.descriptionsTranslations['save_changes_for_existing_movie'] + ", id : " + this.id : this.descriptionsTranslations['add_new_movie'];
     }
   },
   mounted: function mounted() {
@@ -19311,13 +19357,13 @@ Object.defineProperty(exports, "__esModule", ({
 var movieViewsOptions = ['minimumMovieViews', 'maximumMovieViews'];
 var movieTimeOptions = ['minimumMovieTime', 'maximumMovieTime'];
 var variables = {
-  initialValueIsEmptyString: ['abundanceType', 'titsSize', 'assSize', 'thicknessSize', 'ageRange', 'hairColor', 'race', 'nationality', 'shavedPussy', 'analAmount', 'blowjobAmount', 'handjobAmount', 'doublePenetrationAmount', 'vaginalAmount', 'pussyLickingAmount', 'titfuckAmount', 'feetPettingAmount', 'position69amount', 'cumshotType', 'location', 'cameraStyle', 'hasStory', 'storyOrCostume', 'professionalismLevel'],
-  initialValueIsFalse: ['isCumshotCompilation', 'recordedBySpyCamera', 'isSadisticOrMasochistic', 'isFemaleDomination', 'isTranslatedToPolish', 'showPantyhose', 'showStockings', 'showGlasses', 'showHighHeels', 'showHugeCock', 'showWhips', 'showSexToys'],
+  initialValueIsEmptyString: ['abundance', 'actress_tits_size', 'actress_ass_size', 'actress_thickness', 'actress_age_range', 'actress_hair_color', 'actress_race', 'actress_nationality', 'shows_shaved_pussy', 'anal_percentage', 'blowjob_percentage', 'handjob_percentage', 'double_penetration_percentage', 'pussy_fuck_percentage', 'pussy_licking_percentage', 'feet_petting_percentage', 'feet_petting_percentage', 'position_69_percentage', 'actor_cumshot_type', 'location', 'camera_style', 'has_story', 'story_or_costume_type', 'is_professional_production'],
+  initialValueIsFalse: ['is_cumshot_compilation_type', 'recorded_by_spy_camera', 'is_sadistic_or_masochistic', 'is_female_domination_type', 'is_translated_to_polish', 'actress_has_pantyhose', 'actress_has_stockings', 'actress_has_glasses', 'shows_high_heels', 'shows_big_cock', 'shows_whips', 'shows_sex_toys'],
   viewsAndTimeOptions: ['minimumMovieTimeRaw', 'maximumMovieTimeRaw', 'minimumMovieViewsRaw', 'maximumMovieViewsRaw'],
   initialValueIsZero: __spreadArrays(movieTimeOptions, movieViewsOptions),
   movieTimeOptions: movieTimeOptions,
   movieViewsOptions: movieViewsOptions,
-  pornstarsList: "pornstarsList",
+  pornstars_list: "pornstars_list",
   groupNames: ['initialValueIsEmptyString', 'initialValueIsFalse', 'movieTimeOptions', 'movieViewsOptions']
 };
 exports.default = variables;
@@ -20192,11 +20238,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"]), (0, _vue.createElementVNode)("div", _hoisted_1, [(0, _vue.createElementVNode)("fieldset", _hoisted_2, [(0, _vue.createElementVNode)("legend", _hoisted_3, (0, _vue.toDisplayString)($data.descriptionsTranslations['actress_body_and_type']), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.titsSize,
+    modelValue: $data.actress_tits_size,
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-      return $data.titsSize = $event;
+      return $data.actress_tits_size = $event;
     }),
-    options: $data.movieCreatorTranslations['titsSize']
+    options: $data.movieCreatorTranslations['actress_tits_size']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['tits_size']) + " :", 1
@@ -20209,11 +20255,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.assSize,
+    modelValue: $data.actress_ass_size,
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-      return $data.assSize = $event;
+      return $data.actress_ass_size = $event;
     }),
-    options: $data.movieCreatorTranslations['assSize']
+    options: $data.movieCreatorTranslations['actress_ass_size']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['ass_size']) + " : ", 1
@@ -20226,11 +20272,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.thicknessSize,
+    modelValue: $data.actress_thickness,
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
-      return $data.thicknessSize = $event;
+      return $data.actress_thickness = $event;
     }),
-    options: $data.movieCreatorTranslations['thicknessSize']
+    options: $data.movieCreatorTranslations['actress_thickness']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['thickness']) + " : ", 1
@@ -20243,11 +20289,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.ageRange,
+    modelValue: $data.actress_age_range,
     "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
-      return $data.ageRange = $event;
+      return $data.actress_age_range = $event;
     }),
-    options: $data.movieCreatorTranslations['ageRange']
+    options: $data.movieCreatorTranslations['actress_age_range']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['age']) + " : ", 1
@@ -20260,11 +20306,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.hairColor,
+    modelValue: $data.actress_hair_color,
     "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
-      return $data.hairColor = $event;
+      return $data.actress_hair_color = $event;
     }),
-    options: $data.movieCreatorTranslations['hairColor']
+    options: $data.movieCreatorTranslations['actress_hair_color']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['hair_color']) + " : ", 1
@@ -20277,14 +20323,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.race,
+    modelValue: $data.actress_race,
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
-      return $data.race = $event;
+      return $data.actress_race = $event;
     }),
-    options: $data.movieCreatorTranslations['race']
+    options: $data.movieCreatorTranslations['actress_race']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['race']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['actress_race']) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20294,14 +20340,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.nationality,
+    modelValue: $data.actress_nationality,
     "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
-      return $data.nationality = $event;
+      return $data.actress_nationality = $event;
     }),
-    options: $data.movieCreatorTranslations['nationality']
+    options: $data.movieCreatorTranslations['actress_nationality']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['nationality']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['actress_nationality']) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20311,9 +20357,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.shavedPussy,
+    modelValue: $data.shows_shaved_pussy,
     "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
-      return $data.shavedPussy = $event;
+      return $data.shows_shaved_pussy = $event;
     }),
     options: $data.movieCreatorTranslations['binaryOptions']
   }, {
@@ -20330,11 +20376,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue", "options"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_4, [(0, _vue.createElementVNode)("legend", _hoisted_5, (0, _vue.toDisplayString)($data.descriptionsTranslations['sex_type']), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.abundanceType,
+    modelValue: $data.abundance,
     "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
-      return $data.abundanceType = $event;
+      return $data.abundance = $event;
     }),
-    options: $data.movieCreatorTranslations['abundanceType']
+    options: $data.movieCreatorTranslations['abundance']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['abundance']) + " : ", 1
@@ -20348,9 +20394,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.analAmount,
+    modelValue: $data.anal_percentage,
     "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
-      return $data.analAmount = $event;
+      return $data.anal_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20366,9 +20412,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.blowjobAmount,
+    modelValue: $data.blowjob_percentage,
     "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
-      return $data.blowjobAmount = $event;
+      return $data.blowjob_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20384,9 +20430,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.vaginalAmount,
+    modelValue: $data.pussy_fuck_percentage,
     "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
-      return $data.vaginalAmount = $event;
+      return $data.pussy_fuck_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20402,9 +20448,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.handjobAmount,
+    modelValue: $data.handjob_percentage,
     "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
-      return $data.handjobAmount = $event;
+      return $data.handjob_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20420,9 +20466,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.pussyLickingAmount,
+    modelValue: $data.pussy_licking_percentage,
     "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
-      return $data.pussyLickingAmount = $event;
+      return $data.pussy_licking_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20438,9 +20484,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.titfuckAmount,
+    modelValue: $data.tittfuck_percentage,
     "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
-      return $data.titfuckAmount = $event;
+      return $data.tittfuck_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20456,9 +20502,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.feetPettingAmount,
+    modelValue: $data.feet_petting_percentage,
     "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
-      return $data.feetPettingAmount = $event;
+      return $data.feet_petting_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20474,9 +20520,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.doublePenetrationAmount,
+    modelValue: $data.double_penetration_percentage,
     "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {
-      return $data.doublePenetrationAmount = $event;
+      return $data.double_penetration_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20492,9 +20538,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_range, {
     "class": "sex-ammount",
-    modelValue: $data.position69amount,
+    modelValue: $data.position_69_percentage,
     "onUpdate:modelValue": _cache[19] || (_cache[19] = function ($event) {
-      return $data.position69amount = $event;
+      return $data.position_69_percentage = $event;
     }),
     unit: "%"
   }, {
@@ -20509,11 +20555,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.cumshotType,
+    modelValue: $data.actor_cumshot_type,
     "onUpdate:modelValue": _cache[20] || (_cache[20] = function ($event) {
-      return $data.cumshotType = $event;
+      return $data.actor_cumshot_type = $event;
     }),
-    options: $data.movieCreatorTranslations['cumshotType']
+    options: $data.movieCreatorTranslations['actor_cumshot_type']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['cumshot']) + " : ", 1
@@ -20526,9 +20572,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.isCumshotCompilation,
+    modelValue: $data.is_cumshot_compilation_type,
     "onUpdate:modelValue": _cache[21] || (_cache[21] = function ($event) {
-      return $data.isCumshotCompilation = $event;
+      return $data.is_cumshot_compilation_type = $event;
     }),
     "class": "movie-panel-checkbox",
     name: "cumshot-compilation"
@@ -20563,11 +20609,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.cameraStyle,
+    modelValue: $data.camera_style,
     "onUpdate:modelValue": _cache[23] || (_cache[23] = function ($event) {
-      return $data.cameraStyle = $event;
+      return $data.camera_style = $event;
     }),
-    options: $data.movieCreatorTranslations['cameraStyle']
+    options: $data.movieCreatorTranslations['camera_style']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['camera_style']) + " : ", 1
@@ -20580,11 +20626,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.storyOrCostume,
+    modelValue: $data.story_or_costume_type,
     "onUpdate:modelValue": _cache[24] || (_cache[24] = function ($event) {
-      return $data.storyOrCostume = $event;
+      return $data.story_or_costume_type = $event;
     }),
-    options: $data.movieCreatorTranslations['storyOrCostume']
+    options: $data.movieCreatorTranslations['story_or_costume_type']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['story_or_costume_type']) + " : ", 1
@@ -20597,11 +20643,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.professionalismLevel,
+    modelValue: $data.is_professional_production,
     "onUpdate:modelValue": _cache[25] || (_cache[25] = function ($event) {
-      return $data.professionalismLevel = $event;
+      return $data.is_professional_production = $event;
     }),
-    options: $data.movieCreatorTranslations['professionalismLevel']
+    options: $data.movieCreatorTranslations['is_professional_production']
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['movie_level']) + " : ", 1
@@ -20614,9 +20660,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_simple_labeled_select, {
-    modelValue: $data.hasStory,
+    modelValue: $data.has_story,
     "onUpdate:modelValue": _cache[26] || (_cache[26] = function ($event) {
-      return $data.hasStory = $event;
+      return $data.has_story = $event;
     }),
     options: $data.movieCreatorTranslations['binaryOptions']
   }, {
@@ -20631,12 +20677,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue", "options"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.recordedBySpyCamera,
+    modelValue: $data.recorded_by_spy_camera,
     "onUpdate:modelValue": _cache[27] || (_cache[27] = function ($event) {
-      return $data.recordedBySpyCamera = $event;
+      return $data.recorded_by_spy_camera = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "recorded-by-spy-camera"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['spy_camera']), 1
@@ -20649,12 +20694,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.isSadisticOrMasochistic,
+    modelValue: $data.is_sadistic_or_masochistic,
     "onUpdate:modelValue": _cache[28] || (_cache[28] = function ($event) {
-      return $data.isSadisticOrMasochistic = $event;
+      return $data.is_sadistic_or_masochistic = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "sado-maso"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['sadistic_or_masochistic']), 1
@@ -20667,12 +20711,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.isFemaleDomination,
+    modelValue: $data.is_female_domination_type,
     "onUpdate:modelValue": _cache[29] || (_cache[29] = function ($event) {
-      return $data.isFemaleDomination = $event;
+      return $data.is_female_domination_type = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "female-domination"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['female_domination']), 1
@@ -20685,12 +20728,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.isTranslatedToPolish,
+    modelValue: $data.is_translated_to_polish,
     "onUpdate:modelValue": _cache[30] || (_cache[30] = function ($event) {
-      return $data.isTranslatedToPolish = $event;
+      return $data.is_translated_to_polish = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "translated-to-polish"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['polish_language_version']), 1
@@ -20705,12 +20747,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_8, [(0, _vue.createElementVNode)("legend", _hoisted_9, (0, _vue.toDisplayString)($data.descriptionsTranslations['gadgets_and_clothing']), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showPantyhose,
+    modelValue: $data.actress_has_pantyhose,
     "onUpdate:modelValue": _cache[31] || (_cache[31] = function ($event) {
-      return $data.showPantyhose = $event;
+      return $data.actress_has_pantyhose = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "pantyhose"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['pantyhose']), 1
@@ -20723,12 +20764,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showStockings,
+    modelValue: $data.actress_has_stockings,
     "onUpdate:modelValue": _cache[32] || (_cache[32] = function ($event) {
-      return $data.showStockings = $event;
+      return $data.actress_has_stockings = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "stockings"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['stockings']), 1
@@ -20741,12 +20781,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showGlasses,
+    modelValue: $data.actress_has_glasses,
     "onUpdate:modelValue": _cache[33] || (_cache[33] = function ($event) {
-      return $data.showGlasses = $event;
+      return $data.actress_has_glasses = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "glasses"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['glasses']), 1
@@ -20759,12 +20798,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showHighHeels,
+    modelValue: $data.shows_high_heels,
     "onUpdate:modelValue": _cache[34] || (_cache[34] = function ($event) {
-      return $data.showHighHeels = $event;
+      return $data.shows_high_heels = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "high-heels"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['high_heels']), 1
@@ -20777,12 +20815,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showHugeCock,
+    modelValue: $data.shows_big_cock,
     "onUpdate:modelValue": _cache[35] || (_cache[35] = function ($event) {
-      return $data.showHugeCock = $event;
+      return $data.shows_big_cock = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "huge-cock"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['huge_cock']), 1
@@ -20795,12 +20832,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showWhips,
+    modelValue: $data.shows_whips,
     "onUpdate:modelValue": _cache[36] || (_cache[36] = function ($event) {
-      return $data.showWhips = $event;
+      return $data.shows_whips = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "whips"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['whips']), 1
@@ -20813,12 +20849,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
-    modelValue: $data.showSexToys,
+    modelValue: $data.shows_sex_toys,
     "onUpdate:modelValue": _cache[37] || (_cache[37] = function ($event) {
-      return $data.showSexToys = $event;
+      return $data.shows_sex_toys = $event;
     }),
-    "class": "movie-panel-checkbox",
-    name: "sex-toys"
+    "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['sex_toys']), 1
@@ -20830,12 +20865,29 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
+  , ["modelValue"]), (0, _vue.createVNode)(_component_labeled_checkbox, {
+    modelValue: $data.shows_latex,
+    "onUpdate:modelValue": _cache[38] || (_cache[38] = function ($event) {
+      return $data.shows_latex = $event;
+    }),
+    "class": "movie-panel-checkbox"
+  }, {
+    "default": (0, _vue.withCtx)(function () {
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['latex']), 1
+      /* TEXT */
+      )];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
   , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_10, [(0, _vue.createElementVNode)("legend", _hoisted_11, (0, _vue.toDisplayString)($data.descriptionsTranslations['stars']), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_multiselect, {
-    modelValue: $data.pornstarsList,
-    "onUpdate:modelValue": _cache[38] || (_cache[38] = function ($event) {
-      return $data.pornstarsList = $event;
+    modelValue: $data.pornstars_list,
+    "onUpdate:modelValue": _cache[39] || (_cache[39] = function ($event) {
+      return $data.pornstars_list = $event;
     }),
     "main-label": $data.descriptionsTranslations['choose_from_pornstars_list'],
     "show-search-input": true
@@ -20844,15 +20896,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["modelValue", "main-label"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_12, [(0, _vue.createElementVNode)("legend", _hoisted_13, (0, _vue.toDisplayString)($data.descriptionsTranslations['movie_duration']), 1
   /* TEXT */
   ), (0, _vue.withDirectives)((0, _vue.createElementVNode)("input", {
-    "onUpdate:modelValue": _cache[39] || (_cache[39] = function ($event) {
-      return $data.movieDuration = $event;
+    "onUpdate:modelValue": _cache[40] || (_cache[40] = function ($event) {
+      return $data.duration = $event;
     }),
     "class": "movie-duration",
     step: "1",
     type: "time"
   }, null, 512
   /* NEED_PATCH */
-  ), [[_vue.vModelText, $data.movieDuration]])]), (0, _vue.createElementVNode)("fieldset", _hoisted_14, [(0, _vue.createElementVNode)("legend", _hoisted_15, (0, _vue.toDisplayString)($data.descriptionsTranslations['controls']), 1
+  ), [[_vue.vModelText, $data.duration]])]), (0, _vue.createElementVNode)("fieldset", _hoisted_14, [(0, _vue.createElementVNode)("legend", _hoisted_15, (0, _vue.toDisplayString)($data.descriptionsTranslations['controls']), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_reset_button, {
     onClick: $options.resetPanel,
@@ -20874,7 +20926,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: $options.saveMovie
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['save_movie']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($options.saveOrEditMovieButtonCaption), 1
       /* TEXT */
       )];
     }),
@@ -20914,9 +20966,7 @@ var _hoisted_3 = {
   "class": "resource-header"
 };
 var _hoisted_4 = ["data-aditional-header"];
-var _hoisted_5 = {
-  "class": "resource-cell"
-};
+var _hoisted_5 = ["onClick"];
 var _hoisted_6 = {
   "class": "resource-cell"
 };
@@ -20953,22 +21003,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       , _hoisted_4);
     }), 128
     /* KEYED_FRAGMENT */
-    )), (0, _vue.createElementVNode)("td", _hoisted_5, [(0, _vue.createVNode)(_component_phantom_button, {
+    )), (0, _vue.createElementVNode)("td", {
       onClick: function onClick($event) {
         return $options.emitEditEvent(resource);
-      }
+      },
+      "class": "resource-cell"
+    }, [(0, _vue.createVNode)(_component_phantom_button, {
+      "class": "action-button"
     }, {
       "default": (0, _vue.withCtx)(function () {
         return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.translator.translate('edit')), 1
         /* TEXT */
         )];
       }),
-      _: 2
-      /* DYNAMIC */
+      _: 1
+      /* STABLE */
 
-    }, 1032
-    /* PROPS, DYNAMIC_SLOTS */
-    , ["onClick"])]), (0, _vue.createElementVNode)("td", _hoisted_6, [(0, _vue.createVNode)(_component_phantom_button, null, {
+    })], 8
+    /* PROPS */
+    , _hoisted_5), (0, _vue.createElementVNode)("td", _hoisted_6, [(0, _vue.createVNode)(_component_phantom_button, {
+      "class": "action-button"
+    }, {
       "default": (0, _vue.withCtx)(function () {
         return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.translator.translate('delete')), 1
         /* TEXT */
@@ -21103,8 +21158,8 @@ var _default = {
   thickness: _translator["default"].translate('thickness'),
   age: _translator["default"].translate('age'),
   hair_color: _translator["default"].translate('hair_color'),
-  race: _translator["default"].translate('race'),
-  nationality: _translator["default"].translate('nationality'),
+  actress_race: _translator["default"].translate('race'),
+  actress_nationality: _translator["default"].translate('nationality'),
   shaved_pussy: _translator["default"].translate('shaved_pussy'),
   sex_type: _translator["default"].translate('sex_type'),
   abundance: _translator["default"].translate('abundance'),
@@ -21139,11 +21194,13 @@ var _default = {
   movie_duration: _translator["default"].translate('movie_duration'),
   controls: _translator["default"].translate('controls'),
   reset_panel: _translator["default"].translate('reset_panel'),
-  save_movie: _translator["default"].translate('save_movie'),
+  add_new_movie: _translator["default"].translate('add_new_movie'),
+  save_changes_for_existing_movie: _translator["default"].translate('save_changes_for_existing_movie'),
   title: _translator["default"].translate('title'),
   cumshot: _translator["default"].translate('cumshot'),
   gadgets_and_clothing: _translator["default"].translate('gadgets_and_clothing'),
-  description: _translator["default"].translate('description')
+  description: _translator["default"].translate('description'),
+  latex: _translator["default"].translate('latex')
 };
 exports.default = _default;
 
@@ -21165,7 +21222,11 @@ exports.default = void 0;
 
 var _translator = _interopRequireDefault(__webpack_require__(/*! @jsmodules/translator.js */ "./resources/js/modules/translator.js"));
 
+var _actress_tits_size$ac;
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var yesNoOptions = {
   1: _translator["default"].translate('yes'),
@@ -21179,34 +21240,35 @@ var sexamounts = {
   a_little: _translator["default"].translate('a_little'),
   exclude: _translator["default"].translate('exclude')
 };
-var _default = {
-  titsSize: {
+
+var _default = (_actress_tits_size$ac = {
+  actress_tits_size: {
     small: _translator["default"].translate('small_tits'),
     medium: _translator["default"].translate('medium_tits'),
     big: _translator["default"].translate('big_tits')
   },
-  assSize: {
+  actress_ass_size: {
     small: _translator["default"].translate('small_ass'),
     medium: _translator["default"].translate('medium_ass'),
     big: _translator["default"].translate('big_ass')
   },
-  thicknessSize: {
+  actress_thickness: {
     skinny: _translator["default"].translate('skinny_tchickness'),
     medium: _translator["default"].translate('medium_tchickness'),
     fat: _translator["default"].translate('fat_tchickness')
   },
-  ageRange: {
+  actress_age_range: {
     teenagers: _translator["default"].translate('teenagers'),
     young: _translator["default"].translate('age_range_young'),
     mature: _translator["default"].translate('age_range_mature')
   },
-  hairColor: {
+  actress_hair_color: {
     dark: _translator["default"].translate('dark_hair'),
     blonde: _translator["default"].translate('blonde_hair'),
     brown: _translator["default"].translate('brown_hair'),
     red: _translator["default"].translate('red_hair')
   },
-  race: {
+  actress_race: {
     white: _translator["default"].translate('white_race'),
     asian: _translator["default"].translate('asian_race'),
     ebony: _translator["default"].translate('ebony_race'),
@@ -21214,9 +21276,9 @@ var _default = {
     arabic: _translator["default"].translate('arabic_race')
   },
   binaryOptions: yesNoOptions,
-  shavedPussy: yesNoOptions,
-  hasStory: yesNoOptions,
-  abundanceType: {
+  shows_shaved_pussy: yesNoOptions,
+  has_story: yesNoOptions,
+  abundance: {
     one_male_one_female: _translator["default"].translate('one_male_one_female'),
     bukkake: _translator["default"].translate('bukkake'),
     single_female: _translator["default"].translate('single_female'),
@@ -21228,97 +21290,78 @@ var _default = {
     lesbianGroup: _translator["default"].translate('lesbian_group_sex')
   },
   sexamounts: sexamounts,
-  analAmount: sexamounts,
-  blowjobAmount: sexamounts,
-  vaginalAmount: sexamounts,
-  pussyLickingAmount: sexamounts,
-  titfuckAmount: sexamounts,
-  position69amount: sexamounts,
-  feetPettingAmount: sexamounts,
-  doublePenetrationAmount: sexamounts,
-  handjobAmount: sexamounts,
-  cumshotType: {
-    on_face: _translator["default"].translate('on_face'),
-    cum_swallow: _translator["default"].translate('cum_swallow'),
-    creampie: _translator["default"].translate('creampie'),
-    anal_creampie: _translator["default"].translate('anal_creampie'),
-    on_tits: _translator["default"].translate('on_tits'),
-    on_pussy: _translator["default"].translate('on_pussy'),
-    on_ass: _translator["default"].translate('on_ass'),
-    on_feet: _translator["default"].translate('on_feet'),
-    on_many_places: _translator["default"].translate('on_many_places'),
-    on_other_body_parts: _translator["default"].translate('on_other_body_parts'),
-    exclude: _translator["default"].translate('exclude')
-  },
-  nationality: {
-    american: _translator["default"].translate('american_nationality'),
-    japanese: _translator["default"].translate('japanese_nationality'),
-    german: _translator["default"].translate('german_nationality'),
-    czech: _translator["default"].translate('czech_nationality'),
-    russian: _translator["default"].translate('russian_nationality'),
-    british: _translator["default"].translate('british_nationality'),
-    swedish: _translator["default"].translate('swedish_nationality'),
-    ukrainian: _translator["default"].translate('ukrainian_nationality'),
-    slovac: _translator["default"].translate('slovac_nationality'),
-    hanguarian: _translator["default"].translate('hanguarian_nationality'),
-    polish: _translator["default"].translate('polish_nationality'),
-    dutch: _translator["default"].translate('dutch_nationality'),
-    hindu: _translator["default"].translate('hindu_nationality'),
-    french: _translator["default"].translate('french_nationality'),
-    spanish: _translator["default"].translate('spanish_nationality'),
-    italian: _translator["default"].translate('italian_nationality'),
-    canadian: _translator["default"].translate('canadian_nationality'),
-    argentinian: _translator["default"].translate('argentinian_nationality')
-  },
-  location: {
-    house: _translator["default"].translate('house'),
-    bathroom: _translator["default"].translate('bathroom'),
-    office: _translator["default"].translate('office'),
-    school: _translator["default"].translate('school'),
-    public_place: _translator["default"].translate('public_place'),
-    car: _translator["default"].translate('car'),
-    nature: _translator["default"].translate('nature'),
-    solarium: _translator["default"].translate('solarium'),
-    elevator: _translator["default"].translate('elevator'),
-    beach: _translator["default"].translate('beach'),
-    gym: _translator["default"].translate('gym')
-  },
-  cameraStyle: {
-    outside: _translator["default"].translate('outside_camera_style'),
-    POV: _translator["default"].translate('POV'),
-    mixed: _translator["default"].translate('mixed_camera_style')
-  },
-  storyOrCostume: {
-    female_pupil: _translator["default"].translate('female_pupil'),
-    female_employee: _translator["default"].translate('female_employee'),
-    female_student: _translator["default"].translate('female_student'),
-    wife: _translator["default"].translate('wife'),
-    female_teacher: _translator["default"].translate('female_teacher'),
-    nurse: _translator["default"].translate('nurse'),
-    female_slave: _translator["default"].translate('female_slave'),
-    nun: _translator["default"].translate('nun'),
-    female_police_officer: _translator["default"].translate('female_police_officer'),
-    prostitute: _translator["default"].translate('prostitute'),
-    female_boss: _translator["default"].translate('female_boss'),
-    cleaner: _translator["default"].translate('cleaner'),
-    mommy: _translator["default"].translate('mommy')
-  },
-  professionalismLevel: {
-    professional: _translator["default"].translate("professional"),
-    amateur: _translator["default"].translate("amateur")
-  },
-  pornstarsFetchingLabel: _translator["default"].translate("fetching_pornstars"),
-  notSelected: _translator["default"].translate("not_selected"),
-  selectedTimeLabel: _translator["default"].translate("minutes_inflected"),
-  selectedViewsLabel: _translator["default"].translate("views_inflected"),
-  fetchingMoviesLabel: _translator["default"].translate("fetching_movies"),
-  totalMoviesLabel: _translator["default"].translate("total_movies_found"),
-  noMoviesHaveBeenFound: _translator["default"].translate("no_movies_have_been_found"),
-  noOptionsHaveBeenSelected: _translator["default"].translate("no_options_have_been_selected"),
-  unexpectedError: _translator["default"].translate("unexpected_error_occured"),
-  fetchingPornstarsFailed: _translator["default"].translate("failed_to_fetch_pornstars_list"),
-  searchHasBenStoppedBecauseThereWereToManyRequests: _translator["default"].translate("because_of_security_reasons_search_was_blocked")
-};
+  anal_percentage: sexamounts,
+  blowjob_percentage: sexamounts,
+  pussy_fuck_percentage: sexamounts,
+  pussy_licking_percentage: sexamounts,
+  feet_petting_percentage: sexamounts,
+  position_69_percentage: sexamounts
+}, _defineProperty(_actress_tits_size$ac, "feet_petting_percentage", sexamounts), _defineProperty(_actress_tits_size$ac, "double_penetration_percentage", sexamounts), _defineProperty(_actress_tits_size$ac, "handjob_percentage", sexamounts), _defineProperty(_actress_tits_size$ac, "actor_cumshot_type", {
+  on_face: _translator["default"].translate('on_face'),
+  cum_swallow: _translator["default"].translate('cum_swallow'),
+  creampie: _translator["default"].translate('creampie'),
+  anal_creampie: _translator["default"].translate('anal_creampie'),
+  on_tits: _translator["default"].translate('on_tits'),
+  on_pussy: _translator["default"].translate('on_pussy'),
+  on_ass: _translator["default"].translate('on_ass'),
+  on_feet: _translator["default"].translate('on_feet'),
+  on_many_places: _translator["default"].translate('on_many_places'),
+  on_other_body_parts: _translator["default"].translate('on_other_body_parts'),
+  exclude: _translator["default"].translate('exclude')
+}), _defineProperty(_actress_tits_size$ac, "actress_nationality", {
+  american: _translator["default"].translate('american_nationality'),
+  japanese: _translator["default"].translate('japanese_nationality'),
+  german: _translator["default"].translate('german_nationality'),
+  czech: _translator["default"].translate('czech_nationality'),
+  russian: _translator["default"].translate('russian_nationality'),
+  british: _translator["default"].translate('british_nationality'),
+  swedish: _translator["default"].translate('swedish_nationality'),
+  ukrainian: _translator["default"].translate('ukrainian_nationality'),
+  slovac: _translator["default"].translate('slovac_nationality'),
+  hanguarian: _translator["default"].translate('hanguarian_nationality'),
+  polish: _translator["default"].translate('polish_nationality'),
+  dutch: _translator["default"].translate('dutch_nationality'),
+  hindu: _translator["default"].translate('hindu_nationality'),
+  french: _translator["default"].translate('french_nationality'),
+  spanish: _translator["default"].translate('spanish_nationality'),
+  italian: _translator["default"].translate('italian_nationality'),
+  canadian: _translator["default"].translate('canadian_nationality'),
+  argentinian: _translator["default"].translate('argentinian_nationality')
+}), _defineProperty(_actress_tits_size$ac, "location", {
+  house: _translator["default"].translate('house'),
+  bathroom: _translator["default"].translate('bathroom'),
+  office: _translator["default"].translate('office'),
+  school: _translator["default"].translate('school'),
+  public_place: _translator["default"].translate('public_place'),
+  car: _translator["default"].translate('car'),
+  nature: _translator["default"].translate('nature'),
+  solarium: _translator["default"].translate('solarium'),
+  elevator: _translator["default"].translate('elevator'),
+  beach: _translator["default"].translate('beach'),
+  gym: _translator["default"].translate('gym')
+}), _defineProperty(_actress_tits_size$ac, "camera_style", {
+  outside: _translator["default"].translate('outside_camera_style'),
+  POV: _translator["default"].translate('POV'),
+  mixed: _translator["default"].translate('mixed_camera_style')
+}), _defineProperty(_actress_tits_size$ac, "story_or_costume_type", {
+  female_pupil: _translator["default"].translate('female_pupil'),
+  female_employee: _translator["default"].translate('female_employee'),
+  female_student: _translator["default"].translate('female_student'),
+  wife: _translator["default"].translate('wife'),
+  female_teacher: _translator["default"].translate('female_teacher'),
+  nurse: _translator["default"].translate('nurse'),
+  female_slave: _translator["default"].translate('female_slave'),
+  nun: _translator["default"].translate('nun'),
+  female_police_officer: _translator["default"].translate('female_police_officer'),
+  prostitute: _translator["default"].translate('prostitute'),
+  female_boss: _translator["default"].translate('female_boss'),
+  cleaner: _translator["default"].translate('cleaner'),
+  mommy: _translator["default"].translate('mommy')
+}), _defineProperty(_actress_tits_size$ac, "is_professional_production", {
+  professional: _translator["default"].translate("professional"),
+  amateur: _translator["default"].translate("amateur")
+}), _defineProperty(_actress_tits_size$ac, "pornstarsFetchingLabel", _translator["default"].translate("fetching_pornstars")), _defineProperty(_actress_tits_size$ac, "notSelected", _translator["default"].translate("not_selected")), _defineProperty(_actress_tits_size$ac, "selectedTimeLabel", _translator["default"].translate("minutes_inflected")), _defineProperty(_actress_tits_size$ac, "selectedViewsLabel", _translator["default"].translate("views_inflected")), _defineProperty(_actress_tits_size$ac, "fetchingMoviesLabel", _translator["default"].translate("fetching_movies")), _defineProperty(_actress_tits_size$ac, "totalMoviesLabel", _translator["default"].translate("total_movies_found")), _defineProperty(_actress_tits_size$ac, "noMoviesHaveBeenFound", _translator["default"].translate("no_movies_have_been_found")), _defineProperty(_actress_tits_size$ac, "noOptionsHaveBeenSelected", _translator["default"].translate("no_options_have_been_selected")), _defineProperty(_actress_tits_size$ac, "unexpectedError", _translator["default"].translate("unexpected_error_occured")), _defineProperty(_actress_tits_size$ac, "fetchingPornstarsFailed", _translator["default"].translate("failed_to_fetch_pornstars_list")), _defineProperty(_actress_tits_size$ac, "searchHasBenStoppedBecauseThereWereToManyRequests", _translator["default"].translate("because_of_security_reasons_search_was_blocked")), _actress_tits_size$ac);
+
 exports.default = _default;
 
 /***/ }),
@@ -21403,7 +21446,7 @@ var _default = {
     gadgets_and_clothing: "Ubiór i gadżety",
     cumshot: "Wytrysk",
     login_to_sex_empire_manager: "Menager Sex-Imperium"
-  }, _defineProperty(_pl, "login_to_sex_empire_manager", "Zaloguj do Menagera Sex-Imperium"), _defineProperty(_pl, "tits_size", "Rozmiar cycków"), _defineProperty(_pl, "ass_size", "Rozmiar tyłka"), _defineProperty(_pl, "hair_color", "Kolor włosów"), _defineProperty(_pl, "race", "Rasa"), _defineProperty(_pl, "nationality", "Narodowość"), _defineProperty(_pl, "shaved_pussy", "Wygolona cipka"), _defineProperty(_pl, "sex_type", "Typ seksu"), _defineProperty(_pl, "abundance", "Liczebność"), _defineProperty(_pl, "age", "Wiek"), _defineProperty(_pl, "thickness", "Tusza"), _defineProperty(_pl, "login", "Login"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "actions", "Akcje"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "email", "Email"), _defineProperty(_pl, "delete", 'Usuń'), _defineProperty(_pl, "cancel", 'anuluj'), _defineProperty(_pl, "answear_comment", 'Odpowiedz'), _defineProperty(_pl, "error_during_fetching_pornstars_list", "Podczas pobierania listy gwiazd pojawił się błąd"), _defineProperty(_pl, "account_deletion_warning", "Czy na pewno chcesz usunąć konto? Znikną wszystkie komentarze i wystawione oceny. Nie będzie można tego cofnąć. Jeżeli jesteś pewny/a wpisz hasło i kliknij usuń"), _defineProperty(_pl, "email_has_already_been_taken", "Adres email jest już zajęty"), _defineProperty(_pl, "current_number_of_votes", "Liczba oddanych głosów"), _defineProperty(_pl, "file_size_exceeds_limit", "Rozmiar pliku przekracza dopuszczalny limit (2 MB)"), _defineProperty(_pl, "an_error_occured_while_fetching_pornstar_rating", "Podczas próby pobrania rankingu gwiazdy pojawił się niespodziewany bład"), _defineProperty(_pl, "i_forgot_password", "Zapomniałem hasła"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "email_is_invalid", "Adres email jest nieprawidłowy"), _defineProperty(_pl, "the_user_type_is_incorrect", "Niepoprawny typ użytkownika. Należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_attempts", "Za dużo prób w ciągu jednej minuty"), _defineProperty(_pl, "the_sexual_orientation_is_incorrect", "Niepoprawna orientacja seksualna należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_user_settings_change_attempts", "Za dużo prób w ciągu jednej minuty. Ze względów bezpieczeństwa liczba prób jest ograniczona. Proszę spróbować za chwilę."), _defineProperty(_pl, "undefined_error", "Bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "show_next_answears", "Wczytaj kolejne odpowiedzi"), _defineProperty(_pl, "user_data_has_been_modified_successfully", "Pomyślnie zmodyfikowano dane użytkownika"), _defineProperty(_pl, "password_must_contain_at_least_3_characters", "Hasło musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "password_must_not_exceed_20_characters", "Hasło nie może przekraczać 20 znaków"), _defineProperty(_pl, "password_is_missing", "Nie podano hasła"), _defineProperty(_pl, "password_is_required", "Należy podać hasło"), _defineProperty(_pl, "the_given_password_is_incorrect", "Wprowadzone hasło jest nieprawidłowe"), _defineProperty(_pl, "the_following_errors_occured", "Wykryto następujące problemy : "), _defineProperty(_pl, "data_has_been_changed_successfully", "Pomyślnie zmieniono dane użytkownika."), _defineProperty(_pl, "the_requested_data_is_probably_ok_but_a_server_error_occured", "Wprowadzone dane są prawdopodobnie w porządku jednak wystąpił błąd po stronie serwera"), _defineProperty(_pl, "the_requested_data_is_ok_but_a_server_error_occured", "Wprowadzone dane są poprawne jednak serwer napotkał nieoczekiwany błąd. Prosimy spróbować później lub skontaktować się z obsługą"), _defineProperty(_pl, "please_type_in_a_valid_password", "Proszę wprowadzić swoje hasło o długości od 3 do 20 znaków"), _defineProperty(_pl, "no_data_has_been_changed", "Żadne pole nie zostało zmienione."), _defineProperty(_pl, "this_input_must_not_be_changed", "Tego pola nie można edytować"), _defineProperty(_pl, "edit", "Edycja"), _defineProperty(_pl, "you_have_to_choose_one_option", "Należy wybrać jedną opcję"), _defineProperty(_pl, "information", "Informacja"), _defineProperty(_pl, "error", "Błąd"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "login_to_sex_empire", "Zaloguj się do Sex-Imperium"), _defineProperty(_pl, "incorrect_image_dimensions", "Szerokość lub wysokość obrazu przekracza 128px"), _defineProperty(_pl, "invalid_file_extension", "Niewłaściwe rozszerzenie pliku. Dozwolone rozszerzenia to : jpg, jpeg, svg, bmp, png, gif, webp"), _defineProperty(_pl, "url_address", "Adres URL"), _defineProperty(_pl, "incorrect_extension", "Niewłaściwe rozszerzenie pliku"), _defineProperty(_pl, "invalid_image_url", "Wygląda na to, że podany adres URL obrazu jest nieprawidłowy. Jeżeli jesteś przekonany, że jest inaczej zawsze możesz pobrać obraz na dysk i stamtąd wczytać"), _defineProperty(_pl, "invalid_image_extension", "Wygląda na to, że plik ma niewłaściwe rozszerzenie"), _defineProperty(_pl, "invalid_image_dimensions", "Wprowadzony adres odnosi się do obrazu z właściwym rozszerzeniem jednak szerokość lub wysokość przekracza 128px"), _defineProperty(_pl, "operation_in_progress", "Operacja w toku"), _defineProperty(_pl, "checking_image", "Sprawdzam obraz"), _defineProperty(_pl, "checking_the_email", "Sprawdzam email"), _defineProperty(_pl, "changing_user_data", "Pracuję nad zmianą danych"), _defineProperty(_pl, "server_error", "Błąd serwera"), _defineProperty(_pl, "invalid_image_url_or_another_error", "Prawdopodobnie adres URL jest nieprawidłowy lub wystąpił inny bliżej niezidentyfikowany problem"), _defineProperty(_pl, "deleting_the_avatar", "Usuwam avatar"), _defineProperty(_pl, "message_exceeds_1000_characters", "Wiadomość przekracza 1000 znaków"), _defineProperty(_pl, "message_contains_less_then_3_characters", "Wiadomość zawiera mniej niż 3 znaki"), _defineProperty(_pl, "this_email_address_does_not_exist", "Taki adres email nie istnieje"), _defineProperty(_pl, "to_many_attemts_during_one_minute", "Za dużo prób w ciągu 1 minuty"), _defineProperty(_pl, "password_has_less_then_3_characters", "Hasło ma mniej niż 3 znaki"), _defineProperty(_pl, "password_has_more_then_20_characters", "Hasło ma więcej niż 20 znaków"), _defineProperty(_pl, "passwords_do_not_match", "Hasła nie pokrywają się"), _defineProperty(_pl, "login_has_already_been_taken", "Login jest już zajęty"), _defineProperty(_pl, "login_contains_less_then_3_characters", "Login ma mniej niż 3 znaki"), _defineProperty(_pl, "login_contains_more_then_20_characters", "Login ma więcej niż 20 znaków"), _defineProperty(_pl, "email_has_already_been_taken", "Email jest już zajęty"), _defineProperty(_pl, "email_seems_to_be_incorrect", "Email wygląda na nieprawidłowy"), _defineProperty(_pl, "subject_exceeds_40_characters", "Temat przekracza 40 znaków"), _defineProperty(_pl, "you_are_under_18", "Nie ukończyłeś 18 lat"), _defineProperty(_pl, "the_user_has_no_avatar", "Użytkownik nie posiada avataru"), _defineProperty(_pl, "password_change_attempt", "Próba zmiany hasła"), _defineProperty(_pl, "password_changed_successfully", "Pomyślnie zmieniono hasło"), _defineProperty(_pl, "please_type_in_new_valid_password_as_described", "Proszę wprowadzić nowe hasło zgodnie z wytycznymi"), _defineProperty(_pl, "please_type_in_current_password_as_described", "Proszę wprowadzić aktualne hasło zgodnie z wytycznymi"), _defineProperty(_pl, "new_password_does_not_match", "Wprowadzone nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password_is_required", "Nie podano nowego hasła(środkowe pole)"), _defineProperty(_pl, "new_password_must_contain_at_least_3_characters", "Nowe hasło musi zawierać co najmniej 3 znaki(środkowe pole)"), _defineProperty(_pl, "the_given_new_passwords_do_not_match", "Podane nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password__confirmation_must_contain_at_least_3_characters", "Potwierdzenie nowego hasła musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "new_password__confirmation_must_not_exceed_20_characters", "Potwierdzenie nowego hasła przekracza 20 znaków"), _defineProperty(_pl, "no_image_has_been_selected", "Nie wybrano żadnego prawidłowego obrazu"), _defineProperty(_pl, "the_file_selected_from_hard_drive_is_not_an_image", "Plik wybrany z dysku nie jest obrazem"), _defineProperty(_pl, "invalid_image_dimensions", "Niewłaściwe wymiary obrazu"), _defineProperty(_pl, "the_data_looks_ok_but_an_unexpected_error_occured", "Wprowadzone dane są w porządku jednak pojawił się nieoczekiwany błąd"), _defineProperty(_pl, "settings_change_attempt", "Próba zmiany ustawień"), _defineProperty(_pl, "settings_changed_successfully", "Pomyślnie zmieniono ustawienia"), _defineProperty(_pl, "the_shows_birthday_field_is_missing", "Brak informacji o tym czy wyświetlać datę urodzenia innym użytkownikom"), _defineProperty(_pl, "the_shows_birthday_field_must_be_a_boolean_value", "Pole pokazuj datę urodzenia musi zawierać wartość typu logicznego"), _defineProperty(_pl, "fetching_movies", "Pobieram filmy"), _defineProperty(_pl, "movies", "Filmy"), _defineProperty(_pl, "views", "Odsłon"), _defineProperty(_pl, "preview", "Podgląd"), _defineProperty(_pl, "pornstars", "Gwiazdy"), _defineProperty(_pl, "pornstars_navbar_caption", "Gwiazdy porno"), _defineProperty(_pl, "scroll_previous_links", "Przewijaj listę podstron do tyłu"), _defineProperty(_pl, "movie_frame", "Kadr z filmu"), _defineProperty(_pl, "close_movie_preview", "Zamknij podgląd filmu"), _defineProperty(_pl, "play_movie_preview", "Uruchom podgląd filmu"), _defineProperty(_pl, "launching_in_progress", "Trwa uruchamianie"), _defineProperty(_pl, "click_to_play_the_video", "Kliknij aby uruchomić film"), _defineProperty(_pl, "stop_movie_preview", "Zatrzymaj odtwarzanie podglądu filmu"), _defineProperty(_pl, "sex_empire", "Sex-Imperium"), _defineProperty(_pl, "movie_translated_to_polish", "Film przetłumaczony na język polski"), _defineProperty(_pl, "scroll_next_links", "Przewijaj listę podstron do przodu"), _defineProperty(_pl, "hide_side_bar", "Schowaj boczny pasek"), _defineProperty(_pl, "previous_page", "poprzednia"), _defineProperty(_pl, "next_page", "następna"), _defineProperty(_pl, "further", "dalej"), _defineProperty(_pl, "back", "wstecz"), _defineProperty(_pl, "up", "góra"), _defineProperty(_pl, "first_page", "pierwsza"), _defineProperty(_pl, "profile", "Profil"), _defineProperty(_pl, "profile_settings", "Ustawienia profilu"), _defineProperty(_pl, "messages", "Wiadomości"), _defineProperty(_pl, "favourites", "Ulubione"), _defineProperty(_pl, "friends", "Znajomi"), _defineProperty(_pl, "logout", "Wyloguj"), _defineProperty(_pl, "porn", "Porno"), _defineProperty(_pl, "user_avatar_description", "Avatar użytkownika o nicku"), _defineProperty(_pl, "description", "Opis"), _defineProperty(_pl, "default_avatar", "Domyślny avatar, przedstawia bliżej niezidentyfikowanego użytkownika"), _defineProperty(_pl, "hide", "Schowaj"), _defineProperty(_pl, "element_has_been_rated", "Ocena została wystawiona. Możesz zawsze zmienić zdanie i ocenić ponownie."), _defineProperty(_pl, "pornstar_rate_data_is_invalid", "Niepoprawne dane oceny lub gwiazdy"), _defineProperty(_pl, "movie_rate_data_is_invalid", "Niepoprawne dane oceny lub filmu"), _defineProperty(_pl, "nickname_is_missing", "Nie podano pseudonimu"), _defineProperty(_pl, "unexpected_error_occured_while_fetching_comments", "Niestety pojawił się bliżej niezidentyfikowany błąd podczas pobierania komentarzy"), _defineProperty(_pl, "nickname", "Pseudonim"), _defineProperty(_pl, "answears", "Odpowiedzi"), _defineProperty(_pl, "add_comment", "Dodaj komentarz"), _defineProperty(_pl, "add", "dodaj"), _defineProperty(_pl, "contents", "Treść"), _defineProperty(_pl, "comment_added", "Dodano komentarz"), _defineProperty(_pl, "unregistered_user", "Niezarejestrowany"), _defineProperty(_pl, "register", "Rejestruj"), _defineProperty(_pl, "add_comment_short", "Komentuj"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "adding_comment", "Dodaję komentarz"), _defineProperty(_pl, "fetching_comments", "Pobieram komentarze"), _defineProperty(_pl, "comment_text_is_missing", "Nie podano treści komentarza"), _defineProperty(_pl, "comment_text_exceeds_1000_characters", "Treść komentarza przekracza 1000 znaków"), _defineProperty(_pl, "the_nickname_must_be_between_2_and_20_characters", "Pseudonim musi mieć minimum 2 znaki ale nie więcej niż 20"), _defineProperty(_pl, "no_comments_available", "Brak komentarzy"), _defineProperty(_pl, "because_of_safety_reasons_adding_comments_is_limited_to_2_per_minute", "Z powodów bezpieczeństwa ograniczono liczbę dodawanych komentarzy do 2 na minutę"), _defineProperty(_pl, "total_comments", "Liczba wszystkich komentarzy"), _defineProperty(_pl, "publish_comment", "Opublikuj komentarz"), _defineProperty(_pl, "show_comments_sub_page_with_number", "Pokaż podstronę komentarzy o numerze"), _defineProperty(_pl, "sex_empire_short", "SI"), _defineProperty(_pl, "small_ass", "mały"), _defineProperty(_pl, "medium_ass", "średni"), _defineProperty(_pl, "big_ass", "duży"), _defineProperty(_pl, "small_tits", "małe"), _defineProperty(_pl, "medium_tits", "średnie"), _defineProperty(_pl, "big_tits", "duże"), _defineProperty(_pl, "skinny_tchickness", "chuda"), _defineProperty(_pl, "medium_tchickness", "średnia"), _defineProperty(_pl, "fat_tchickness", "gruba"), _defineProperty(_pl, "teenagers", "nastolatki(18 - 19)"), _defineProperty(_pl, "age_range_young", "młode (20 -29)"), _defineProperty(_pl, "age_range_mature", "dojrzałe(30 - 50)"), _defineProperty(_pl, "dark_hair", "czarny"), _defineProperty(_pl, "blonde_hair", "blond"), _defineProperty(_pl, "brown_hair", "brązowy"), _defineProperty(_pl, "red_hair", "rudy"), _defineProperty(_pl, "white_race", "biała"), _defineProperty(_pl, "asian_race", "azjatki"), _defineProperty(_pl, "ebony_race", "murzynki"), _defineProperty(_pl, "latin_race", "latynoski"), _defineProperty(_pl, "arabic_race", "arabki"), _defineProperty(_pl, "yes", "tak"), _defineProperty(_pl, "no", "nie"), _defineProperty(_pl, "one_male_one_female", "facet i kobieta"), _defineProperty(_pl, "bukkake", "bukkake"), _defineProperty(_pl, "single_female", "kobieta solo"), _defineProperty(_pl, "lesbians", "lesbijki"), _defineProperty(_pl, "group_sex", "grupowy"), _defineProperty(_pl, "one_male_many_females", "facet i wiele kobiet"), _defineProperty(_pl, "GangBang", "GangBang"), _defineProperty(_pl, "one_female_two_males", "Na 2 baty"), _defineProperty(_pl, "lesbian_group_sex", "Lesbijki grupowo"), _defineProperty(_pl, "only", "tylko i wyłącznie"), _defineProperty(_pl, "maximum", "maximum"), _defineProperty(_pl, "a_lot", "dużo"), _defineProperty(_pl, "medium", "średnio"), _defineProperty(_pl, "a_little", "trochę"), _defineProperty(_pl, "exclude", "wyklucz"), _defineProperty(_pl, "on_face", "na twarz"), _defineProperty(_pl, "cum_swallow", "z połykiem"), _defineProperty(_pl, "creampie", "w cipkę"), _defineProperty(_pl, "anal", "Anal"), _defineProperty(_pl, "blowjob", "Obciąganie"), _defineProperty(_pl, "vaginal", "Waginalny"), _defineProperty(_pl, "handjob", "Walenie konika"), _defineProperty(_pl, "tittfuck", "Na hiszpana"), _defineProperty(_pl, "feet", "Stópki"), _defineProperty(_pl, "double_penetration", "Wtyczka"), _defineProperty(_pl, "position_69", "Pozycja 69"), _defineProperty(_pl, "cumshot_compilation", "Kompilacja wytrysków"), _defineProperty(_pl, "circumstances_and_style", "Okoliczności i styl"), _defineProperty(_pl, "location", "Lokalizacja"), _defineProperty(_pl, "camera_style", "Ujęcie kamery"), _defineProperty(_pl, "story_or_costume_type", "fabuła, kostium"), _defineProperty(_pl, "movie_level", "Poziom filmu"), _defineProperty(_pl, "has_story", "Zawiera fabuła"), _defineProperty(_pl, "spy_camera", "Kamera szpiegowska"), _defineProperty(_pl, "sadistic_or_masochistic", "Sado-maso"), _defineProperty(_pl, "female_domination", "Kobieca dominacja"), _defineProperty(_pl, "polish_language_version", "Polska wersja językowa"), _defineProperty(_pl, "pantyhose", "Rajstopy"), _defineProperty(_pl, "stockings", "Pończochy"), _defineProperty(_pl, "glasses", "Okulary"), _defineProperty(_pl, "high_heels", "Szpile"), _defineProperty(_pl, "huge_cock", "Wielki kutas"), _defineProperty(_pl, "whips", "Bicze"), _defineProperty(_pl, "sex_toys", "Sex-zabawki"), _defineProperty(_pl, "choose_from_pornstars_list", "Wybierz z listy gwiazd"), _defineProperty(_pl, "reset_panel", "Resetuj panel"), _defineProperty(_pl, "save_movie", "Zapisz film"), _defineProperty(_pl, "title", "Tytuł"), _defineProperty(_pl, "controls", "Sterowanie"), _defineProperty(_pl, "movie_duration", "Czas trwania filmu"), _defineProperty(_pl, "anal_creampie", "w dupkę"), _defineProperty(_pl, "on_tits", "na cycki"), _defineProperty(_pl, "on_pussy", "na cipkę"), _defineProperty(_pl, "on_ass", "na dupkę"), _defineProperty(_pl, "on_feet", "na stopy"), _defineProperty(_pl, "on_many_places", "na wiele miejsc"), _defineProperty(_pl, "on_other_body_parts", "na inne miejsca"), _defineProperty(_pl, "american_nationality", "amerykańska"), _defineProperty(_pl, "japanese_nationality", "japońska"), _defineProperty(_pl, "german_nationality", "niemiecka"), _defineProperty(_pl, "czech_nationality", "czeska"), _defineProperty(_pl, "russian_nationality", "rosyjska"), _defineProperty(_pl, "british_nationality", "brytyjska"), _defineProperty(_pl, "swedish_nationality", "szwedzka"), _defineProperty(_pl, "ukrainian_nationality", "ukraińska"), _defineProperty(_pl, "slovac_nationality", "słowacka"), _defineProperty(_pl, "hanguarian_nationality", "węgierska"), _defineProperty(_pl, "polish_nationality", "polska"), _defineProperty(_pl, "dutch_nationality", "holenderska"), _defineProperty(_pl, "hindu_nationality", "hinduska"), _defineProperty(_pl, "french_nationality", "francuska"), _defineProperty(_pl, "spanish_nationality", "hiszpańska"), _defineProperty(_pl, "italian_nationality", "włoska"), _defineProperty(_pl, "canadian_nationality", "kanadyjska"), _defineProperty(_pl, "argentinian_nationality", "argentyńska"), _defineProperty(_pl, "house", "dom"), _defineProperty(_pl, "bathroom", "łazienka"), _defineProperty(_pl, "office", "biuro"), _defineProperty(_pl, "school", "szkoła"), _defineProperty(_pl, "public_place", "miejsca publiczne"), _defineProperty(_pl, "car", "samochód"), _defineProperty(_pl, "nature", "łono natury"), _defineProperty(_pl, "solarium", "solarium"), _defineProperty(_pl, "elevator", "winda"), _defineProperty(_pl, "beach", "plaża"), _defineProperty(_pl, "gym", "siłownia"), _defineProperty(_pl, "POV", "POV"), _defineProperty(_pl, "outside_camera_style", "z zewnątrz"), _defineProperty(_pl, "mixed_camera_style", "mieszane"), _defineProperty(_pl, "female_pupil", "uczennica"), _defineProperty(_pl, "female_employee", "pracownica"), _defineProperty(_pl, "female_student", "studentka"), _defineProperty(_pl, "wife", "żona"), _defineProperty(_pl, "female_teacher", "nauczycielka"), _defineProperty(_pl, "nurse", "pielęgniarka"), _defineProperty(_pl, "female_slave", "niewolnica"), _defineProperty(_pl, "nun", "zakonnica"), _defineProperty(_pl, "female_police_officer", "policjantka"), _defineProperty(_pl, "prostitute", "prostytutka"), _defineProperty(_pl, "female_boss", "szefowa"), _defineProperty(_pl, "cleaner", "sprzątaczka"), _defineProperty(_pl, "mommy", "mamusia"), _defineProperty(_pl, "amateur", "amatorski"), _defineProperty(_pl, "professional", "profesjonalny"), _defineProperty(_pl, "choose_options", "wybierz opcje"), _defineProperty(_pl, "search", "szukaj"), _defineProperty(_pl, "remove_option", "usuń opcję"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd, w razie potrzeby prosimy odświeżyć stronę"), _defineProperty(_pl, "fetching_pornstars", "Pobieram listę gwiazd"), _defineProperty(_pl, "not_selected", "nie wybrano"), _defineProperty(_pl, "minutes_inflected", "minut(y)"), _defineProperty(_pl, "views_inflected", "wyświetleń"), _defineProperty(_pl, "unexpected_error_occured", "Pojawił się bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "titsSize", "rozmiar cycków"), _defineProperty(_pl, "assSize", "rozmiar dupci"), _defineProperty(_pl, "thicknessSize", "tusza"), _defineProperty(_pl, "ageRange", "przedział wiekowy"), _defineProperty(_pl, "hairColor", "kolor włosów"), _defineProperty(_pl, "race", "rasa"), _defineProperty(_pl, "abundanceType", "liczebność"), _defineProperty(_pl, "cumshotType", "typ wytrysku"), _defineProperty(_pl, "nationality", "narodowość"), _defineProperty(_pl, "location", "lokalizacja"), _defineProperty(_pl, "cameraStyle", "ujęcie kamery"), _defineProperty(_pl, "storyOrCostume", "motyw fabularno kostiumowy"), _defineProperty(_pl, "professionalismLevel", "poziom filmu"), _defineProperty(_pl, "shavedPussy", "wygolona cipka"), _defineProperty(_pl, "analAmount", "anal"), _defineProperty(_pl, "blowjob", "obciąganie"), _defineProperty(_pl, "handjob", "walenie konika"), _defineProperty(_pl, "blondes", "blondynki"), _defineProperty(_pl, "tittfuck", "na hiszpana"), _defineProperty(_pl, "pussy_licking", "minetka"), _defineProperty(_pl, "feet", "stopy"), _defineProperty(_pl, "femdom", "kobieca dominacja"), _defineProperty(_pl, "brunettes", "brunetki"), _defineProperty(_pl, "redheads", "rude"), _defineProperty(_pl, "milfs", "dojrzałe"), _defineProperty(_pl, "teens", 'nastolatki'), _defineProperty(_pl, "amateur", "amatorskie"), _defineProperty(_pl, "asian", 'azjatki'), _defineProperty(_pl, "latins", 'latynoski'), _defineProperty(_pl, "ebony", 'murzynki'), _defineProperty(_pl, "lesbians", 'lesbijki'), _defineProperty(_pl, "group", 'grupowy'), _defineProperty(_pl, "cumshot_compilation", 'kompilacja wytrysków'), _defineProperty(_pl, "cumshot_compilations", 'kompilacje wytrysków'), _defineProperty(_pl, "cum_on_face", 'wytrysk na twarz'), _defineProperty(_pl, "cum_swallow", 'połykanie spermy'), _defineProperty(_pl, "cum_on_feet", 'wytrysk na stopy'), _defineProperty(_pl, "creampie", 'wytrysk w cipkę'), _defineProperty(_pl, "cum_in_ass", 'wytrysk w dupkę'), _defineProperty(_pl, "cum_on_titts", 'wytrysk na cycki'), _defineProperty(_pl, "pantyhose", 'rajstopki'), _defineProperty(_pl, "high_heels", 'szpile'), _defineProperty(_pl, "nurses", 'pielęgniarki'), _defineProperty(_pl, "teachers", 'nauczycielki'), _defineProperty(_pl, "japanese", 'japonki'), _defineProperty(_pl, "russian", 'rosjanki'), _defineProperty(_pl, "pornstars", 'gwiazdy porno'), _defineProperty(_pl, "blowjobAmount", 'obciąganie'), _defineProperty(_pl, "handjobAmount", 'walenie konika'), _defineProperty(_pl, "doublePenetrationAmount", "wtyczka"), _defineProperty(_pl, "vaginalAmount", "waginalny"), _defineProperty(_pl, "pussyLickingAmount", 'minetka'), _defineProperty(_pl, "feetPettingAmount", 'pieszczenie stóp'), _defineProperty(_pl, "position69amount", 'pozycja 69'), _defineProperty(_pl, "titfuckAmount", "na hiszpana"), _defineProperty(_pl, "isCumshotCompilation", 'kompilacja wytrysków'), _defineProperty(_pl, "recordedBySpyCamera", 'nagrany kamerą szpiegowską'), _defineProperty(_pl, "isSadisticOrMasochistic", 'sado-masochostyczny'), _defineProperty(_pl, "isFemaleDomination", 'kobieca dominacja'), _defineProperty(_pl, "isTranslatedToPolish", 'polska wersja językowa'), _defineProperty(_pl, "showPantyhose", 'rajstopy'), _defineProperty(_pl, "showStockings", 'pończochy'), _defineProperty(_pl, "showGlasses", 'okulary'), _defineProperty(_pl, "showHighHeels", 'szpile'), _defineProperty(_pl, "showHugeCock", 'wielki kutas'), _defineProperty(_pl, "showWhips", 'bicze'), _defineProperty(_pl, "showSexToys", 'sex-zabawki'), _defineProperty(_pl, "minimumMovieTime", "minimalny czas"), _defineProperty(_pl, "maximumMovieTime", "maksymalny czas"), _defineProperty(_pl, "minimumMovieViews", 'minimalna liczba wyświetleń'), _defineProperty(_pl, "maximumMovieViews", 'maksymalna liczba wyświetleń'), _defineProperty(_pl, "hasStory", 'zawiera fabułę'), _defineProperty(_pl, "total_movies_found", "Ilość znalezionych filmów"), _defineProperty(_pl, "movie_with_following_pornstars", "występują jednocześnie następujące gwiazdy"), _defineProperty(_pl, "last_page", "ostatnia"), _defineProperty(_pl, "movie_with_pornstar", "Film w którym występuje"), _defineProperty(_pl, "no_movies_have_been_found", "Nie znaleziono żadnych filmów pasujących do wybranych kryteriów"), _defineProperty(_pl, "no_options_have_been_selected", "Nie wybrano żadnych opcji"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd"), _defineProperty(_pl, "because_of_security_reasons_search_was_blocked", "Ze względów bezpieczeństwa ilość zapytań do wyszukiwarki w ciągu minuty jest ograniczona. Prosimy zaczekać chwilę i spróbować ponownie."), _defineProperty(_pl, "popular_categories", "Popularne kategorie"), _defineProperty(_pl, "categories_list", "Lista kategorii"), _defineProperty(_pl, "big_titts", "duże cycki"), _defineProperty(_pl, "categories", "Kategorie"), _defineProperty(_pl, "teenagers", "nastolatki"), _defineProperty(_pl, "spermatozoid_has_been_asigned", "Przyznano plemnika. Musisz odczekać minimum pół godziny aby przyznać kolejnego."), _defineProperty(_pl, "you_have_exceeded_cum_limit", "Możesz przyznać maksymalnie jednego plemnika na pół godziny niezależnie od filmu"), _defineProperty(_pl, "spermatozoid_rate_data_is_incorrect", "Niepoprawne dane filmu"), _defineProperty(_pl, "movie_views", "Liczba wyświetleń"), _defineProperty(_pl, "movie_added_at", "Data dodania"), _defineProperty(_pl, "movie_average_rating", "Średnia ocen"), _defineProperty(_pl, "this_pornstar_does_not_have_enough_votes_to_calculate_average", "Ta gwiazda ma za mało głosów aby policzyć średnią (wymagane minimum to 10)"), _defineProperty(_pl, "fetching_rating_in_progress", "Pobieram dane rankingu"), _defineProperty(_pl, "average_rate_not_available_yet", "jeszcze niedostępna"), _defineProperty(_pl, "ammount_of_spermatozoids", "Liczba plemników"), _defineProperty(_pl, "your_spermatozoids", "twoich"), _defineProperty(_pl, "number_of_likes", "Polubień"), _defineProperty(_pl, "failed_to_load_movie_data", "Nie udało się pobrać szczegółowych danych filmu"), _defineProperty(_pl, "failed_to_load_similar_movies", "Nie udało się załadować podobnych filmów"), _defineProperty(_pl, "you_like_it", "Lubisz to"), _defineProperty(_pl, "you_already_like_this_movie", "Już wcześniej polubiłeś ten film"), _defineProperty(_pl, "you_and", "Ty i"), _defineProperty(_pl, "people_like_it", "osób lubi to"), _defineProperty(_pl, "no_comments", "Brak komentarzy"), _defineProperty(_pl, "cookie_notification_header", "Ta strona wykorzystuje pliki cookie"), _defineProperty(_pl, "cookie_notification_body", "Poprzez dalsze korzystanie z portalu lub naci\u015Bni\u0119cie przycisku \"Akceptuj\u0119\" wyra\u017Casz zgod\u0119 na przechowywanie plik\xF3w cookie na Twej maszynie"), _defineProperty(_pl, "accept_button_caption", "Akceptuję - zamknij"), _defineProperty(_pl, "show_content_side_bar_title", "Rozwiń nawigację strony dla wersji mobilnej"), _defineProperty(_pl, "show_content_side_bar_caption", "Menu"), _defineProperty(_pl, "cancel_like", "cofnij like'a"), _defineProperty(_pl, "show_authenticated_user_sidebar_title", "Rozwiń menu użytkownika, ustawienia profilu, wylogowanie itp."), _defineProperty(_pl, "show_authenticated_user_sidebar_caption", "Profil"), _defineProperty(_pl, "selected_avatar", "Nowy avatar"), _defineProperty(_pl, "no_avatar_has_been_choosen", "Nie wybrano avataru"), _defineProperty(_pl, "current_avatar", "Wybrany avatar"), _defineProperty(_pl, "the_latest", "Najnowsze"), _defineProperty(_pl, "the_most_popular", "Najpopularniejsze"), _defineProperty(_pl, "advanced_search", "Szukanie zaawansowane"), _defineProperty(_pl, "remember_me", "Zapamiętaj mnie"), _defineProperty(_pl, "scroll_movies_list_left", "Przewiń listę filmów w lewo"), _defineProperty(_pl, "scroll_movies_list_right", "Przewiń listę filmów w prawo"), _defineProperty(_pl, "dictionary", "Słownik"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "added_movie", "Dodano film"), _defineProperty(_pl, "employee_added_incorrect_parameters", "Podano nieprawidłowe parametry, lista problemów"), _defineProperty(_pl, "packages", {
+  }, _defineProperty(_pl, "login_to_sex_empire_manager", "Zaloguj do Menagera Sex-Imperium"), _defineProperty(_pl, "tits_size", "Rozmiar cycków"), _defineProperty(_pl, "ass_size", "Rozmiar tyłka"), _defineProperty(_pl, "hair_color", "Kolor włosów"), _defineProperty(_pl, "race", "Rasa"), _defineProperty(_pl, "nationality", "Narodowość"), _defineProperty(_pl, "shaved_pussy", "Wygolona cipka"), _defineProperty(_pl, "sex_type", "Typ seksu"), _defineProperty(_pl, "abundance", "Liczebność"), _defineProperty(_pl, "age", "Wiek"), _defineProperty(_pl, "thickness", "Tusza"), _defineProperty(_pl, "login", "Login"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "actions", "Akcje"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "email", "Email"), _defineProperty(_pl, "delete", 'Usuń'), _defineProperty(_pl, "cancel", 'anuluj'), _defineProperty(_pl, "answear_comment", 'Odpowiedz'), _defineProperty(_pl, "error_during_fetching_pornstars_list", "Podczas pobierania listy gwiazd pojawił się błąd"), _defineProperty(_pl, "account_deletion_warning", "Czy na pewno chcesz usunąć konto? Znikną wszystkie komentarze i wystawione oceny. Nie będzie można tego cofnąć. Jeżeli jesteś pewny/a wpisz hasło i kliknij usuń"), _defineProperty(_pl, "email_has_already_been_taken", "Adres email jest już zajęty"), _defineProperty(_pl, "current_number_of_votes", "Liczba oddanych głosów"), _defineProperty(_pl, "file_size_exceeds_limit", "Rozmiar pliku przekracza dopuszczalny limit (2 MB)"), _defineProperty(_pl, "an_error_occured_while_fetching_pornstar_rating", "Podczas próby pobrania rankingu gwiazdy pojawił się niespodziewany bład"), _defineProperty(_pl, "i_forgot_password", "Zapomniałem hasła"), _defineProperty(_pl, "password", "Hasło"), _defineProperty(_pl, "email_is_invalid", "Adres email jest nieprawidłowy"), _defineProperty(_pl, "the_user_type_is_incorrect", "Niepoprawny typ użytkownika. Należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_attempts", "Za dużo prób w ciągu jednej minuty"), _defineProperty(_pl, "the_sexual_orientation_is_incorrect", "Niepoprawna orientacja seksualna należy wybrać 1 opcję z listy"), _defineProperty(_pl, "to_many_user_settings_change_attempts", "Za dużo prób w ciągu jednej minuty. Ze względów bezpieczeństwa liczba prób jest ograniczona. Proszę spróbować za chwilę."), _defineProperty(_pl, "undefined_error", "Bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "show_next_answears", "Wczytaj kolejne odpowiedzi"), _defineProperty(_pl, "user_data_has_been_modified_successfully", "Pomyślnie zmodyfikowano dane użytkownika"), _defineProperty(_pl, "password_must_contain_at_least_3_characters", "Hasło musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "password_must_not_exceed_20_characters", "Hasło nie może przekraczać 20 znaków"), _defineProperty(_pl, "password_is_missing", "Nie podano hasła"), _defineProperty(_pl, "password_is_required", "Należy podać hasło"), _defineProperty(_pl, "the_given_password_is_incorrect", "Wprowadzone hasło jest nieprawidłowe"), _defineProperty(_pl, "the_following_errors_occured", "Wykryto następujące problemy : "), _defineProperty(_pl, "data_has_been_changed_successfully", "Pomyślnie zmieniono dane użytkownika."), _defineProperty(_pl, "the_requested_data_is_probably_ok_but_a_server_error_occured", "Wprowadzone dane są prawdopodobnie w porządku jednak wystąpił błąd po stronie serwera"), _defineProperty(_pl, "the_requested_data_is_ok_but_a_server_error_occured", "Wprowadzone dane są poprawne jednak serwer napotkał nieoczekiwany błąd. Prosimy spróbować później lub skontaktować się z obsługą"), _defineProperty(_pl, "please_type_in_a_valid_password", "Proszę wprowadzić swoje hasło o długości od 3 do 20 znaków"), _defineProperty(_pl, "no_data_has_been_changed", "Żadne pole nie zostało zmienione."), _defineProperty(_pl, "this_input_must_not_be_changed", "Tego pola nie można edytować"), _defineProperty(_pl, "edit", "Edycja"), _defineProperty(_pl, "you_have_to_choose_one_option", "Należy wybrać jedną opcję"), _defineProperty(_pl, "information", "Informacja"), _defineProperty(_pl, "error", "Błąd"), _defineProperty(_pl, "log_in", "Zaloguj"), _defineProperty(_pl, "login_to_sex_empire", "Zaloguj się do Sex-Imperium"), _defineProperty(_pl, "incorrect_image_dimensions", "Szerokość lub wysokość obrazu przekracza 128px"), _defineProperty(_pl, "invalid_file_extension", "Niewłaściwe rozszerzenie pliku. Dozwolone rozszerzenia to : jpg, jpeg, svg, bmp, png, gif, webp"), _defineProperty(_pl, "url_address", "Adres URL"), _defineProperty(_pl, "incorrect_extension", "Niewłaściwe rozszerzenie pliku"), _defineProperty(_pl, "invalid_image_url", "Wygląda na to, że podany adres URL obrazu jest nieprawidłowy. Jeżeli jesteś przekonany, że jest inaczej zawsze możesz pobrać obraz na dysk i stamtąd wczytać"), _defineProperty(_pl, "invalid_image_extension", "Wygląda na to, że plik ma niewłaściwe rozszerzenie"), _defineProperty(_pl, "invalid_image_dimensions", "Wprowadzony adres odnosi się do obrazu z właściwym rozszerzeniem jednak szerokość lub wysokość przekracza 128px"), _defineProperty(_pl, "operation_in_progress", "Operacja w toku"), _defineProperty(_pl, "checking_image", "Sprawdzam obraz"), _defineProperty(_pl, "checking_the_email", "Sprawdzam email"), _defineProperty(_pl, "changing_user_data", "Pracuję nad zmianą danych"), _defineProperty(_pl, "server_error", "Błąd serwera"), _defineProperty(_pl, "invalid_image_url_or_another_error", "Prawdopodobnie adres URL jest nieprawidłowy lub wystąpił inny bliżej niezidentyfikowany problem"), _defineProperty(_pl, "deleting_the_avatar", "Usuwam avatar"), _defineProperty(_pl, "message_exceeds_1000_characters", "Wiadomość przekracza 1000 znaków"), _defineProperty(_pl, "message_contains_less_then_3_characters", "Wiadomość zawiera mniej niż 3 znaki"), _defineProperty(_pl, "this_email_address_does_not_exist", "Taki adres email nie istnieje"), _defineProperty(_pl, "to_many_attemts_during_one_minute", "Za dużo prób w ciągu 1 minuty"), _defineProperty(_pl, "password_has_less_then_3_characters", "Hasło ma mniej niż 3 znaki"), _defineProperty(_pl, "password_has_more_then_20_characters", "Hasło ma więcej niż 20 znaków"), _defineProperty(_pl, "passwords_do_not_match", "Hasła nie pokrywają się"), _defineProperty(_pl, "login_has_already_been_taken", "Login jest już zajęty"), _defineProperty(_pl, "login_contains_less_then_3_characters", "Login ma mniej niż 3 znaki"), _defineProperty(_pl, "login_contains_more_then_20_characters", "Login ma więcej niż 20 znaków"), _defineProperty(_pl, "email_has_already_been_taken", "Email jest już zajęty"), _defineProperty(_pl, "email_seems_to_be_incorrect", "Email wygląda na nieprawidłowy"), _defineProperty(_pl, "subject_exceeds_40_characters", "Temat przekracza 40 znaków"), _defineProperty(_pl, "you_are_under_18", "Nie ukończyłeś 18 lat"), _defineProperty(_pl, "the_user_has_no_avatar", "Użytkownik nie posiada avataru"), _defineProperty(_pl, "password_change_attempt", "Próba zmiany hasła"), _defineProperty(_pl, "password_changed_successfully", "Pomyślnie zmieniono hasło"), _defineProperty(_pl, "please_type_in_new_valid_password_as_described", "Proszę wprowadzić nowe hasło zgodnie z wytycznymi"), _defineProperty(_pl, "please_type_in_current_password_as_described", "Proszę wprowadzić aktualne hasło zgodnie z wytycznymi"), _defineProperty(_pl, "new_password_does_not_match", "Wprowadzone nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password_is_required", "Nie podano nowego hasła(środkowe pole)"), _defineProperty(_pl, "new_password_must_contain_at_least_3_characters", "Nowe hasło musi zawierać co najmniej 3 znaki(środkowe pole)"), _defineProperty(_pl, "the_given_new_passwords_do_not_match", "Podane nowe hasło nie pokrywa się z potwierdzeniem"), _defineProperty(_pl, "new_password__confirmation_must_contain_at_least_3_characters", "Potwierdzenie nowego hasła musi zawierać co najmniej 3 znaki"), _defineProperty(_pl, "new_password__confirmation_must_not_exceed_20_characters", "Potwierdzenie nowego hasła przekracza 20 znaków"), _defineProperty(_pl, "no_image_has_been_selected", "Nie wybrano żadnego prawidłowego obrazu"), _defineProperty(_pl, "the_file_selected_from_hard_drive_is_not_an_image", "Plik wybrany z dysku nie jest obrazem"), _defineProperty(_pl, "invalid_image_dimensions", "Niewłaściwe wymiary obrazu"), _defineProperty(_pl, "the_data_looks_ok_but_an_unexpected_error_occured", "Wprowadzone dane są w porządku jednak pojawił się nieoczekiwany błąd"), _defineProperty(_pl, "settings_change_attempt", "Próba zmiany ustawień"), _defineProperty(_pl, "settings_changed_successfully", "Pomyślnie zmieniono ustawienia"), _defineProperty(_pl, "the_shows_birthday_field_is_missing", "Brak informacji o tym czy wyświetlać datę urodzenia innym użytkownikom"), _defineProperty(_pl, "the_shows_birthday_field_must_be_a_boolean_value", "Pole pokazuj datę urodzenia musi zawierać wartość typu logicznego"), _defineProperty(_pl, "fetching_movies", "Pobieram filmy"), _defineProperty(_pl, "movies", "Filmy"), _defineProperty(_pl, "views", "Odsłon"), _defineProperty(_pl, "preview", "Podgląd"), _defineProperty(_pl, "pornstars", "Gwiazdy"), _defineProperty(_pl, "pornstars_navbar_caption", "Gwiazdy porno"), _defineProperty(_pl, "scroll_previous_links", "Przewijaj listę podstron do tyłu"), _defineProperty(_pl, "movie_frame", "Kadr z filmu"), _defineProperty(_pl, "close_movie_preview", "Zamknij podgląd filmu"), _defineProperty(_pl, "play_movie_preview", "Uruchom podgląd filmu"), _defineProperty(_pl, "launching_in_progress", "Trwa uruchamianie"), _defineProperty(_pl, "click_to_play_the_video", "Kliknij aby uruchomić film"), _defineProperty(_pl, "stop_movie_preview", "Zatrzymaj odtwarzanie podglądu filmu"), _defineProperty(_pl, "sex_empire", "Sex-Imperium"), _defineProperty(_pl, "movie_translated_to_polish", "Film przetłumaczony na język polski"), _defineProperty(_pl, "scroll_next_links", "Przewijaj listę podstron do przodu"), _defineProperty(_pl, "hide_side_bar", "Schowaj boczny pasek"), _defineProperty(_pl, "previous_page", "poprzednia"), _defineProperty(_pl, "next_page", "następna"), _defineProperty(_pl, "further", "dalej"), _defineProperty(_pl, "back", "wstecz"), _defineProperty(_pl, "up", "góra"), _defineProperty(_pl, "first_page", "pierwsza"), _defineProperty(_pl, "profile", "Profil"), _defineProperty(_pl, "profile_settings", "Ustawienia profilu"), _defineProperty(_pl, "messages", "Wiadomości"), _defineProperty(_pl, "favourites", "Ulubione"), _defineProperty(_pl, "friends", "Znajomi"), _defineProperty(_pl, "logout", "Wyloguj"), _defineProperty(_pl, "porn", "Porno"), _defineProperty(_pl, "user_avatar_description", "Avatar użytkownika o nicku"), _defineProperty(_pl, "description", "Opis"), _defineProperty(_pl, "default_avatar", "Domyślny avatar, przedstawia bliżej niezidentyfikowanego użytkownika"), _defineProperty(_pl, "hide", "Schowaj"), _defineProperty(_pl, "element_has_been_rated", "Ocena została wystawiona. Możesz zawsze zmienić zdanie i ocenić ponownie."), _defineProperty(_pl, "pornstar_rate_data_is_invalid", "Niepoprawne dane oceny lub gwiazdy"), _defineProperty(_pl, "movie_rate_data_is_invalid", "Niepoprawne dane oceny lub filmu"), _defineProperty(_pl, "nickname_is_missing", "Nie podano pseudonimu"), _defineProperty(_pl, "unexpected_error_occured_while_fetching_comments", "Niestety pojawił się bliżej niezidentyfikowany błąd podczas pobierania komentarzy"), _defineProperty(_pl, "nickname", "Pseudonim"), _defineProperty(_pl, "answears", "Odpowiedzi"), _defineProperty(_pl, "add_comment", "Dodaj komentarz"), _defineProperty(_pl, "add", "dodaj"), _defineProperty(_pl, "contents", "Treść"), _defineProperty(_pl, "comment_added", "Dodano komentarz"), _defineProperty(_pl, "unregistered_user", "Niezarejestrowany"), _defineProperty(_pl, "register", "Rejestruj"), _defineProperty(_pl, "add_comment_short", "Komentuj"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "adding_comment", "Dodaję komentarz"), _defineProperty(_pl, "fetching_comments", "Pobieram komentarze"), _defineProperty(_pl, "comment_text_is_missing", "Nie podano treści komentarza"), _defineProperty(_pl, "comment_text_exceeds_1000_characters", "Treść komentarza przekracza 1000 znaków"), _defineProperty(_pl, "the_nickname_must_be_between_2_and_20_characters", "Pseudonim musi mieć minimum 2 znaki ale nie więcej niż 20"), _defineProperty(_pl, "no_comments_available", "Brak komentarzy"), _defineProperty(_pl, "because_of_safety_reasons_adding_comments_is_limited_to_2_per_minute", "Z powodów bezpieczeństwa ograniczono liczbę dodawanych komentarzy do 2 na minutę"), _defineProperty(_pl, "total_comments", "Liczba wszystkich komentarzy"), _defineProperty(_pl, "publish_comment", "Opublikuj komentarz"), _defineProperty(_pl, "show_comments_sub_page_with_number", "Pokaż podstronę komentarzy o numerze"), _defineProperty(_pl, "sex_empire_short", "SI"), _defineProperty(_pl, "small_ass", "mały"), _defineProperty(_pl, "medium_ass", "średni"), _defineProperty(_pl, "big_ass", "duży"), _defineProperty(_pl, "small_tits", "małe"), _defineProperty(_pl, "medium_tits", "średnie"), _defineProperty(_pl, "big_tits", "duże"), _defineProperty(_pl, "skinny_tchickness", "chuda"), _defineProperty(_pl, "medium_tchickness", "średnia"), _defineProperty(_pl, "fat_tchickness", "gruba"), _defineProperty(_pl, "teenagers", "nastolatki(18 - 19)"), _defineProperty(_pl, "age_range_young", "młode (20 -29)"), _defineProperty(_pl, "age_range_mature", "dojrzałe(30 - 50)"), _defineProperty(_pl, "dark_hair", "czarny"), _defineProperty(_pl, "blonde_hair", "blond"), _defineProperty(_pl, "brown_hair", "brązowy"), _defineProperty(_pl, "red_hair", "rudy"), _defineProperty(_pl, "white_race", "biała"), _defineProperty(_pl, "asian_race", "azjatki"), _defineProperty(_pl, "ebony_race", "murzynki"), _defineProperty(_pl, "latin_race", "latynoski"), _defineProperty(_pl, "arabic_race", "arabki"), _defineProperty(_pl, "yes", "tak"), _defineProperty(_pl, "no", "nie"), _defineProperty(_pl, "one_male_one_female", "facet i kobieta"), _defineProperty(_pl, "bukkake", "bukkake"), _defineProperty(_pl, "single_female", "kobieta solo"), _defineProperty(_pl, "lesbians", "lesbijki"), _defineProperty(_pl, "group_sex", "grupowy"), _defineProperty(_pl, "one_male_many_females", "facet i wiele kobiet"), _defineProperty(_pl, "GangBang", "GangBang"), _defineProperty(_pl, "one_female_two_males", "Na 2 baty"), _defineProperty(_pl, "lesbian_group_sex", "Lesbijki grupowo"), _defineProperty(_pl, "only", "tylko i wyłącznie"), _defineProperty(_pl, "maximum", "maximum"), _defineProperty(_pl, "a_lot", "dużo"), _defineProperty(_pl, "medium", "średnio"), _defineProperty(_pl, "a_little", "trochę"), _defineProperty(_pl, "exclude", "wyklucz"), _defineProperty(_pl, "on_face", "na twarz"), _defineProperty(_pl, "cum_swallow", "z połykiem"), _defineProperty(_pl, "creampie", "w cipkę"), _defineProperty(_pl, "anal", "Anal"), _defineProperty(_pl, "blowjob", "Obciąganie"), _defineProperty(_pl, "vaginal", "Waginalny"), _defineProperty(_pl, "handjob", "Walenie konika"), _defineProperty(_pl, "tittfuck", "Na hiszpana"), _defineProperty(_pl, "feet", "Stópki"), _defineProperty(_pl, "double_penetration", "Wtyczka"), _defineProperty(_pl, "position_69", "Pozycja 69"), _defineProperty(_pl, "cumshot_compilation", "Kompilacja wytrysków"), _defineProperty(_pl, "circumstances_and_style", "Okoliczności i styl"), _defineProperty(_pl, "location", "Lokalizacja"), _defineProperty(_pl, "camera_style", "Ujęcie kamery"), _defineProperty(_pl, "story_or_costume_type", "fabuła, kostium"), _defineProperty(_pl, "movie_level", "Poziom filmu"), _defineProperty(_pl, "has_story", "Zawiera fabuła"), _defineProperty(_pl, "spy_camera", "Kamera szpiegowska"), _defineProperty(_pl, "sadistic_or_masochistic", "Sado-maso"), _defineProperty(_pl, "female_domination", "Kobieca dominacja"), _defineProperty(_pl, "polish_language_version", "Polska wersja językowa"), _defineProperty(_pl, "pantyhose", "Rajstopy"), _defineProperty(_pl, "stockings", "Pończochy"), _defineProperty(_pl, "glasses", "Okulary"), _defineProperty(_pl, "high_heels", "Szpile"), _defineProperty(_pl, "huge_cock", "Wielki kutas"), _defineProperty(_pl, "whips", "Bicze"), _defineProperty(_pl, "sex_toys", "Sex-zabawki"), _defineProperty(_pl, "choose_from_pornstars_list", "Wybierz z listy gwiazd"), _defineProperty(_pl, "reset_panel", "Resetuj panel"), _defineProperty(_pl, "add_new_movie", "Dodaj nowy film"), _defineProperty(_pl, "save_changes_for_existing_movie", "Zapisz istniejący film"), _defineProperty(_pl, "title", "Tytuł"), _defineProperty(_pl, "controls", "Sterowanie"), _defineProperty(_pl, "movie_duration", "Czas trwania filmu"), _defineProperty(_pl, "anal_creampie", "w dupkę"), _defineProperty(_pl, "on_tits", "na cycki"), _defineProperty(_pl, "on_pussy", "na cipkę"), _defineProperty(_pl, "on_ass", "na dupkę"), _defineProperty(_pl, "on_feet", "na stopy"), _defineProperty(_pl, "on_many_places", "na wiele miejsc"), _defineProperty(_pl, "on_other_body_parts", "na inne miejsca"), _defineProperty(_pl, "american_nationality", "amerykańska"), _defineProperty(_pl, "japanese_nationality", "japońska"), _defineProperty(_pl, "german_nationality", "niemiecka"), _defineProperty(_pl, "czech_nationality", "czeska"), _defineProperty(_pl, "russian_nationality", "rosyjska"), _defineProperty(_pl, "british_nationality", "brytyjska"), _defineProperty(_pl, "swedish_nationality", "szwedzka"), _defineProperty(_pl, "ukrainian_nationality", "ukraińska"), _defineProperty(_pl, "slovac_nationality", "słowacka"), _defineProperty(_pl, "hanguarian_nationality", "węgierska"), _defineProperty(_pl, "polish_nationality", "polska"), _defineProperty(_pl, "dutch_nationality", "holenderska"), _defineProperty(_pl, "hindu_nationality", "hinduska"), _defineProperty(_pl, "french_nationality", "francuska"), _defineProperty(_pl, "spanish_nationality", "hiszpańska"), _defineProperty(_pl, "italian_nationality", "włoska"), _defineProperty(_pl, "canadian_nationality", "kanadyjska"), _defineProperty(_pl, "argentinian_nationality", "argentyńska"), _defineProperty(_pl, "house", "dom"), _defineProperty(_pl, "bathroom", "łazienka"), _defineProperty(_pl, "office", "biuro"), _defineProperty(_pl, "school", "szkoła"), _defineProperty(_pl, "public_place", "miejsca publiczne"), _defineProperty(_pl, "car", "samochód"), _defineProperty(_pl, "nature", "łono natury"), _defineProperty(_pl, "solarium", "solarium"), _defineProperty(_pl, "elevator", "winda"), _defineProperty(_pl, "beach", "plaża"), _defineProperty(_pl, "gym", "siłownia"), _defineProperty(_pl, "POV", "POV"), _defineProperty(_pl, "outside_camera_style", "z zewnątrz"), _defineProperty(_pl, "mixed_camera_style", "mieszane"), _defineProperty(_pl, "female_pupil", "uczennica"), _defineProperty(_pl, "female_employee", "pracownica"), _defineProperty(_pl, "female_student", "studentka"), _defineProperty(_pl, "wife", "żona"), _defineProperty(_pl, "female_teacher", "nauczycielka"), _defineProperty(_pl, "nurse", "pielęgniarka"), _defineProperty(_pl, "female_slave", "niewolnica"), _defineProperty(_pl, "nun", "zakonnica"), _defineProperty(_pl, "female_police_officer", "policjantka"), _defineProperty(_pl, "prostitute", "prostytutka"), _defineProperty(_pl, "female_boss", "szefowa"), _defineProperty(_pl, "cleaner", "sprzątaczka"), _defineProperty(_pl, "mommy", "mamusia"), _defineProperty(_pl, "amateur", "amatorski"), _defineProperty(_pl, "professional", "profesjonalny"), _defineProperty(_pl, "choose_options", "wybierz opcje"), _defineProperty(_pl, "search", "szukaj"), _defineProperty(_pl, "remove_option", "usuń opcję"), _defineProperty(_pl, "close", "zamknij"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd, w razie potrzeby prosimy odświeżyć stronę"), _defineProperty(_pl, "fetching_pornstars", "Pobieram listę gwiazd"), _defineProperty(_pl, "not_selected", "nie wybrano"), _defineProperty(_pl, "minutes_inflected", "minut(y)"), _defineProperty(_pl, "views_inflected", "wyświetleń"), _defineProperty(_pl, "unexpected_error_occured", "Pojawił się bliżej niezidentyfikowany błąd"), _defineProperty(_pl, "actress_tits_size", "rozmiar cycków"), _defineProperty(_pl, "actress_ass_size", "rozmiar dupci"), _defineProperty(_pl, "actress_thickness", "tusza"), _defineProperty(_pl, "actress_age_range", "przedział wiekowy"), _defineProperty(_pl, "actress_hair_color", "kolor włosów"), _defineProperty(_pl, "race", "rasa"), _defineProperty(_pl, "abundance", "liczebność"), _defineProperty(_pl, "actor_cumshot_type", "typ wytrysku"), _defineProperty(_pl, "nationality", "narodowość"), _defineProperty(_pl, "location", "lokalizacja"), _defineProperty(_pl, "camera_style", "ujęcie kamery"), _defineProperty(_pl, "is_professional_production", "poziom filmu"), _defineProperty(_pl, "shows_shaved_pussy", "wygolona cipka"), _defineProperty(_pl, "anal_percentage", "anal"), _defineProperty(_pl, "blowjob", "obciąganie"), _defineProperty(_pl, "handjob", "walenie konika"), _defineProperty(_pl, "blondes", "blondynki"), _defineProperty(_pl, "tittfuck", "na hiszpana"), _defineProperty(_pl, "pussy_licking", "minetka"), _defineProperty(_pl, "feet", "stopy"), _defineProperty(_pl, "femdom", "kobieca dominacja"), _defineProperty(_pl, "brunettes", "brunetki"), _defineProperty(_pl, "redheads", "rude"), _defineProperty(_pl, "milfs", "dojrzałe"), _defineProperty(_pl, "teens", 'nastolatki'), _defineProperty(_pl, "amateur", "amatorskie"), _defineProperty(_pl, "asian", 'azjatki'), _defineProperty(_pl, "latins", 'latynoski'), _defineProperty(_pl, "ebony", 'murzynki'), _defineProperty(_pl, "lesbians", 'lesbijki'), _defineProperty(_pl, "group", 'grupowy'), _defineProperty(_pl, "cumshot_compilation", 'kompilacja wytrysków'), _defineProperty(_pl, "cumshot_compilations", 'kompilacje wytrysków'), _defineProperty(_pl, "cum_on_face", 'wytrysk na twarz'), _defineProperty(_pl, "cum_swallow", 'połykanie spermy'), _defineProperty(_pl, "cum_on_feet", 'wytrysk na stopy'), _defineProperty(_pl, "creampie", 'wytrysk w cipkę'), _defineProperty(_pl, "cum_in_ass", 'wytrysk w dupkę'), _defineProperty(_pl, "cum_on_titts", 'wytrysk na cycki'), _defineProperty(_pl, "pantyhose", 'rajstopki'), _defineProperty(_pl, "high_heels", 'szpile'), _defineProperty(_pl, "nurses", 'pielęgniarki'), _defineProperty(_pl, "teachers", 'nauczycielki'), _defineProperty(_pl, "japanese", 'japonki'), _defineProperty(_pl, "russian", 'rosjanki'), _defineProperty(_pl, "pornstars", 'gwiazdy porno'), _defineProperty(_pl, "blowjob_percentage", 'obciąganie'), _defineProperty(_pl, "handjob_percentage", 'walenie konika'), _defineProperty(_pl, "double_penetration_percentage", "wtyczka"), _defineProperty(_pl, "pussy_fuck_percentage", "waginalny"), _defineProperty(_pl, "pussy_licking_percentage", 'minetka'), _defineProperty(_pl, "feet_petting_percentage", 'pieszczenie stóp'), _defineProperty(_pl, "position_69_percentage", 'pozycja 69'), _defineProperty(_pl, "feet_petting_percentage", "na hiszpana"), _defineProperty(_pl, "is_cumshot_compilation_type", 'kompilacja wytrysków'), _defineProperty(_pl, "recorded_by_spy_camera", 'nagrany kamerą szpiegowską'), _defineProperty(_pl, "is_sadistic_or_masochistic", 'sado-masochostyczny'), _defineProperty(_pl, "is_female_domination_type", 'kobieca dominacja'), _defineProperty(_pl, "is_translated_to_polish", 'polska wersja językowa'), _defineProperty(_pl, "actress_has_pantyhose", 'rajstopy'), _defineProperty(_pl, "actress_has_stockings", 'pończochy'), _defineProperty(_pl, "actress_has_glasses", 'okulary'), _defineProperty(_pl, "shows_high_heels", 'szpile'), _defineProperty(_pl, "shows_big_cock", 'wielki kutas'), _defineProperty(_pl, "shows_whips", 'bicze'), _defineProperty(_pl, "shows_sex_toys", 'sex-zabawki'), _defineProperty(_pl, "minimumMovieTime", "minimalny czas"), _defineProperty(_pl, "maximumMovieTime", "maksymalny czas"), _defineProperty(_pl, "minimumMovieViews", 'minimalna liczba wyświetleń'), _defineProperty(_pl, "maximumMovieViews", 'maksymalna liczba wyświetleń'), _defineProperty(_pl, "has_story", 'zawiera fabułę'), _defineProperty(_pl, "total_movies_found", "Ilość znalezionych filmów"), _defineProperty(_pl, "movie_with_following_pornstars", "występują jednocześnie następujące gwiazdy"), _defineProperty(_pl, "last_page", "ostatnia"), _defineProperty(_pl, "movie_with_pornstar", "Film w którym występuje"), _defineProperty(_pl, "no_movies_have_been_found", "Nie znaleziono żadnych filmów pasujących do wybranych kryteriów"), _defineProperty(_pl, "no_options_have_been_selected", "Nie wybrano żadnych opcji"), _defineProperty(_pl, "failed_to_fetch_pornstars_list", "Nie udało się pobrać listy gwiazd"), _defineProperty(_pl, "because_of_security_reasons_search_was_blocked", "Ze względów bezpieczeństwa ilość zapytań do wyszukiwarki w ciągu minuty jest ograniczona. Prosimy zaczekać chwilę i spróbować ponownie."), _defineProperty(_pl, "popular_categories", "Popularne kategorie"), _defineProperty(_pl, "categories_list", "Lista kategorii"), _defineProperty(_pl, "big_titts", "duże cycki"), _defineProperty(_pl, "categories", "Kategorie"), _defineProperty(_pl, "teenagers", "nastolatki"), _defineProperty(_pl, "spermatozoid_has_been_asigned", "Przyznano plemnika. Musisz odczekać minimum pół godziny aby przyznać kolejnego."), _defineProperty(_pl, "you_have_exceeded_cum_limit", "Możesz przyznać maksymalnie jednego plemnika na pół godziny niezależnie od filmu"), _defineProperty(_pl, "spermatozoid_rate_data_is_incorrect", "Niepoprawne dane filmu"), _defineProperty(_pl, "movie_views", "Liczba wyświetleń"), _defineProperty(_pl, "movie_added_at", "Data dodania"), _defineProperty(_pl, "movie_average_rating", "Średnia ocen"), _defineProperty(_pl, "this_pornstar_does_not_have_enough_votes_to_calculate_average", "Ta gwiazda ma za mało głosów aby policzyć średnią (wymagane minimum to 10)"), _defineProperty(_pl, "fetching_rating_in_progress", "Pobieram dane rankingu"), _defineProperty(_pl, "average_rate_not_available_yet", "jeszcze niedostępna"), _defineProperty(_pl, "ammount_of_spermatozoids", "Liczba plemników"), _defineProperty(_pl, "your_spermatozoids", "twoich"), _defineProperty(_pl, "number_of_likes", "Polubień"), _defineProperty(_pl, "failed_to_load_movie_data", "Nie udało się pobrać szczegółowych danych filmu"), _defineProperty(_pl, "failed_to_load_similar_movies", "Nie udało się załadować podobnych filmów"), _defineProperty(_pl, "you_like_it", "Lubisz to"), _defineProperty(_pl, "you_already_like_this_movie", "Już wcześniej polubiłeś ten film"), _defineProperty(_pl, "you_and", "Ty i"), _defineProperty(_pl, "people_like_it", "osób lubi to"), _defineProperty(_pl, "no_comments", "Brak komentarzy"), _defineProperty(_pl, "cookie_notification_header", "Ta strona wykorzystuje pliki cookie"), _defineProperty(_pl, "cookie_notification_body", "Poprzez dalsze korzystanie z portalu lub naci\u015Bni\u0119cie przycisku \"Akceptuj\u0119\" wyra\u017Casz zgod\u0119 na przechowywanie plik\xF3w cookie na Twej maszynie"), _defineProperty(_pl, "accept_button_caption", "Akceptuję - zamknij"), _defineProperty(_pl, "show_content_side_bar_title", "Rozwiń nawigację strony dla wersji mobilnej"), _defineProperty(_pl, "show_content_side_bar_caption", "Menu"), _defineProperty(_pl, "cancel_like", "cofnij like'a"), _defineProperty(_pl, "show_authenticated_user_sidebar_title", "Rozwiń menu użytkownika, ustawienia profilu, wylogowanie itp."), _defineProperty(_pl, "show_authenticated_user_sidebar_caption", "Profil"), _defineProperty(_pl, "selected_avatar", "Nowy avatar"), _defineProperty(_pl, "no_avatar_has_been_choosen", "Nie wybrano avataru"), _defineProperty(_pl, "current_avatar", "Wybrany avatar"), _defineProperty(_pl, "the_latest", "Najnowsze"), _defineProperty(_pl, "the_most_popular", "Najpopularniejsze"), _defineProperty(_pl, "advanced_search", "Szukanie zaawansowane"), _defineProperty(_pl, "remember_me", "Zapamiętaj mnie"), _defineProperty(_pl, "scroll_movies_list_left", "Przewiń listę filmów w lewo"), _defineProperty(_pl, "scroll_movies_list_right", "Przewiń listę filmów w prawo"), _defineProperty(_pl, "dictionary", "Słownik"), _defineProperty(_pl, "comment_text", "Treść komentarza"), _defineProperty(_pl, "added_movie", "Dodano film"), _defineProperty(_pl, "data_saved_successfully", "Pomyślnie zapisano dane"), _defineProperty(_pl, "latex", "Latex"), _defineProperty(_pl, "employee_added_incorrect_parameters", "Podano nieprawidłowe parametry, lista problemów"), _defineProperty(_pl, "packages", {
     content_sidebar: {
       hide_side_bar_title: "Schowaj boczne menu",
       hide_side_bar_caption: "Schowaj",
@@ -21761,7 +21804,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".resource-table[data-v-5a490c4f] {\n  margin: 0 auto;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-table[data-v-5a490c4f] {\n      font-size: 13px;\n}\n}\n.resource-header[data-v-5a490c4f] {\n  text-align: center;\n  font-size: 1.3vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  padding: 5px;\n  background: #06850a;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-header[data-v-5a490c4f] {\n      font-size: 15px;\n}\n}\n.resource-cell[data-v-5a490c4f] {\n  border: 1px solid white;\n  color: white;\n  padding: 4px 3px;\n}\n.resource-row[data-v-5a490c4f] {\n  cursor: pointer;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(even) {\n    background: black;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(odd) {\n    background: #3a3a3a;\n}\n.resource-row[data-v-5a490c4f]:hover {\n    background: darkred;\n}\n@media screen and (max-width: 600px) {\n.table-headers[data-v-5a490c4f] {\n    display: none;\n}\n.resource-cell[data-v-5a490c4f] {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -moz-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -webkit-justify-content: space-between;\n       -moz-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    -webkit-flex-wrap: wrap;\n        -ms-flex-wrap: wrap;\n            flex-wrap: wrap;\n}\n.resource-cell[data-v-5a490c4f]::before {\n      content: attr(data-aditional-header) \" : \";\n      color: #06850a;\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".resource-table[data-v-5a490c4f] {\n  margin: 0 auto;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-table[data-v-5a490c4f] {\n      font-size: 13px;\n}\n}\n.resource-header[data-v-5a490c4f] {\n  text-align: center;\n  font-size: 1.3vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  padding: 5px;\n  background: #06850a;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-header[data-v-5a490c4f] {\n      font-size: 15px;\n}\n}\n.resource-cell[data-v-5a490c4f] {\n  border: 1px solid white;\n  color: white;\n  padding: 4px 3px;\n}\n.resource-row[data-v-5a490c4f] {\n  cursor: pointer;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(even) {\n    background: black;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(odd) {\n    background: #3a3a3a;\n}\n.resource-row[data-v-5a490c4f]:hover {\n    background: darkred;\n}\n@media screen and (max-width: 600px) {\n.table-headers[data-v-5a490c4f] {\n    display: none;\n}\n.resource-cell[data-v-5a490c4f] {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -moz-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -webkit-justify-content: space-between;\n       -moz-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    -webkit-flex-wrap: wrap;\n        -ms-flex-wrap: wrap;\n            flex-wrap: wrap;\n}\n.resource-cell[data-v-5a490c4f]::before {\n      content: attr(data-aditional-header) \" : \";\n      color: #06850a;\n}\n.action-button[data-v-5a490c4f] {\n    -webkit-box-flex: 100;\n    -webkit-flex-grow: 100;\n       -moz-box-flex: 100;\n        -ms-flex-positive: 100;\n            flex-grow: 100;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -25450,8 +25493,8 @@ var settings = {
         });
       });
     },
-    loadResourceValuesToEditor: function loadResourceValuesToEditor(resource) {
-      console.log(resource);
+    loadResourceValuesToEditor: function loadResourceValuesToEditor(movie) {
+      this.emitter.emit('loadMovieProperties', movie);
     }
   },
   mounted: function mounted() {

@@ -5,6 +5,7 @@ namespace App\CustomValidators;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Exceptions\FailedValidationException;
 
 class MoviePropertiesValidator
 {
@@ -79,60 +80,61 @@ class MoviePropertiesValidator
         'amateur'
     ];
 
-    protected static bool $checkMovieID = false;
+    public static bool $checkMovieID = false;
 
     public static function getRules(): array
     {
 
         $sexTypeRule = ['nullable', 'integer', 'min:1', 'max:100'];
+        $booleanRule = ['boolean', 'nullable'];
 
         $rules = [
             'title' => ['required', 'string', 'min:3', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
 
-            'abundanceType' => ['required', 'string', Rule::in(self::ABUNDANCE_TYPES)],
-            'titsSize' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
-            'assSize' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
-            'thicknessSize' => ['string', 'nullable', Rule::in(self::THICKNESS_SIZES)],
-            'ageRange' => ['string', 'nullable', Rule::in(self::AGE_RANGES)],
-            'hairColor' => ['string', 'nullable', Rule::in(self::HAIR_COLORS)],
-            'race' => ['string', 'nullable', Rule::in(self::RACES)],
-            'nationality' => ['string', 'nullable', 'exists:nationalities,name'],
-            'shavedPussy' => ['nullable', 'boolean'],
-            'cumshotType' => ['string', 'nullable', Rule::in(self::CUMSHOT_TYPES)],
+            'abundance' => ['required', 'string', Rule::in(self::ABUNDANCE_TYPES)],
+            'actress_tits_size' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
+            'actress_ass_size' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
+            'actress_thickness' => ['string', 'nullable', Rule::in(self::THICKNESS_SIZES)],
+            'actress_age_range' => ['string', 'nullable', Rule::in(self::AGE_RANGES)],
+            'actress_hair_color' => ['string', 'nullable', Rule::in(self::HAIR_COLORS)],
+            'actress_race' => ['string', 'nullable', Rule::in(self::RACES)],
+            'actress_nationality' => ['string', 'nullable', 'exists:nationalities,name'],
+            'shows_shaved_pussy' => ['nullable', 'boolean'],
+            'actor_cumshot_type' => ['string', 'nullable', Rule::in(self::CUMSHOT_TYPES)],
             'location' => ['string', 'nullable', 'exists:locations,name'],
-            'cameraStyle' => ['required', 'string', Rule::in(self::CAMERA_STYLES)],
-            'hasStory' => ['nullable', 'boolean'],
-            'storyOrCostume' => ['string', 'nullable', 'exists:story_or_costume_types,name'],
-            'professionalismLevel' => ['nullable', 'string', Rule::in(self::PROFESSIONALISM_LEVELS)],
-            'movieDuration' => ['date_format:H:i:s', 'after:00:00:00'],
+            'camera_style' => ['required', 'string', Rule::in(self::CAMERA_STYLES)],
+            'has_story' => ['nullable', 'boolean'],
+            'story_or_costume_type' => ['string', 'nullable', 'exists:story_or_costume_types,name'],
+            'is_professional_production' => ['nullable', 'string', Rule::in(self::PROFESSIONALISM_LEVELS)],
+            'duration' => ['date_format:H:i:s', 'after:00:00:00'],
 
-            'analAmount' => $sexTypeRule,
-            'blowjobAmount' => $sexTypeRule,
-            'doublePenetrationAmount' => $sexTypeRule,
-            'vaginalAmount' => $sexTypeRule,
-            'pussyLickingAmount' => $sexTypeRule,
-            'titfuckAmount' => $sexTypeRule,
-            'feetPettingAmount' => $sexTypeRule,
-            'position69amount' => $sexTypeRule,
+            'anal_percentage' => $sexTypeRule,
+            'blowjob_percentage' => $sexTypeRule,
+            'handjob_percentage' => $sexTypeRule,
+            'double_penetration_percentage' => $sexTypeRule,
+            'pussy_fuck_percentage' => $sexTypeRule,
+            'pussy_licking_percentage' => $sexTypeRule,
+            'feet_petting_percentage' => $sexTypeRule,
+            'position_69_percentage' => $sexTypeRule,
+            'tittfuck_percentage' => $sexTypeRule,
 
-            'pages' => ['nullable', 'numeric', 'min:0'],
+            'is_cumshot_compilation_type' => $booleanRule,
+            'recorded_by_spy_camera' => $booleanRule,
+            'is_sadistic_or_masochistic' => $booleanRule,
+            'is_female_domination_type' => $booleanRule,
+            'is_translated_to_polish' => $booleanRule,
+            'actress_has_pantyhose' => $booleanRule,
+            'actress_has_stockings' => $booleanRule,
+            'actress_has_glasses' => $booleanRule,
+            'shows_high_heels' => $booleanRule,
+            'shows_big_cock' => $booleanRule,
+            'shows_whips' => $booleanRule,
+            'shows_sex_toys' => $booleanRule,
+            'shows_latex' => $booleanRule,
 
-            'isCumshotCompilation' => ['boolean', 'nullable'],
-            'recordedBySpyCamera' => ['boolean', 'nullable'],
-            'isSadisticOrMasochistic' => ['boolean', 'nullable'],
-            'isFemaleDomination' => ['boolean', 'nullable'],
-            'isTranslatedToPolish' => ['boolean', 'nullable'],
-            'showPantyhose' => ['boolean', 'nullable',],
-            'showStockings' => ['boolean', 'nullable'],
-            'showGlasses' => ['boolean', 'nullable'],
-            'showHighHeels' => ['boolean', 'nullable'],
-            'showHugeCock' => ['boolean', 'nullable'],
-            'showWhips' => ['boolean', 'nullable'],
-            'showSexToys' => ['boolean', 'nullable'],
-
-            'pornstarsList' => ['nullable', 'array'],
-            'pornstarsList.*' => ['nullable', 'string', 'exists:pornstars,nickname']
+            'pornstars_list' => ['nullable', 'array'],
+            'pornstars_list.*' => ['nullable', 'string', 'exists:pornstars,nickname']
         ];
 
         return self::$checkMovieID ? array_merge($rules, ['id' => ['required', 'exists:movie_candidates,id']]) : $rules;
@@ -143,9 +145,10 @@ class MoviePropertiesValidator
 
     public static function validate(Request $request): array
     {
-        self::$checkMovieID = $request->isMethod('PUT');
         $validator = Validator::make($request->all(), self::getRules());
-        return $validator->fails() ? ['success' => false, 'errors' => $validator->errors()->all()]  : 
-         ['success' => true, 'data' => $validator->validated()];
+        if($validator->fails()) {
+            throw new FailedValidationException($validator->errors()->all());
+        }
+        return $validator->validated();
     }
 }

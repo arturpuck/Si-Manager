@@ -8,26 +8,26 @@
             <legend class="panel-group-legend">
                {{descriptionsTranslations['actress_body_and_type']}}
             </legend>
-            <simple-labeled-select v-model="titsSize" v-bind:options="movieCreatorTranslations['titsSize']">{{descriptionsTranslations['tits_size']}} :</simple-labeled-select>
-            <simple-labeled-select v-model="assSize" v-bind:options="movieCreatorTranslations['assSize']">
+            <simple-labeled-select v-model="actress_tits_size" v-bind:options="movieCreatorTranslations['actress_tits_size']">{{descriptionsTranslations['tits_size']}} :</simple-labeled-select>
+            <simple-labeled-select v-model="actress_ass_size" v-bind:options="movieCreatorTranslations['actress_ass_size']">
                {{descriptionsTranslations['ass_size']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="thicknessSize" v-bind:options="movieCreatorTranslations['thicknessSize']">
+            <simple-labeled-select v-model="actress_thickness" v-bind:options="movieCreatorTranslations['actress_thickness']">
                {{descriptionsTranslations['thickness']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="ageRange" v-bind:options="movieCreatorTranslations['ageRange']">
+            <simple-labeled-select v-model="actress_age_range" v-bind:options="movieCreatorTranslations['actress_age_range']">
                {{descriptionsTranslations['age']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="hairColor" v-bind:options="movieCreatorTranslations['hairColor']">
+            <simple-labeled-select v-model="actress_hair_color" v-bind:options="movieCreatorTranslations['actress_hair_color']">
                {{descriptionsTranslations['hair_color']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="race" v-bind:options="movieCreatorTranslations['race']">
-               {{descriptionsTranslations['race']}} :
+            <simple-labeled-select v-model="actress_race" v-bind:options="movieCreatorTranslations['actress_race']">
+               {{descriptionsTranslations['actress_race']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="nationality" v-bind:options="movieCreatorTranslations['nationality']">
-               {{descriptionsTranslations['nationality']}} :
+            <simple-labeled-select v-model="actress_nationality" v-bind:options="movieCreatorTranslations['actress_nationality']">
+               {{descriptionsTranslations['actress_nationality']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="shavedPussy" v-bind:options="movieCreatorTranslations['binaryOptions']">
+            <simple-labeled-select v-model="shows_shaved_pussy" v-bind:options="movieCreatorTranslations['binaryOptions']">
                {{descriptionsTranslations['shaved_pussy']}} :
             </simple-labeled-select>
          </fieldset>
@@ -35,23 +35,23 @@
             <legend class="panel-group-legend">
                {{descriptionsTranslations['sex_type']}}
             </legend>
-            <simple-labeled-select v-model="abundanceType" v-bind:options="movieCreatorTranslations['abundanceType']">
+            <simple-labeled-select v-model="abundance" v-bind:options="movieCreatorTranslations['abundance']">
                {{descriptionsTranslations['abundance']}} :
             </simple-labeled-select>
-            <labeled-range class="sex-ammount" v-model="analAmount" unit="%">{{descriptionsTranslations['anal']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="blowjobAmount" unit="%">{{descriptionsTranslations['blowjob']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="vaginalAmount" unit="%">{{descriptionsTranslations['vaginal']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="handjobAmount" unit="%">{{descriptionsTranslations['handjob']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="pussyLickingAmount" unit="%">{{descriptionsTranslations['pussy_licking']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="titfuckAmount" unit="%">{{descriptionsTranslations['tittfuck']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="feetPettingAmount" unit="%">{{descriptionsTranslations['feet']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="doublePenetrationAmount" unit="%">{{descriptionsTranslations['double_penetration']}}</labeled-range>
-            <labeled-range class="sex-ammount" v-model="position69amount" unit="%">{{descriptionsTranslations['position_69']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="anal_percentage" unit="%">{{descriptionsTranslations['anal']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="blowjob_percentage" unit="%">{{descriptionsTranslations['blowjob']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="pussy_fuck_percentage" unit="%">{{descriptionsTranslations['vaginal']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="handjob_percentage" unit="%">{{descriptionsTranslations['handjob']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="pussy_licking_percentage" unit="%">{{descriptionsTranslations['pussy_licking']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="tittfuck_percentage" unit="%">{{descriptionsTranslations['tittfuck']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="feet_petting_percentage" unit="%">{{descriptionsTranslations['feet']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="double_penetration_percentage" unit="%">{{descriptionsTranslations['double_penetration']}}</labeled-range>
+            <labeled-range class="sex-ammount" v-model="position_69_percentage" unit="%">{{descriptionsTranslations['position_69']}}</labeled-range>
          
-            <simple-labeled-select v-model="cumshotType" v-bind:options="movieCreatorTranslations['cumshotType']">
+            <simple-labeled-select v-model="actor_cumshot_type" v-bind:options="movieCreatorTranslations['actor_cumshot_type']">
                {{descriptionsTranslations['cumshot']}} :
             </simple-labeled-select>
-            <labeled-checkbox v-model="isCumshotCompilation" class="movie-panel-checkbox" name="cumshot-compilation">{{descriptionsTranslations['cumshot_compilation']}}</labeled-checkbox>
+            <labeled-checkbox v-model="is_cumshot_compilation_type" class="movie-panel-checkbox" name="cumshot-compilation">{{descriptionsTranslations['cumshot_compilation']}}</labeled-checkbox>
          </fieldset>
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
@@ -60,46 +60,47 @@
             <simple-labeled-select v-model="location" v-bind:options="movieCreatorTranslations['location']">
                {{descriptionsTranslations['location']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="cameraStyle" v-bind:options="movieCreatorTranslations['cameraStyle']">
+            <simple-labeled-select v-model="camera_style" v-bind:options="movieCreatorTranslations['camera_style']">
                {{descriptionsTranslations['camera_style']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="storyOrCostume" v-bind:options="movieCreatorTranslations['storyOrCostume']">
+            <simple-labeled-select v-model="story_or_costume_type" v-bind:options="movieCreatorTranslations['story_or_costume_type']">
                {{descriptionsTranslations['story_or_costume_type']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="professionalismLevel" v-bind:options="movieCreatorTranslations['professionalismLevel']">
+            <simple-labeled-select v-model="is_professional_production" v-bind:options="movieCreatorTranslations['is_professional_production']">
                {{descriptionsTranslations['movie_level']}} :
             </simple-labeled-select>
-            <simple-labeled-select v-model="hasStory" v-bind:options="movieCreatorTranslations['binaryOptions']">
+            <simple-labeled-select v-model="has_story" v-bind:options="movieCreatorTranslations['binaryOptions']">
                {{descriptionsTranslations['has_story']}} :
             </simple-labeled-select>
-            <labeled-checkbox v-model="recordedBySpyCamera" class="movie-panel-checkbox" name="recorded-by-spy-camera">{{descriptionsTranslations['spy_camera']}}</labeled-checkbox>
-            <labeled-checkbox v-model="isSadisticOrMasochistic" class="movie-panel-checkbox" name="sado-maso">{{descriptionsTranslations['sadistic_or_masochistic']}}</labeled-checkbox>
-            <labeled-checkbox v-model="isFemaleDomination" class="movie-panel-checkbox" name="female-domination">{{descriptionsTranslations['female_domination']}}</labeled-checkbox>
-            <labeled-checkbox v-model="isTranslatedToPolish" class="movie-panel-checkbox" name="translated-to-polish">{{descriptionsTranslations['polish_language_version']}}</labeled-checkbox>
+            <labeled-checkbox v-model="recorded_by_spy_camera" class="movie-panel-checkbox" >{{descriptionsTranslations['spy_camera']}}</labeled-checkbox>
+            <labeled-checkbox v-model="is_sadistic_or_masochistic" class="movie-panel-checkbox" >{{descriptionsTranslations['sadistic_or_masochistic']}}</labeled-checkbox>
+            <labeled-checkbox v-model="is_female_domination_type" class="movie-panel-checkbox" >{{descriptionsTranslations['female_domination']}}</labeled-checkbox>
+            <labeled-checkbox v-model="is_translated_to_polish" class="movie-panel-checkbox" >{{descriptionsTranslations['polish_language_version']}}</labeled-checkbox>
          </fieldset>
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
                {{descriptionsTranslations['gadgets_and_clothing']}}
             </legend>
-            <labeled-checkbox v-model="showPantyhose" class="movie-panel-checkbox" name="pantyhose">{{descriptionsTranslations['pantyhose']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showStockings" class="movie-panel-checkbox" name="stockings">{{descriptionsTranslations['stockings']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showGlasses" class="movie-panel-checkbox" name="glasses">{{descriptionsTranslations['glasses']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showHighHeels" class="movie-panel-checkbox" name="high-heels">{{descriptionsTranslations['high_heels']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showHugeCock" class="movie-panel-checkbox" name="huge-cock">{{descriptionsTranslations['huge_cock']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showWhips" class="movie-panel-checkbox" name="whips">{{descriptionsTranslations['whips']}}</labeled-checkbox>
-            <labeled-checkbox v-model="showSexToys" class="movie-panel-checkbox" name="sex-toys">{{descriptionsTranslations['sex_toys']}}</labeled-checkbox>
+            <labeled-checkbox v-model="actress_has_pantyhose" class="movie-panel-checkbox" >{{descriptionsTranslations['pantyhose']}}</labeled-checkbox>
+            <labeled-checkbox v-model="actress_has_stockings" class="movie-panel-checkbox" >{{descriptionsTranslations['stockings']}}</labeled-checkbox>
+            <labeled-checkbox v-model="actress_has_glasses" class="movie-panel-checkbox" >{{descriptionsTranslations['glasses']}}</labeled-checkbox>
+            <labeled-checkbox v-model="shows_high_heels" class="movie-panel-checkbox" >{{descriptionsTranslations['high_heels']}}</labeled-checkbox>
+            <labeled-checkbox v-model="shows_big_cock" class="movie-panel-checkbox" >{{descriptionsTranslations['huge_cock']}}</labeled-checkbox>
+            <labeled-checkbox v-model="shows_whips" class="movie-panel-checkbox" >{{descriptionsTranslations['whips']}}</labeled-checkbox>
+            <labeled-checkbox v-model="shows_sex_toys" class="movie-panel-checkbox">{{descriptionsTranslations['sex_toys']}}</labeled-checkbox>
+            <labeled-checkbox v-model="shows_latex" class="movie-panel-checkbox">{{descriptionsTranslations['latex']}}</labeled-checkbox>
          </fieldset>
          <fieldset class="panel-group--relative">
             <legend class="panel-group-legend">
                {{descriptionsTranslations['stars']}}
             </legend>
-            <multiselect v-model="pornstarsList" v-bind:main-label="descriptionsTranslations['choose_from_pornstars_list']" v-bind:show-search-input="true"></multiselect>
+            <multiselect v-model="pornstars_list" v-bind:main-label="descriptionsTranslations['choose_from_pornstars_list']" v-bind:show-search-input="true"></multiselect>
          </fieldset>
          <fieldset class="panel-group">
             <legend class="panel-group-legend">
                {{descriptionsTranslations['movie_duration']}}
             </legend>
-            <input v-model="movieDuration" class="movie-duration" step="1" type="time">
+            <input v-model="duration" class="movie-duration" step="1" type="time">
             
          </fieldset>
          <fieldset class="panel-group">
@@ -111,7 +112,7 @@
                {{descriptionsTranslations['reset_panel']}}
             </reset-button>
             <accept-button v-on:click="saveMovie">
-               {{descriptionsTranslations['save_movie']}}
+               {{saveOrEditMovieButtonCaption}}
             </accept-button>
          </fieldset>
       </div>
@@ -152,8 +153,37 @@ const propertiesNotDescribingMovie = [
    'csrfToken',
    'multiselectValues',
    'translator',
-   'fetchingPornstarsInProgress'
+   'fetchingPornstarsInProgress',
+   'descriptionsTranslations',
+   'movieCreatorTranslations'
 ];
+
+const propertiesToIgnoreDuringLoad = [
+  'action_location_id',
+  'created_at',
+  'deleted_at',
+  'story_or_costume_type_id',
+  'actress_nationality_id',
+];
+
+const relationProperties = [
+ 'actress_nationality',
+ 'location',
+ 'story_or_costume_type'
+];
+
+const percentageProperties = [
+ 'anal_percentage',
+  'blowjob_percentage',
+  'handjob_percentage',
+  'double_penetration_percentage',
+  'pussy_fuck_percentage',
+  'pussy_licking_percentage',
+  'feet_petting_percentage',
+  'position_69_percentage',
+  'tittfuck_percentage',
+];
+
 
 export default {
   name: "movie-edit-create",
@@ -182,52 +212,54 @@ export default {
         multiselectValues: [],
         translator: Translator,
         fetchingPornstarsInProgress: true,
-        abundanceType: "",
-        titsSize: "",
-        assSize: "",
-        thicknessSize: "",
-        ageRange: "",
-        hairColor: "",
-        race: "",
-        nationality: "",
-        shavedPussy: "",
-        analAmount: 0,
-        blowjobAmount: 0,
-        vaginalAmount: 0,
-        handjobAmount: 0,
-        pussyLickingAmount: 0,
-        titfuckAmount: 0,
-        feetPettingAmount: 0,
-        position69amount: 0,
-        doublePenetrationAmount: 0,
-        cumshotType: "",
-        isCumshotCompilation: false,
+        abundance: "",
+        actress_tits_size: "",
+        actress_ass_size: "",
+        actress_thickness: "",
+        actress_age_range: "",
+        actress_hair_color: "",
+        actress_race: "",
+        actress_nationality: "",
+        shows_shaved_pussy: "",
+        anal_percentage: 0,
+        blowjob_percentage: 0,
+        pussy_fuck_percentage: 0,
+        handjob_percentage: 0,
+        pussy_licking_percentage: 0,
+        tittfuck_percentage : 0,
+        feet_petting_percentage: 0,
+        position_69_percentage: 0,
+        double_penetration_percentage: 0,
+        actor_cumshot_type: "",
+        is_cumshot_compilation_type: false,
         location: "",
-        cameraStyle: "",
-        storyOrCostume: "",
-        professionalismLevel: "",
-        hasStory: "",
-        recordedBySpyCamera: false,
-        isSadisticOrMasochistic: false,
-        isFemaleDomination: false,
-        isTranslatedToPolish: false,
-        showPantyhose: false,
-        showStockings: false,
-        showGlasses: false,
-        showHighHeels: false,
-        showHugeCock: false,
-        showWhips: false,
-        showSexToys: false,
-        pornstarsList: [],
+        camera_style: "",
+        story_or_costume_type: "",
+        is_professional_production: "",
+        has_story: "",
+        recorded_by_spy_camera: false,
+        is_sadistic_or_masochistic: false,
+        is_female_domination_type: false,
+        is_translated_to_polish: false,
+        actress_has_pantyhose: false,
+        actress_has_stockings: false,
+        actress_has_glasses: false,
+        shows_high_heels: false,
+        shows_big_cock: false,
+        shows_latex : false,
+        shows_whips: false,
+        shows_sex_toys: false,
+        pornstars_list: [],
         fetchingMoviesInProgress: false,
         advancedSearchPanelIsVisible: true,
         selectedOptionsVisibleForUser: [],
         totalMoviesFound: undefined,
         scrollYreactiveProperty: 0,
         currentPage: undefined,
-        movieDuration : '00:00:00',
+        duration : '00:00:00',
         title : '',
         description : '',
+        id : null,
      };
   },
 
@@ -241,37 +273,38 @@ export default {
         this[propertyName] = false;
       });
 
-      this.analAmount = 0;
-      this.blowjobAmount = 0;
-      this.vaginalAmount = 0;
-      this.handjobAmount = 0;
-      this.pussyLickingAmount = 0;
-      this.titfuckAmount = 0;
-      this.feetPettingAmount = 0;
-      this.position69amount = 0;
-      this.doublePenetrationAmount = 0;
+      this.anal_percentage = 0;
+      this.blowjob_percentage = 0;
+      this.pussy_fuck_percentage = 0;
+      this.handjob_percentage = 0;
+      this.pussy_licking_percentage = 0;
+      this.feet_petting_percentage = 0;
+      this.feet_petting_percentage = 0;
+      this.position_69_percentage = 0;
+      this.double_penetration_percentage = 0;
 
 
-      this.pornstarsList = [];
+      this.pornstars_list = [];
       this.title = '';
-      this.movieDuration = '00:00:00';
+      this.duration = '00:00:00';
 
-      this.abundanceType = '';
-      this.titsSize = '';
-      this.assSize = '',
-      this.thicknessSize = '';
-      this.ageRange = '';
-      this.hairColor = '';
-      this.race = '';
-      this.nationality = '';
-      this.shavedPussy = '';
-      this.cumshotType = '';
+      this.abundance = '';
+      this.actress_tits_size = '';
+      this.actress_ass_size = '',
+      this.actress_thickness = '';
+      this.actress_age_range = '';
+      this.actress_hair_color = '';
+      this.actress_race = '';
+      this.actress_nationality = '';
+      this.shows_shaved_pussy = '';
+      this.actor_cumshot_type = '';
       this.location = '';
-      this.cameraStyle = '';
-      this.storyOrCostume = '';
-      this.professionalismLevel = '';
-      this.hasStory = '';
+      this.camera_style = '';
+      this.story_or_costume_type = '';
+      this.is_professional_production = '';
+      this.has_story = '';
       this.description = '';
+      this.id = null;
     },
 
     async fetchPornstarsList() {
@@ -298,9 +331,9 @@ export default {
 
     },
 
-    loadPornstarsList(pornstarsList : PornstarBasic[]) : void {
+    loadPornstarsList(pornstars_list : PornstarBasic[]) : void {
        let processedNames = [];
-       pornstarsList.forEach(pornstarData => processedNames.push(pornstarData.nickname));
+       pornstars_list.forEach(pornstarData => processedNames.push(pornstarData.nickname));
        this.emitter.emit('replaceAvailableOptionsForMultiselect', processedNames);
     },
 
@@ -309,12 +342,16 @@ export default {
         propertiesNotDescribingMovie.forEach( property => delete movieData[property] );
         Object.keys(movieData).forEach(function(propertName : string){
            if(!movieData[propertName]) {
-             delete movieData[propertName];
+             movieData[propertName] = null;
            }
         })
 
-        if(this.pornstarsList.length === 0) {
-          delete movieData.pornstarsList;
+        if(this.pornstars_list.length === 0) {
+          delete movieData.pornstars_list;
+        }
+
+        if(this.id === null) {
+          delete movieData.id;
         }
 
         return movieData;
@@ -327,7 +364,7 @@ export default {
        switch(response.status) {
            case 201:
              this.showMovieCandidateOnList(responseBody);
-             this.showUserNotification('added_movie');
+             this.showUserNotification('data_saved_successfully');
            break;
  
            case 400:
@@ -347,9 +384,10 @@ export default {
 
    async saveMovie() {
         const movieData = this.getMovieDataForRequest();
+        const httpMethod = this.id ? 'PUT' : 'POST';
 
         const requestData = {
-         method: 'POST',
+         method: httpMethod,
          body: JSON.stringify(movieData),
          headers: {
            'X-CSRF-TOKEN': this.csrfToken,
@@ -363,8 +401,45 @@ export default {
 
     addOnReadMovie() : void {
       this.emitter.on('loadMovieProperties', this.loadMovieProperties);
-    } 
+    },
+    
+    loadMovieProperties(movie : object[]) : void {
+      Object.keys(movie).forEach(movieProperty => {
+           if(!propertiesToIgnoreDuringLoad.includes(movieProperty)) {
+              this.assignMovieProperty(movie, movieProperty);
+           }
+         });
+    },
 
+    assignMovieProperty(movie : object, movieProperty : string) : void {
+        const propertyValue = movie[movieProperty];
+
+         switch(true) {
+            case percentageProperties.includes(movieProperty): 
+              this[movieProperty] = Number(propertyValue);
+            break;
+
+            case relationProperties.includes(movieProperty): 
+              this[movieProperty] = propertyValue?.['name'];
+            break;
+
+            case movieProperty === 'pornstars_list':
+              this.pornstars_list = propertyValue ? propertyValue.split(',') : [];
+            break;
+
+            default: 
+             this[movieProperty] = propertyValue;
+            break;
+         }
+    }
+
+  },
+
+  computed : {
+     saveOrEditMovieButtonCaption() : string {
+      return this.id ? `${this.descriptionsTranslations['save_changes_for_existing_movie']}, id : ${this.id}` :
+      this.descriptionsTranslations['add_new_movie'];
+     }
   },
 
   mounted() {

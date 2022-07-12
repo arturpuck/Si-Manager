@@ -21,7 +21,7 @@ class MovieCandidateController extends Controller
         return view('movies.submit_panel');
     }
 
-    public function addMovieCandidate(UpdateOrCreateMovieCandidateHandler $handler, Request $request) : JsonResponse {
+    public function addOrEditMovieCandidate(UpdateOrCreateMovieCandidateHandler $handler, Request $request) : JsonResponse {
        return $handler->handle($request);
     }
 
