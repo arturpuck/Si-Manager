@@ -53,9 +53,18 @@ const settings = {
 
     },
 
-    updateResourcesTable(responseBody: object[]): void {
+    addNewResourceToTable(responseBody: object[]): void {
       responseBody = this.prepareResourcesData(responseBody);
-      this.emitter.emit('updateResourcesTable', responseBody);
+      this.emitter.emit('addNewResourceToTable', responseBody);
+    },
+
+    updateResourcesTableItem(movieCandidate: object) : void {
+      movieCandidate = this.prepareResourcesData([movieCandidate]);
+      let updateCompleteData : {
+        updatedResources: object, 
+        replacementKey : string
+      } = {updatedResources : movieCandidate, replacementKey : 'id'};
+       this.emitter.emit('updateExistingResourcesInTable', updateCompleteData);
     },
 
     prepareResourcesData(responseBody: object[]): object[] {
@@ -80,7 +89,7 @@ const settings = {
           this.anyMovieCandidatesAvailable = true;
           this.setMovieCandidatesListHeaders();
         }
-        this.updateResourcesTable(responseBody);
+        this.addNewResourceToTable(responseBody);
       }
     },
 

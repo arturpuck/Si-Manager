@@ -7,10 +7,10 @@
     <tbody>
       <tr class="resource-row" v-for="(resource, index) in resourceInstances" v-bind:key="index">
         <td v-bind:data-aditional-header="header" class="resource-cell" v-for="header in headers" v-bind:key="header">{{resource[header]}}</td>
-        <td v-on:click="emitEditEvent(resource)" class="resource-cell">
+        <td v-on:click="emitEditEvent(resource)" class="resource-cell edit-cell">
           <phantom-button class="action-button">{{translator.translate('edit')}}</phantom-button>
         </td>
-        <td class="resource-cell">
+        <td class="resource-cell delete-cell">
           <phantom-button class="action-button">{{translator.translate('delete')}}</phantom-button>
         </td>
       </tr>
@@ -54,19 +54,37 @@ export default {
         this.emitter.on('updateResourceTableHeaders', this.updateTableHeaders);
       },
 
+      onAddResource() : void {
+          this.emitter.on('addNewResourceToTable', this.addResource);
+      },
+
       onUpdateResource() : void {
-          this.emitter.on('updateResourcesTable', this.updateResource);
+         this.emitter.on('updateExistingResourcesInTable', this.updateResources);
       },
 
       updateTableHeaders(headers : string[]) : void {
          this.headers = headers;
       },
 
+      updateResources(updateData : {
+        updatedResources: object[], 
+        replacementKey : string
+      }) {
+        let resourcesForMapping = this.resourceInstances;
+        let {updatedResources,replacementKey} = updateData = updateData;
+
+        updatedResources.forEach(updatedResource => {
+          resourcesForMapping = resourcesForMapping.map(resourceExistingOnList => 
+        resourceExistingOnList[replacementKey] === updatedResource [replacementKey] ? updatedResource  : resourceExistingOnList)
+        });
+        this.resourceInstances = resourcesForMapping;
+      },
+
       emitEditEvent(resource) : void {
         this.$emit('edit', resource);
       },
 
-      updateResource(resource) : void {
+      addResource(resource) : void {
          if(Array.isArray(resource)) {
             this.resourceInstances = this.resourceInstances.concat(resource);
          } else {
@@ -78,6 +96,7 @@ export default {
 
    created() {
      this.onUpdateTableHeaders();
+     this.onAddResource();
      this.onUpdateResource();
    }
 }
@@ -101,7 +120,7 @@ export default {
   @include responsive-font(1.3vw, 15px);
   color:white;
   padding:5px;
-  background: #06850a;
+  background: #0e621d;
   @include table-border()
 }
 
@@ -122,11 +141,23 @@ export default {
    }
 
    &:hover {
-    background:darkred;
+    background:#0f990f;
    }
 }
 
-@media screen and (max-width:600px){
+.delete-cell{
+    &:hover {
+      background:red;
+    }
+  }
+
+  .edit-cell {
+    &:hover{
+      background:dodgerblue;
+    }
+  }
+
+@media screen and (max-width:800px){
   .table-headers {
     display :none;
   }

@@ -2,7 +2,6 @@
   <div class="labeled-checkbox-container">
     <input
       v-bind:checked="modelValue"
-      v-bind:value="checkboxValue"
       v-on:input="updateModel"
       ref="checkbox"
       type="checkbox"
@@ -29,13 +28,6 @@ export default class LabeledCheckbox extends Vue {
   readonly name: string;
 
   @Prop({
-    type: Object,
-    required: false,
-    default: undefined,
-  })
-  readonly aditionalClasses: object;
-
-  @Prop({
     type: Boolean,
     required: false,
     default: false,
@@ -48,12 +40,6 @@ export default class LabeledCheckbox extends Vue {
   })
   readonly modelValue;
 
-  @Prop({
-    required: false,
-    default: 1,
-  })
-  readonly checkboxValue;
-
   private checked: boolean = false;
 
   updateModel(event) {
@@ -61,14 +47,8 @@ export default class LabeledCheckbox extends Vue {
   }
 
   mounted() {
-    if (this.aditionalClasses) {
-      Object.keys(this.aditionalClasses).forEach((key) =>
-        (<HTMLElement>this.$refs[key]).classList.add(this.aditionalClasses[key])
-      );
-    }
 
     (<HTMLInputElement>this.$refs.checkbox).checked = this.checkedAtStart;
-    this.$emit("input", this.checkedAtStart);
   }
 }
 </script>

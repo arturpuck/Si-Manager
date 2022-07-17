@@ -17784,16 +17784,7 @@ var LabeledCheckbox = function (_super) {
   };
 
   LabeledCheckbox.prototype.mounted = function () {
-    var _this = this;
-
-    if (this.aditionalClasses) {
-      Object.keys(this.aditionalClasses).forEach(function (key) {
-        return _this.$refs[key].classList.add(_this.aditionalClasses[key]);
-      });
-    }
-
     this.$refs.checkbox.checked = this.checkedAtStart;
-    this.$emit("input", this.checkedAtStart);
   };
 
   __decorate([vue_property_decorator_1.Prop({
@@ -17801,12 +17792,6 @@ var LabeledCheckbox = function (_super) {
     required: false,
     "default": "labeled-checkbox"
   })], LabeledCheckbox.prototype, "name", void 0);
-
-  __decorate([vue_property_decorator_1.Prop({
-    type: Object,
-    required: false,
-    "default": undefined
-  })], LabeledCheckbox.prototype, "aditionalClasses", void 0);
 
   __decorate([vue_property_decorator_1.Prop({
     type: Boolean,
@@ -17818,11 +17803,6 @@ var LabeledCheckbox = function (_super) {
     required: false,
     "default": false
   })], LabeledCheckbox.prototype, "modelValue", void 0);
-
-  __decorate([vue_property_decorator_1.Prop({
-    required: false,
-    "default": 1
-  })], LabeledCheckbox.prototype, "checkboxValue", void 0);
 
   LabeledCheckbox = __decorate([vue_property_decorator_1.Options({
     name: "LabeledCheckbox"
@@ -18709,12 +18689,13 @@ var user_notification_vue_1 = __importDefault(__webpack_require__(/*! @jscompone
 var user_notification_call_1 = __importDefault(__webpack_require__(/*! @js/mixins/user_notification_call */ "./resources/js/mixins/user_notification_call.ts"));
 
 var EventBus = mitt_1["default"]();
-var propertiesNotDescribingMovie = ['fetchingMoviesInProgress', 'advancedSearchPanelIsVisible', 'selectedOptionsVisibleForUser', 'totalMoviesFound', 'scrollYreactiveProperty', 'currentPage', 'movieCreatorTranslations', 'csrfToken', 'multiselectValues', 'translator', 'fetchingPornstarsInProgress', 'descriptionsTranslations', 'movieCreatorTranslations'];
-var propertiesToIgnoreDuringLoad = ['action_location_id', 'created_at', 'deleted_at', 'story_or_costume_type_id', 'actress_nationality_id'];
-var relationProperties = ['actress_nationality', 'location', 'story_or_costume_type'];
-var percentageProperties = ['anal_percentage', 'blowjob_percentage', 'handjob_percentage', 'double_penetration_percentage', 'pussy_fuck_percentage', 'pussy_licking_percentage', 'feet_petting_percentage', 'position_69_percentage', 'tittfuck_percentage'];
+var propertiesNotDescribingMovie = ["fetchingMoviesInProgress", "advancedSearchPanelIsVisible", "selectedOptionsVisibleForUser", "totalMoviesFound", "scrollYreactiveProperty", "currentPage", "movieCreatorTranslations", "csrfToken", "multiselectValues", "translator", "fetchingPornstarsInProgress", "descriptionsTranslations", "movieCreatorTranslations"];
+var propertiesToIgnoreDuringLoad = ["action_location_id", "created_at", "deleted_at", "story_or_costume_type_id", "actress_nationality_id"];
+var relationProperties = ["actress_nationality", "location", "story_or_costume_type"];
+var percentageProperties = ["anal_percentage", "blowjob_percentage", "handjob_percentage", "double_penetration_percentage", "pussy_fuck_percentage", "pussy_licking_percentage", "feet_petting_percentage", "position_69_percentage", "tittfuck_percentage"];
 exports.default = {
   name: "movie-edit-create",
+  emits: ['addedNewMovieCandidate', 'updatedMovieCandidate'],
   mixins: [user_notification_call_1["default"]],
   components: {
     SimpleLabeledSelect: simple_labeled_select_vue_1["default"],
@@ -18781,9 +18762,9 @@ exports.default = {
       totalMoviesFound: undefined,
       scrollYreactiveProperty: 0,
       currentPage: undefined,
-      duration: '00:00:00',
-      title: '',
-      description: '',
+      duration: "00:00:00",
+      title: "",
+      description: "",
       id: null
     };
   },
@@ -18792,7 +18773,7 @@ exports.default = {
       var _this = this;
 
       event.preventDefault();
-      search_engine_variables_ts_1["default"]['initialValueIsFalse'].forEach(function (propertyName) {
+      search_engine_variables_ts_1["default"]["initialValueIsFalse"].forEach(function (propertyName) {
         _this[propertyName] = false;
       });
       this.anal_percentage = 0;
@@ -18805,23 +18786,23 @@ exports.default = {
       this.position_69_percentage = 0;
       this.double_penetration_percentage = 0;
       this.pornstars_list = [];
-      this.title = '';
-      this.duration = '00:00:00';
-      this.abundance = '';
-      this.actress_tits_size = '';
-      this.actress_ass_size = '', this.actress_thickness = '';
-      this.actress_age_range = '';
-      this.actress_hair_color = '';
-      this.actress_race = '';
-      this.actress_nationality = '';
-      this.shows_shaved_pussy = '';
-      this.actor_cumshot_type = '';
-      this.location = '';
-      this.camera_style = '';
-      this.story_or_costume_type = '';
-      this.is_professional_production = '';
-      this.has_story = '';
-      this.description = '';
+      this.title = "";
+      this.duration = "00:00:00";
+      this.abundance = "";
+      this.actress_tits_size = "";
+      this.actress_ass_size = "", this.actress_thickness = "";
+      this.actress_age_range = "";
+      this.actress_hair_color = "";
+      this.actress_race = "";
+      this.actress_nationality = "";
+      this.shows_shaved_pussy = "";
+      this.actor_cumshot_type = "";
+      this.location = "";
+      this.camera_style = "";
+      this.story_or_costume_type = "";
+      this.is_professional_production = "";
+      this.has_story = "";
+      this.description = "";
       this.id = null;
     },
     fetchPornstarsList: function fetchPornstarsList() {
@@ -18832,14 +18813,14 @@ exports.default = {
           switch (_b.label) {
             case 0:
               requestData = {
-                method: 'GET',
+                method: "GET",
                 headers: {
-                  'X-CSRF-TOKEN': this.csrfToken
+                  "X-CSRF-TOKEN": this.csrfToken
                 }
               };
               return [4
               /*yield*/
-              , fetch('/pornstar', requestData)];
+              , fetch("/pornstar", requestData)];
 
             case 1:
               response = _b.sent();
@@ -18869,7 +18850,7 @@ exports.default = {
               , 5];
 
             case 4:
-              this.showUserNotification('error_during_fetching_pornstars_list', 'error', true);
+              this.showUserNotification("error_during_fetching_pornstars_list", "error", true);
               return [3
               /*break*/
               , 5];
@@ -18887,7 +18868,7 @@ exports.default = {
       pornstars_list.forEach(function (pornstarData) {
         return processedNames.push(pornstarData.nickname);
       });
-      this.emitter.emit('replaceAvailableOptionsForMultiselect', processedNames);
+      this.emitter.emit("replaceAvailableOptionsForMultiselect", processedNames);
     },
     getMovieDataForRequest: function getMovieDataForRequest() {
       var movieData = __assign({}, this.$data);
@@ -18923,12 +18904,16 @@ exports.default = {
 
             case 1:
               responseBody = _a.sent();
-              ;
 
               switch (response.status) {
+                case 200:
+                  this.updateMovieCandidate(responseBody);
+                  this.showUserNotification("data_saved_successfully");
+                  break;
+
                 case 201:
                   this.showMovieCandidateOnList(responseBody);
-                  this.showUserNotification('data_saved_successfully');
+                  this.showUserNotification("data_saved_successfully");
                   break;
 
                 case 400:
@@ -18948,7 +18933,10 @@ exports.default = {
       });
     },
     showMovieCandidateOnList: function showMovieCandidateOnList(movieCandidate) {
-      this.emitter.emit('updateResourceItemsList', movieCandidate);
+      this.$emit("addedNewMovieCandidate", movieCandidate);
+    },
+    updateMovieCandidate: function updateMovieCandidate(movieCandidate) {
+      this.$emit('updatedMovieCandidate', movieCandidate);
     },
     saveMovie: function saveMovie() {
       return __awaiter(this, void 0, void 0, function () {
@@ -18957,18 +18945,18 @@ exports.default = {
           switch (_a.label) {
             case 0:
               movieData = this.getMovieDataForRequest();
-              httpMethod = this.id ? 'PUT' : 'POST';
+              httpMethod = this.id ? "PUT" : "POST";
               requestData = {
                 method: httpMethod,
                 body: JSON.stringify(movieData),
                 headers: {
-                  'X-CSRF-TOKEN': this.csrfToken,
-                  'Content-type': 'application/json; charset=UTF-8'
+                  "X-CSRF-TOKEN": this.csrfToken,
+                  "Content-type": "application/json; charset=UTF-8"
                 }
               };
               return [4
               /*yield*/
-              , fetch('/movie-candidate', requestData)];
+              , fetch("/movie-candidate", requestData)];
 
             case 1:
               response = _a.sent();
@@ -18981,7 +18969,7 @@ exports.default = {
       });
     },
     addOnReadMovie: function addOnReadMovie() {
-      this.emitter.on('loadMovieProperties', this.loadMovieProperties);
+      this.emitter.on("loadMovieProperties", this.loadMovieProperties);
     },
     loadMovieProperties: function loadMovieProperties(movie) {
       var _this = this;
@@ -19001,11 +18989,11 @@ exports.default = {
           break;
 
         case relationProperties.includes(movieProperty):
-          this[movieProperty] = propertyValue === null || propertyValue === void 0 ? void 0 : propertyValue['name'];
+          this[movieProperty] = propertyValue === null || propertyValue === void 0 ? void 0 : propertyValue["name"];
           break;
 
-        case movieProperty === 'pornstars_list':
-          this.pornstars_list = propertyValue ? propertyValue.split(',') : [];
+        case movieProperty === "pornstars_list":
+          this.pornstars_list = propertyValue ? propertyValue.split(",") : [];
           break;
 
         default:
@@ -19016,7 +19004,7 @@ exports.default = {
   },
   computed: {
     saveOrEditMovieButtonCaption: function saveOrEditMovieButtonCaption() {
-      return this.id ? this.descriptionsTranslations['save_changes_for_existing_movie'] + ", id : " + this.id : this.descriptionsTranslations['add_new_movie'];
+      return this.id ? this.descriptionsTranslations["save_changes_for_existing_movie"] + ", id : " + this.id : this.descriptionsTranslations["add_new_movie"];
     }
   },
   mounted: function mounted() {
@@ -19075,16 +19063,33 @@ exports.default = {
     onUpdateTableHeaders: function onUpdateTableHeaders() {
       this.emitter.on('updateResourceTableHeaders', this.updateTableHeaders);
     },
+    onAddResource: function onAddResource() {
+      this.emitter.on('addNewResourceToTable', this.addResource);
+    },
     onUpdateResource: function onUpdateResource() {
-      this.emitter.on('updateResourcesTable', this.updateResource);
+      this.emitter.on('updateExistingResourcesInTable', this.updateResources);
     },
     updateTableHeaders: function updateTableHeaders(headers) {
       this.headers = headers;
     },
+    updateResources: function updateResources(updateData) {
+      var resourcesForMapping = this.resourceInstances;
+
+      var _a = updateData = updateData,
+          updatedResources = _a.updatedResources,
+          replacementKey = _a.replacementKey;
+
+      updatedResources.forEach(function (updatedResource) {
+        resourcesForMapping = resourcesForMapping.map(function (resourceExistingOnList) {
+          return resourceExistingOnList[replacementKey] === updatedResource[replacementKey] ? updatedResource : resourceExistingOnList;
+        });
+      });
+      this.resourceInstances = resourcesForMapping;
+    },
     emitEditEvent: function emitEditEvent(resource) {
       this.$emit('edit', resource);
     },
-    updateResource: function updateResource(resource) {
+    addResource: function addResource(resource) {
       if (Array.isArray(resource)) {
         this.resourceInstances = this.resourceInstances.concat(resource);
       } else {
@@ -19094,6 +19099,7 @@ exports.default = {
   },
   created: function created() {
     this.onUpdateTableHeaders();
+    this.onAddResource();
     this.onUpdateResource();
   }
 };
@@ -19742,14 +19748,13 @@ var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundl
 var _hoisted_1 = {
   "class": "labeled-checkbox-container"
 };
-var _hoisted_2 = ["checked", "value", "name", "id"];
+var _hoisted_2 = ["checked", "name", "id"];
 var _hoisted_3 = ["for"];
 (0, _vue.popScopeId)();
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0, _vue.openBlock)(), (0, _vue.createElementBlock)("div", _hoisted_1, [(0, _vue.createElementVNode)("input", {
     checked: _ctx.modelValue,
-    value: _ctx.checkboxValue,
     onInput: _cache[0] || (_cache[0] = function () {
       return _ctx.updateModel && _ctx.updateModel.apply(_ctx, arguments);
     }),
@@ -20209,7 +20214,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['title']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["title"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20226,7 +20231,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['description']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["description"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20235,7 +20240,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["modelValue"]), (0, _vue.createElementVNode)("div", _hoisted_1, [(0, _vue.createElementVNode)("fieldset", _hoisted_2, [(0, _vue.createElementVNode)("legend", _hoisted_3, (0, _vue.toDisplayString)($data.descriptionsTranslations['actress_body_and_type']), 1
+  , ["modelValue"]), (0, _vue.createElementVNode)("div", _hoisted_1, [(0, _vue.createElementVNode)("fieldset", _hoisted_2, [(0, _vue.createElementVNode)("legend", _hoisted_3, (0, _vue.toDisplayString)($data.descriptionsTranslations["actress_body_and_type"]), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.actress_tits_size,
@@ -20245,7 +20250,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_tits_size']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['tits_size']) + " :", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["tits_size"]) + " :", 1
       /* TEXT */
       )];
     }),
@@ -20262,7 +20267,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_ass_size']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['ass_size']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["ass_size"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20279,7 +20284,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_thickness']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['thickness']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["thickness"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20296,7 +20301,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_age_range']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['age']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["age"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20313,7 +20318,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_hair_color']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['hair_color']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["hair_color"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20330,7 +20335,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_race']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['actress_race']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["actress_race"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20347,7 +20352,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actress_nationality']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['actress_nationality']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["actress_nationality"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20364,7 +20369,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['binaryOptions']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['shaved_pussy']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["shaved_pussy"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20373,7 +20378,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["modelValue", "options"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_4, [(0, _vue.createElementVNode)("legend", _hoisted_5, (0, _vue.toDisplayString)($data.descriptionsTranslations['sex_type']), 1
+  , ["modelValue", "options"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_4, [(0, _vue.createElementVNode)("legend", _hoisted_5, (0, _vue.toDisplayString)($data.descriptionsTranslations["sex_type"]), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.abundance,
@@ -20383,7 +20388,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['abundance']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['abundance']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["abundance"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20401,7 +20406,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['anal']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["anal"]), 1
       /* TEXT */
       )];
     }),
@@ -20419,7 +20424,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['blowjob']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["blowjob"]), 1
       /* TEXT */
       )];
     }),
@@ -20437,7 +20442,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['vaginal']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["vaginal"]), 1
       /* TEXT */
       )];
     }),
@@ -20455,7 +20460,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['handjob']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["handjob"]), 1
       /* TEXT */
       )];
     }),
@@ -20473,7 +20478,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['pussy_licking']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["pussy_licking"]), 1
       /* TEXT */
       )];
     }),
@@ -20491,7 +20496,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['tittfuck']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["tittfuck"]), 1
       /* TEXT */
       )];
     }),
@@ -20509,7 +20514,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['feet']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["feet"]), 1
       /* TEXT */
       )];
     }),
@@ -20527,7 +20532,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['double_penetration']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["double_penetration"]), 1
       /* TEXT */
       )];
     }),
@@ -20545,7 +20550,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     unit: "%"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['position_69']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["position_69"]), 1
       /* TEXT */
       )];
     }),
@@ -20562,7 +20567,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['actor_cumshot_type']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['cumshot']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["cumshot"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20580,7 +20585,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     name: "cumshot-compilation"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['cumshot_compilation']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["cumshot_compilation"]), 1
       /* TEXT */
       )];
     }),
@@ -20589,7 +20594,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_6, [(0, _vue.createElementVNode)("legend", _hoisted_7, (0, _vue.toDisplayString)($data.descriptionsTranslations['circumstances_and_style']), 1
+  , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_6, [(0, _vue.createElementVNode)("legend", _hoisted_7, (0, _vue.toDisplayString)($data.descriptionsTranslations["circumstances_and_style"]), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_simple_labeled_select, {
     modelValue: $data.location,
@@ -20599,7 +20604,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['location']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['location']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["location"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20616,7 +20621,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['camera_style']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['camera_style']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["camera_style"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20633,7 +20638,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['story_or_costume_type']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['story_or_costume_type']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["story_or_costume_type"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20650,7 +20655,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['is_professional_production']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['movie_level']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["movie_level"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20667,7 +20672,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.movieCreatorTranslations['binaryOptions']
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['has_story']) + " : ", 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["has_story"]) + " : ", 1
       /* TEXT */
       )];
     }),
@@ -20684,7 +20689,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['spy_camera']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["spy_camera"]), 1
       /* TEXT */
       )];
     }),
@@ -20701,7 +20706,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['sadistic_or_masochistic']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["sadistic_or_masochistic"]), 1
       /* TEXT */
       )];
     }),
@@ -20718,7 +20723,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['female_domination']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["female_domination"]), 1
       /* TEXT */
       )];
     }),
@@ -20735,7 +20740,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['polish_language_version']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["polish_language_version"]), 1
       /* TEXT */
       )];
     }),
@@ -20744,7 +20749,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_8, [(0, _vue.createElementVNode)("legend", _hoisted_9, (0, _vue.toDisplayString)($data.descriptionsTranslations['gadgets_and_clothing']), 1
+  , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_8, [(0, _vue.createElementVNode)("legend", _hoisted_9, (0, _vue.toDisplayString)($data.descriptionsTranslations["gadgets_and_clothing"]), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_labeled_checkbox, {
     modelValue: $data.actress_has_pantyhose,
@@ -20754,7 +20759,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['pantyhose']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["pantyhose"]), 1
       /* TEXT */
       )];
     }),
@@ -20771,7 +20776,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['stockings']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["stockings"]), 1
       /* TEXT */
       )];
     }),
@@ -20788,7 +20793,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['glasses']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["glasses"]), 1
       /* TEXT */
       )];
     }),
@@ -20805,7 +20810,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['high_heels']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["high_heels"]), 1
       /* TEXT */
       )];
     }),
@@ -20822,7 +20827,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['huge_cock']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["huge_cock"]), 1
       /* TEXT */
       )];
     }),
@@ -20839,7 +20844,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['whips']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["whips"]), 1
       /* TEXT */
       )];
     }),
@@ -20856,7 +20861,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['sex_toys']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["sex_toys"]), 1
       /* TEXT */
       )];
     }),
@@ -20873,7 +20878,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "movie-panel-checkbox"
   }, {
     "default": (0, _vue.withCtx)(function () {
-      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations['latex']), 1
+      return [(0, _vue.createTextVNode)((0, _vue.toDisplayString)($data.descriptionsTranslations["latex"]), 1
       /* TEXT */
       )];
     }),
@@ -20882,7 +20887,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_10, [(0, _vue.createElementVNode)("legend", _hoisted_11, (0, _vue.toDisplayString)($data.descriptionsTranslations['stars']), 1
+  , ["modelValue"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_10, [(0, _vue.createElementVNode)("legend", _hoisted_11, (0, _vue.toDisplayString)($data.descriptionsTranslations["stars"]), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_multiselect, {
     modelValue: $data.pornstars_list,
@@ -20893,7 +20898,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "show-search-input": true
   }, null, 8
   /* PROPS */
-  , ["modelValue", "main-label"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_12, [(0, _vue.createElementVNode)("legend", _hoisted_13, (0, _vue.toDisplayString)($data.descriptionsTranslations['movie_duration']), 1
+  , ["modelValue", "main-label"])]), (0, _vue.createElementVNode)("fieldset", _hoisted_12, [(0, _vue.createElementVNode)("legend", _hoisted_13, (0, _vue.toDisplayString)($data.descriptionsTranslations["movie_duration"]), 1
   /* TEXT */
   ), (0, _vue.withDirectives)((0, _vue.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[40] || (_cache[40] = function ($event) {
@@ -20904,7 +20909,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "time"
   }, null, 512
   /* NEED_PATCH */
-  ), [[_vue.vModelText, $data.duration]])]), (0, _vue.createElementVNode)("fieldset", _hoisted_14, [(0, _vue.createElementVNode)("legend", _hoisted_15, (0, _vue.toDisplayString)($data.descriptionsTranslations['controls']), 1
+  ), [[_vue.vModelText, $data.duration]])]), (0, _vue.createElementVNode)("fieldset", _hoisted_14, [(0, _vue.createElementVNode)("legend", _hoisted_15, (0, _vue.toDisplayString)($data.descriptionsTranslations["controls"]), 1
   /* TEXT */
   ), (0, _vue.createVNode)(_component_reset_button, {
     onClick: $options.resetPanel,
@@ -20913,7 +20918,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0, _vue.withCtx)(function () {
       return [(0, _vue.createVNode)(_component_shutdown_icon, {
         "class": "control-panel-button__icon--bigger"
-      }), (0, _vue.createTextVNode)(" " + (0, _vue.toDisplayString)($data.descriptionsTranslations['reset_panel']), 1
+      }), (0, _vue.createTextVNode)(" " + (0, _vue.toDisplayString)($data.descriptionsTranslations["reset_panel"]), 1
       /* TEXT */
       )];
     }),
@@ -20968,7 +20973,7 @@ var _hoisted_3 = {
 var _hoisted_4 = ["data-aditional-header"];
 var _hoisted_5 = ["onClick"];
 var _hoisted_6 = {
-  "class": "resource-cell"
+  "class": "resource-cell delete-cell"
 };
 (0, _vue.popScopeId)();
 
@@ -21007,7 +21012,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.emitEditEvent(resource);
       },
-      "class": "resource-cell"
+      "class": "resource-cell edit-cell"
     }, [(0, _vue.createVNode)(_component_phantom_button, {
       "class": "action-button"
     }, {
@@ -21804,7 +21809,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".resource-table[data-v-5a490c4f] {\n  margin: 0 auto;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-table[data-v-5a490c4f] {\n      font-size: 13px;\n}\n}\n.resource-header[data-v-5a490c4f] {\n  text-align: center;\n  font-size: 1.3vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  padding: 5px;\n  background: #06850a;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-header[data-v-5a490c4f] {\n      font-size: 15px;\n}\n}\n.resource-cell[data-v-5a490c4f] {\n  border: 1px solid white;\n  color: white;\n  padding: 4px 3px;\n}\n.resource-row[data-v-5a490c4f] {\n  cursor: pointer;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(even) {\n    background: black;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(odd) {\n    background: #3a3a3a;\n}\n.resource-row[data-v-5a490c4f]:hover {\n    background: darkred;\n}\n@media screen and (max-width: 600px) {\n.table-headers[data-v-5a490c4f] {\n    display: none;\n}\n.resource-cell[data-v-5a490c4f] {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -moz-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -webkit-justify-content: space-between;\n       -moz-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    -webkit-flex-wrap: wrap;\n        -ms-flex-wrap: wrap;\n            flex-wrap: wrap;\n}\n.resource-cell[data-v-5a490c4f]::before {\n      content: attr(data-aditional-header) \" : \";\n      color: #06850a;\n}\n.action-button[data-v-5a490c4f] {\n    -webkit-box-flex: 100;\n    -webkit-flex-grow: 100;\n       -moz-box-flex: 100;\n        -ms-flex-positive: 100;\n            flex-grow: 100;\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".resource-table[data-v-5a490c4f] {\n  margin: 0 auto;\n  font-size: 1.2vw;\n  font-family: \"Exo 2\", sans-serif;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-table[data-v-5a490c4f] {\n      font-size: 13px;\n}\n}\n.resource-header[data-v-5a490c4f] {\n  text-align: center;\n  font-size: 1.3vw;\n  font-family: \"Exo 2\", sans-serif;\n  color: white;\n  padding: 5px;\n  background: #0e621d;\n  border: 1px solid white;\n}\n@media (max-width: 1200px) {\n.resource-header[data-v-5a490c4f] {\n      font-size: 15px;\n}\n}\n.resource-cell[data-v-5a490c4f] {\n  border: 1px solid white;\n  color: white;\n  padding: 4px 3px;\n}\n.resource-row[data-v-5a490c4f] {\n  cursor: pointer;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(even) {\n    background: black;\n}\n.resource-row[data-v-5a490c4f]:nth-of-type(odd) {\n    background: #3a3a3a;\n}\n.resource-row[data-v-5a490c4f]:hover {\n    background: #0f990f;\n}\n.delete-cell[data-v-5a490c4f]:hover {\n  background: red;\n}\n.edit-cell[data-v-5a490c4f]:hover {\n  background: dodgerblue;\n}\n@media screen and (max-width: 800px) {\n.table-headers[data-v-5a490c4f] {\n    display: none;\n}\n.resource-cell[data-v-5a490c4f] {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -moz-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: justify;\n    -webkit-justify-content: space-between;\n       -moz-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    -webkit-flex-wrap: wrap;\n        -ms-flex-wrap: wrap;\n            flex-wrap: wrap;\n}\n.resource-cell[data-v-5a490c4f]::before {\n      content: attr(data-aditional-header) \" : \";\n      color: #06850a;\n}\n.action-button[data-v-5a490c4f] {\n    -webkit-box-flex: 100;\n    -webkit-flex-grow: 100;\n       -moz-box-flex: 100;\n        -ms-flex-positive: 100;\n            flex-grow: 100;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -25425,9 +25430,17 @@ var settings = {
         });
       });
     },
-    updateResourcesTable: function updateResourcesTable(responseBody) {
+    addNewResourceToTable: function addNewResourceToTable(responseBody) {
       responseBody = this.prepareResourcesData(responseBody);
-      this.emitter.emit('updateResourcesTable', responseBody);
+      this.emitter.emit('addNewResourceToTable', responseBody);
+    },
+    updateResourcesTableItem: function updateResourcesTableItem(movieCandidate) {
+      movieCandidate = this.prepareResourcesData([movieCandidate]);
+      var updateCompleteData = {
+        updatedResources: movieCandidate,
+        replacementKey: 'id'
+      };
+      this.emitter.emit('updateExistingResourcesInTable', updateCompleteData);
     },
     prepareResourcesData: function prepareResourcesData(responseBody) {
       var responseData = this.changeHowDatesAreDisplayed(responseBody);
@@ -25456,7 +25469,7 @@ var settings = {
           this.setMovieCandidatesListHeaders();
         }
 
-        this.updateResourcesTable(responseBody);
+        this.addNewResourceToTable(responseBody);
       }
     },
     processMovieCandidatesResponse: function processMovieCandidatesResponse(response) {
