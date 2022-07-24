@@ -140,7 +140,8 @@
             name="cumshot-compilation"
             >{{
               descriptionsTranslations["cumshot_compilation"]
-            }}</labeled-checkbox>
+            }}</labeled-checkbox
+          >
         </fieldset>
         <fieldset class="panel-group">
           <legend class="panel-group-legend">
@@ -180,26 +181,34 @@
           </simple-labeled-select>
           <labeled-checkbox
             v-model="recorded_by_spy_camera"
+            name="recorded-by-spy-camera"
             class="movie-panel-checkbox"
-            >{{ descriptionsTranslations["spy_camera"] }}</labeled-checkbox>
+            >{{ descriptionsTranslations["spy_camera"] }}</labeled-checkbox
+          >
           <labeled-checkbox
             v-model="is_sadistic_or_masochistic"
+            name="is-sadistic-or-masochistic"
             class="movie-panel-checkbox"
             >{{
               descriptionsTranslations["sadistic_or_masochistic"]
-            }}</labeled-checkbox>
+            }}</labeled-checkbox
+          >
           <labeled-checkbox
             v-model="is_female_domination_type"
+            name="is-female-domination-type"
             class="movie-panel-checkbox"
             >{{
               descriptionsTranslations["female_domination"]
-            }}</labeled-checkbox>
+            }}</labeled-checkbox
+          >
           <labeled-checkbox
             v-model="is_translated_to_polish"
+            name="is-translated-to-polish"
             class="movie-panel-checkbox"
             >{{
               descriptionsTranslations["polish_language_version"]
-            }}</labeled-checkbox>
+            }}</labeled-checkbox
+          >
         </fieldset>
         <fieldset class="panel-group">
           <legend class="panel-group-legend">
@@ -207,38 +216,48 @@
           </legend>
           <labeled-checkbox
             v-model="actress_has_pantyhose"
+            name="actress-has-pantyhose"
             class="movie-panel-checkbox"
-            >{{ descriptionsTranslations["pantyhose"] }}</labeled-checkbox>
+            >{{ descriptionsTranslations["pantyhose"] }}</labeled-checkbox
+          >
           <labeled-checkbox
             v-model="actress_has_stockings"
             class="movie-panel-checkbox"
-            >{{ descriptionsTranslations["stockings"] }}</labeled-checkbox>
+            >{{ descriptionsTranslations["stockings"] }}</labeled-checkbox
+          >
           <labeled-checkbox
             v-model="actress_has_glasses"
+            name="actress-has-glasses"
             class="movie-panel-checkbox"
-            >{{ descriptionsTranslations["glasses"] }}</labeled-checkbox>
+            >{{ descriptionsTranslations["glasses"] }}</labeled-checkbox
+          >
           <labeled-checkbox
             v-model="shows_high_heels"
+            name="shows-high-heels"
             class="movie-panel-checkbox"
             >{{ descriptionsTranslations["high_heels"] }}</labeled-checkbox
           >
           <labeled-checkbox
             v-model="shows_big_cock"
+            name="shows-big-cock"
             class="movie-panel-checkbox"
             >{{ descriptionsTranslations["huge_cock"] }}</labeled-checkbox
           >
           <labeled-checkbox
             v-model="shows_whips"
+            name="shows-whips"
             class="movie-panel-checkbox"
             >{{ descriptionsTranslations["whips"] }}</labeled-checkbox
           >
           <labeled-checkbox
             v-model="shows_sex_toys"
+            name="shows-sex-toys"
             class="movie-panel-checkbox"
             >{{ descriptionsTranslations["sex_toys"] }}</labeled-checkbox
           >
           <labeled-checkbox
             v-model="shows_latex"
+            name="shows-latex"
             class="movie-panel-checkbox"
             >{{ descriptionsTranslations["latex"] }}</labeled-checkbox
           >
@@ -279,7 +298,7 @@
             ></shutdown-icon>
             {{ descriptionsTranslations["reset_panel"] }}
           </reset-button>
-          <accept-button v-on:click="saveMovie">
+          <accept-button class="save-button" v-on:click="saveMovieCandidate">
             {{ saveOrEditMovieButtonCaption }}
           </accept-button>
         </fieldset>
@@ -354,10 +373,7 @@ const percentageProperties = [
 export default {
   name: "movie-edit-create",
 
-  emits : [
-     'addedNewMovieCandidate',
-     'updatedMovieCandidate'
-  ],
+  emits: ["addedNewMovieCandidate", "updatedMovieCandidate"],
 
   mixins: [UserNotificationCalls],
 
@@ -436,7 +452,10 @@ export default {
 
   methods: {
     resetPanel(event): void {
-      event.preventDefault();
+
+      if(event) {
+        event.preventDefault();
+      }
 
       SearchEngineVariables["initialValueIsFalse"].forEach((propertyName) => {
         this[propertyName] = false;
@@ -458,7 +477,8 @@ export default {
 
       this.abundance = "";
       this.actress_tits_size = "";
-      (this.actress_ass_size = ""), (this.actress_thickness = "");
+      this.actress_ass_size = "";
+      this.actress_thickness = "";
       this.actress_age_range = "";
       this.actress_hair_color = "";
       this.actress_race = "";
@@ -533,17 +553,15 @@ export default {
       return movieData;
     },
 
-    async processSaveMovieResponse(response) {
+    async processsaveMovieCandidateResponse(response) {
       let responseBody = await response.json();
 
       switch (response.status) {
         case 200:
-           this.updateMovieCandidate(responseBody);
-           this.showUserNotification("data_saved_successfully");
+          this.successfullyUpdatedMovieProcedure(responseBody);
           break;
         case 201:
-          this.showMovieCandidateOnList(responseBody);
-          this.showUserNotification("data_saved_successfully");
+          this.successfullyCreatedMovieProcedure(responseBody);
           break;
 
         case 400:
@@ -556,15 +574,27 @@ export default {
       }
     },
 
+    successfullyUpdatedMovieProcedure(movieCandidate: object): void {
+      this.updateMovieCandidate(movieCandidate);
+      this.showUserNotification("data_saved_successfully");
+      this.resetPanel();
+    },
+
+    successfullyCreatedMovieProcedure(movieCandidate: object): void {
+      this.showMovieCandidateOnList(movieCandidate);
+      this.showUserNotification("data_saved_successfully");
+      this.resetPanel();
+    },
+
     showMovieCandidateOnList(movieCandidate: object): void {
       this.$emit("addedNewMovieCandidate", movieCandidate);
     },
 
-    updateMovieCandidate(movieCandidate: object) : void {
-       this.$emit('updatedMovieCandidate', movieCandidate);
+    updateMovieCandidate(movieCandidate: object): void {
+      this.$emit("updatedMovieCandidate", movieCandidate);
     },
 
-    async saveMovie() {
+    async saveMovieCandidate() {
       const movieData = this.getMovieDataForRequest();
       const httpMethod = this.id ? "PUT" : "POST";
 
@@ -578,11 +608,15 @@ export default {
       };
 
       const response = await fetch("/movie-candidate", requestData);
-      this.processSaveMovieResponse(response);
+      this.processsaveMovieCandidateResponse(response);
     },
 
     addOnReadMovie(): void {
       this.emitter.on("loadMovieProperties", this.loadMovieProperties);
+    },
+
+    addOnResetPanel(): void {
+      this.emitter.on("resetMovieCreatorPanel", this.resetPanel);
     },
 
     loadMovieProperties(movie: object[]): void {
@@ -609,11 +643,21 @@ export default {
           this.pornstars_list = propertyValue ? propertyValue.split(",") : [];
           break;
 
+        case movieProperty === "is_professional_production":
+          this.is_professional_production =
+            this.matchReturnedValueForProfessionalismLevel(propertyValue);
+          break;
+
         default:
           this[movieProperty] = propertyValue;
           break;
       }
     },
+
+    matchReturnedValueForProfessionalismLevel(returnedValue): string {
+      if (returnedValue === null) return null;
+      return returnedValue === 1 ? "professional" : "amateur";
+    }
   },
 
   computed: {
@@ -630,6 +674,7 @@ export default {
     )).content;
     this.fetchPornstarsList();
     this.addOnReadMovie();
+    this.addOnResetPanel();
   },
 };
 </script>

@@ -11,7 +11,7 @@
         <script src="{{$jsFilePath}}" defer></script>
     </head>
     <body class="body">
-    <div id="app">
+    <div class="app-container" id="app">
         {{$slot}}
     </div>
     </body>

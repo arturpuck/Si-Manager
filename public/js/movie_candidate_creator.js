@@ -25908,9 +25908,9 @@ var __webpack_exports__ = {};
 !function() {
 "use strict";
 var exports = __webpack_exports__;
-/*!***************************************!*\
-  !*** ./resources/js/movie_creator.ts ***!
-  \***************************************/
+/*!*************************************************!*\
+  !*** ./resources/js/movie_candidate_creator.ts ***!
+  \*************************************************/
 
 
 var __importDefault = void 0 && (void 0).__importDefault || function (mod) {
@@ -25947,17 +25947,13 @@ var loading_movie_candidates_values_to_editor_1 = __importDefault(__webpack_requ
 
 var adding_new_movie_candidates_to_table_1 = __importDefault(__webpack_require__(/*! @js/mixins/movies/adding_new_movie_candidates_to_table */ "./resources/js/mixins/movies/adding_new_movie_candidates_to_table.ts"));
 
-var accept_button_1 = __importDefault(__webpack_require__(/*! @jscomponents-form-controls/accept_button */ "./resources/js/components/form_controls/accept_button.vue"));
-
 var EventBus = mitt_1["default"]();
 var settings = {
-  methods: {},
   mixins: [user_notification_call_1["default"], deleting_movie_candidate_1["default"], seting_movie_candidates_list_headers_1["default"], geting_pending_movie_candidates_1["default"], updating_movie_candidates_table_1["default"], loading_movie_candidates_values_to_editor_1["default"], adding_new_movie_candidates_to_table_1["default"]],
   components: {
     UserNotification: user_notification_vue_1["default"],
     MovieEditCreate: movie_edit_create_1["default"],
-    SimpleResourceTable: simple_resource_table_1["default"],
-    AcceptButton: accept_button_1["default"]
+    SimpleResourceTable: simple_resource_table_1["default"]
   },
   mounted: function mounted() {
     this.csrfToken = document.getElementById("csrf-token").content;

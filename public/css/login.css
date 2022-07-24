@@ -73,6 +73,9 @@ meter {
 :where([draggable="true"]) {
   -webkit-user-drag: element; }
 
+.app-container {
+  padding-top: 80px; }
+
 .body {
   -moz-background-size: cover;
        background-size: cover;

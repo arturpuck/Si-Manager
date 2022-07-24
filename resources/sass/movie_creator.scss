@@ -1,18 +1,32 @@
 @import '~sass/basic';
-@import "~sass/fonts";
+@import '~sass/components/navbar';
 
 .body {
-    background: #0e0e0e;
+    background:#0e0e0e;
 }
 
-.main-header{
-    margin:0;
-    padding: 10px;
+.main-header {
     text-align: center;
-    @include responsive-font(1.7vw, 20px);
     color:white;
+    @include responsive-font(1.5vw, 18px);
 }
 
-.full-body {
-    background: #0e0e0e;
+.mass-operation-container {
+    display : flex;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+.mass-operation-control {
+    flex-basis : 40%;
+}
+
+.delete-button {
+    @include responsive-font(1.5vw, 18px);
+    border-radius: 5px;
+    background:red;
+    color:white;
+    font-weight: bold;
+    text-align: center;
+    cursor:pointer;
 }

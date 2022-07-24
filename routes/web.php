@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Movies\MovieCandidateController;
+use App\Http\Controllers\Movies\MovieController;
 use App\Http\Controllers\Pornstars\PornstarsController;
 
 /*
@@ -16,44 +17,52 @@ use App\Http\Controllers\Pornstars\PornstarsController;
 |
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group( function () {
 
         Route::get('/dashboard', [DashboardController::class, 'showDashboard'])
            ->name('dashboard');
 
         Route::middleware(['role:movieCreator'])->group( function () {
-
-            Route::prefix('/movie')->name('movie.')->group( function () {
-
-                Route::get('/creator', [MovieCandidateController::class, 'showMovieCreatorPanel'])
-                    ->name('creator');
-    
-                Route::get('/submit/panel', [MovieCandidateController::class, 'showMovieSubmitPanel'])
-                    ->name('submit.panel');
-    
-            });
             
-            Route::prefix('/movie-candidate')->name('movie-candidate.')->group(function () {
+            
+                Route::prefix('/movie-candidate')->name('movie-candidate.')->group(function () {
 
-                Route::post('', [MovieCandidateController::class, 'addOrEditMovieCandidate'])
-                      ->name('create');
+                        Route::get('/panel', [MovieCandidateController::class, 'showMovieCreatorPanel'])
+                        ->name('panel');
 
-                Route::put('', [MovieCandidateController::class, 'addOrEditMovieCandidate'])
-                      ->name('create');
+                        Route::post('', [MovieCandidateController::class, 'addOrEditMovieCandidate'])
+                        ->name('create');
+
+                        Route::put('', [MovieCandidateController::class, 'addOrEditMovieCandidate'])
+                        ->name('update');
     
-                Route::get('', [MovieCandidateController::class, 'getPendingMovieCandidates'])
-                     ->name('list');
-            });
+                        Route::get('', [MovieCandidateController::class, 'getPendingMovieCandidates'])
+                        ->name('list');
 
-                
+                        Route::delete('', [MovieCandidateController::class, 'deleteMovieCandidate'])
+                        ->name('delete');
+                    }
+                );
 
-         });
+        });
 
-        Route::prefix('/pornstar')->name('pornstar.')->middleware(['role:movieCreator'])->group( function () {
-            Route::get('', [PornstarsController::class, 'getPornstars'])->name('list');
-         });
+        Route::middleware(['role:admin'])->group(function () {
 
-});
+                Route::prefix('/movie')->name('movie.')->group(function () {
+
+                    Route::get('/panel', [MovieController::class, 'showMovieCreationPanel'])
+                    ->name('panel');
+                });
+        });
+
+        Route::prefix('/pornstar')->name('pornstar.')->middleware(['role:movieCreator'])->group(
+            function () {
+                Route::get('', [PornstarsController::class, 'getPornstars'])->name('list');
+            }
+        );
+
+    }
+);
 
 
 require __DIR__.'/auth.php';

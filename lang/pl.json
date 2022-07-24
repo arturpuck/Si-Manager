@@ -1,8 +1,9 @@
 {
     "sex_empire_manager_login_panel" : "Panel logowania menagera sex-imperium",
-    "add_movie" : "Dodawanie filmów",
+    "add_movie_candidates" : "Dodawanie kandydatów do filmu",
+    "add_movies" : "Dodawanie filmów",
     "submit_movies" : "Akceptuj filmy",
-    "menager_dashboard" : "Pulpit menager'a Sex-Imperium",
+    "menager_dashboard" : "Pulpit menagera Sex-Imperium",
     "choose": "wybierz",
     "up" : "góra",
     "heterosexual": "heteroseksualna",
@@ -360,5 +361,8 @@
     "added_movies_awaiting_confirmation" : "Dodane filmy oczekujące na zatwierdzenie",
     "save_movie" : "Zapisz film",
     "logout" : "Wyloguj",
-    "title" : "tytuł"
+    "title" : "tytuł",
+    "dashboard" : "Pulpit",
+    "create_all_from_list" : "Utwórz filmy na podstawie wszystkich z listy",
+    "delete_all_from_list" : "Usuń wszystkich kandydatów z listy"
 }

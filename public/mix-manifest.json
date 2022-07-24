@@ -2,7 +2,9 @@
     "/js/login.js": "/js/login.js",
     "/js/dashboard.js": "/js/dashboard.js",
     "/js/movie_creator.js": "/js/movie_creator.js",
+    "/js/movie_candidate_creator.js": "/js/movie_candidate_creator.js",
     "/css/movie_creator.css": "/css/movie_creator.css",
     "/css/dashboard.css": "/css/dashboard.css",
-    "/css/login.css": "/css/login.css"
+    "/css/login.css": "/css/login.css",
+    "/css/movie_candidate_creator.css": "/css/movie_candidate_creator.css"
 }

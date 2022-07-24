@@ -24,7 +24,7 @@ const variables: {
         'is_professional_production'],
 
     initialValueIsFalse: ['is_cumshot_compilation_type', 'recorded_by_spy_camera', 'is_sadistic_or_masochistic', 'is_female_domination_type',
-        'is_translated_to_polish', 'actress_has_pantyhose', 'actress_has_stockings', 'actress_has_glasses', 'shows_high_heels', 'shows_big_cock',
+        'is_translated_to_polish', 'actress_has_pantyhose', 'shows_latex', 'actress_has_stockings', 'actress_has_glasses', 'shows_high_heels', 'shows_big_cock',
         'shows_whips', 'shows_sex_toys'
     ],
 

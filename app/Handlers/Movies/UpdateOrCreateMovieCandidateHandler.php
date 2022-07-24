@@ -4,7 +4,6 @@ namespace App\Handlers\Movies;
 
 use Illuminate\Http\JsonResponse;
 use App\CustomValidators\MoviePropertiesValidator;
-use Illuminate\Http\Request;
 use App\Models\MovieCandidate;
 use Throwable;
 use App\Models\Nationality;
@@ -26,7 +25,7 @@ const RELATIONAL_PROPERTIES = [
     'pornstars_list'
 ];
 
-public function handle(Request $request) : JsonResponse
+public function handle() : JsonResponse
 {
     try {
         $this->initiateValidation();

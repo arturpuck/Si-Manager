@@ -1,0 +1,19 @@
+@import '~sass/basic';
+@import "~sass/fonts";
+@import "~sasscomponent/navbar";
+
+.body {
+    background: #0e0e0e;
+}
+
+.main-header{
+    margin:0;
+    padding: 10px;
+    text-align: center;
+    @include responsive-font(1.7vw, 20px);
+    color:white;
+}
+
+.full-body {
+    background: #0e0e0e;
+}

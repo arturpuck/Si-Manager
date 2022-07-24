@@ -1,0 +1,44 @@
+@import "~sass/fonts";
+
+@mixin navbar-font {
+    @include responsive-font(1.5vw, 17px);
+    color: white;
+}
+
+.navigation {
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:10;
+}
+
+.list-element {
+    display:flex;
+    align-items:stretch;
+}
+
+.navigation-list {
+    list-style-type: none;
+    display:flex;
+    background: #383436;
+   
+}
+
+.navigation-link {
+    text-decoration: none;
+    @include navbar-font();
+    padding: 6px;
+    &:hover {
+        background:rgb(89, 212, 7);
+    }
+}
+
+.submit-button {
+    padding: 6px;
+    cursor:pointer;
+    @include navbar-font();
+    height:100%;
+    &:hover {
+        background:crimson;
+    }
+}

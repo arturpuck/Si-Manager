@@ -34,7 +34,8 @@ class ViewFilePathsServiceProvider extends ServiceProvider
                 $legitViewsNames = [
                     'login',
                     'dashboard',
-                    'movie_creator'
+                    'movie_creator',
+                    'movie_candidate_creator'
                 ];
 
                 $viewName = Str::afterLast($view->getName(), ".");

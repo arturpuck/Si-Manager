@@ -17,9 +17,11 @@ const webpack = require('webpack')
 mix.ts('resources/js/login.ts', 'public/js').vue()
    .ts('resources/js/dashboard.ts', 'public/js').vue()
    .ts('resources/js/movie_creator.ts', 'public/js').vue()
+   .ts('resources/js/movie_candidate_creator.ts', 'public/js').vue()
    .sass('resources/sass/login.scss', 'public/css')
    .sass('resources/sass/dashboard.scss', 'public/css')
    .sass('resources/sass/movie_creator.scss', 'public/css')
+   .sass('resources/sass/movie_candidate_creator.scss', 'public/css')
   .options({ processCssUrls: false })
   .babelConfig({
     plugins: ['@babel/plugin-syntax-dynamic-import',  "@babel/plugin-transform-modules-commonjs"],

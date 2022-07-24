@@ -9,6 +9,6 @@ Class ShowMovieCreatorPanelHandler
 {
     public function handle() : View
     {
-        return view('movies.movie_creator');
+        return view('movies.movie_candidate_creator');
     }
 }

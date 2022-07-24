@@ -4,12 +4,12 @@
     <ul class="options-list">
         @hasanyrole('movieCreator|admin')
         <li class="option">
-           <a href="{{route('movie.creator')}}" class="option-link">{{__('add_movie')}}</a>
+           <a href="{{route('movie-candidate.panel')}}" class="option-link">{{__('add_movie_candidates')}}</a>
         </li>
         @endhasanyrole
         @role('admin')
         <li class="option">
-            <a href="{{route('movie.submit.panel')}}" class="option-link">{{__('submit_movies')}}</a>
+            <a href="{{route('movie.panel')}}" class="option-link">{{__('submit_movies')}}</a>
         </li>
         @endrole
         <li class="option">

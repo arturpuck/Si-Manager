@@ -437,6 +437,7 @@ export default {
       movie_views: "Liczba wyświetleń",
       movie_added_at: "Data dodania",
       movie_average_rating: "Średnia ocen",
+      desktop : "Pulpit",
       this_pornstar_does_not_have_enough_votes_to_calculate_average : "Ta gwiazda ma za mało głosów aby policzyć średnią (wymagane minimum to 10)",
       fetching_rating_in_progress : "Pobieram dane rankingu",
       average_rate_not_available_yet: "jeszcze niedostępna",
@@ -471,6 +472,7 @@ export default {
       comment_text : "Treść komentarza",
       added_movie : "Dodano film",
       data_saved_successfully : "Pomyślnie zapisano dane",
+      movie_candidate_successfully_deleted : "Pomyślnie usunięto kandydata na film",
       latex : "Latex",
       employee_added_incorrect_parameters : "Podano nieprawidłowe parametry, lista problemów",
       packages: {

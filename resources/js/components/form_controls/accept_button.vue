@@ -20,7 +20,6 @@ export default class AcceptButton extends Vue {}
   color: white;
   display: block;
   width: 95%;
-  margin: 7px auto;
   border-radius: 5px;
   text-align: center;
   font-weight: bold;

@@ -73,20 +73,103 @@ meter {
 :where([draggable="true"]) {
   -webkit-user-drag: element; }
 
+.app-container {
+  padding-top: 80px; }
+
+.navigation {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10; }
+
+.list-element {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+     -moz-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch; }
+
+.navigation-list {
+  list-style-type: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  background: #383436; }
+
+.navigation-link {
+  text-decoration: none;
+  font-size: 1.5vw;
+  font-family: "Exo 2", sans-serif;
+  color: white;
+  padding: 6px; }
+  @media (max-width: 1200px) {
+    .navigation-link {
+      font-size: 17px; } }
+  .navigation-link:hover {
+    background: #59d407; }
+
+.submit-button {
+  padding: 6px;
+  cursor: pointer;
+  font-size: 1.5vw;
+  font-family: "Exo 2", sans-serif;
+  color: white;
+  height: 100%; }
+  @media (max-width: 1200px) {
+    .submit-button {
+      font-size: 17px; } }
+  .submit-button:hover {
+    background: crimson; }
+
 .body {
   background: #0e0e0e; }
 
 .main-header {
-  margin: 0;
-  padding: 10px;
   text-align: center;
-  font-size: 1.7vw;
-  font-family: "Exo 2", sans-serif;
-  color: white; }
+  color: white;
+  font-size: 1.5vw;
+  font-family: "Exo 2", sans-serif; }
   @media (max-width: 1200px) {
     .main-header {
-      font-size: 20px; } }
+      font-size: 18px; } }
 
-.full-body {
-  background: #0e0e0e; }
+.mass-operation-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+  -webkit-justify-content: space-evenly;
+     -moz-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding: 10px; }
+
+.mass-operation-control {
+  -webkit-flex-basis: 40%;
+      -ms-flex-preferred-size: 40%;
+          flex-basis: 40%; }
+
+.delete-button {
+  font-size: 1.5vw;
+  font-family: "Exo 2", sans-serif;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  background: red;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer; }
+  @media (max-width: 1200px) {
+    .delete-button {
+      font-size: 18px; } }
 

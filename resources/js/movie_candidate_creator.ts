@@ -10,14 +10,9 @@ import GettingPendingMovieCandidates from "@js/mixins/movies/geting_pending_movi
 import UpdatingMovieCandidatesTable from "@js/mixins/movies/updating_movie_candidates_table";
 import LoadingMovieCandidatesValuesToEditor from "@js/mixins/movies/loading_movie_candidates_values_to_editor";
 import AddingNewMovieCandidatesToTable from "@js/mixins/movies/adding_new_movie_candidates_to_table";
-import AcceptButton from "@jscomponents-form-controls/accept_button";
 
 const EventBus = EventEmmiter();
 const settings = {
-
-  methods : {
-    
-  },
 
   mixins: [
     UserNotificationCalls,
@@ -33,7 +28,6 @@ const settings = {
     UserNotification,
     MovieEditCreate,
     SimpleResourceTable,
-    AcceptButton
   },
 
   mounted() {

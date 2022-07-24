@@ -9,9 +9,7 @@
       v-bind:name="name"
       v-bind:id="name"
     />
-    <label ref="label" v-bind:for="name" class="labeled-checkbox-description"
-      ><slot></slot
-    ></label>
+    <label v-bind:for="name" class="labeled-checkbox-description"><slot></slot></label>
   </div>
 </template>
 
@@ -40,7 +38,6 @@ export default class LabeledCheckbox extends Vue {
   })
   readonly modelValue;
 
-  private checked: boolean = false;
 
   updateModel(event) {
     this.$emit("update:modelValue", event.target.checked);
