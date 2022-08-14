@@ -11,18 +11,93 @@ import UpdatingMovieCandidatesTable from "@js/mixins/movies/updating_movie_candi
 import LoadingMovieCandidatesValuesToEditor from "@js/mixins/movies/loading_movie_candidates_values_to_editor";
 import AddingNewMovieCandidatesToTable from "@js/mixins/movies/adding_new_movie_candidates_to_table";
 import AcceptButton from "@jscomponents-form-controls/accept_button";
+import Translator from "@jsmodules/translator.js";
 
 const EventBus = EventEmmiter();
 const settings = {
 
-  methods : {
-    
+  data() {
+    return { 
+       movies: []
+    }
+  },
+
+  methods: {
+    deleteAllMovieCandidates(): void {
+      this.makeDeleteMovieCandidatesRequest('all')
+        .then(this.processDeletedMovieCandidateResponse);
+    },
+
+    updateMovies(movies) : void {
+       this.movies = movies;
+    },
+
+    createAllMoviesFromList(): void {
+      let movieCandidatesIds = this.getAllMovieCandidatesIds();
+        this.makeAcceptMovieRequest(movieCandidatesIds)
+            .then(this.processMovieCreationResponse);
+    },
+
+    getAllMovieCandidatesIds() {
+      let candidates_ids = this.movies.map(movieCandidate => movieCandidate.id);
+      return {candidates_ids}
+    },
+
+    createMovie(movie) : void {
+      this.makeAcceptMovieRequest({candidates_ids : [movie.id]})
+      .then(this.processMovieCreationResponse);
+    },
+
+    makeAcceptMovieRequest(moviCandidatesIDs) {
+      const requestData = {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': this.csrfToken,
+          'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(moviCandidatesIDs),
+      };
+
+      return fetch('/movie', requestData);
+    },
+
+    async processMovieCreationResponse(response) {
+      let responseBody = await response.json();
+
+      switch (response.status) {
+        case 201:
+          this.addedMovieCandidatesCleanUp(responseBody.deletedCandidates);
+          break;
+
+        case 400:
+          this.showMovieCandidateValidationErrors(responseBody.errors);
+          break;
+
+        case 500:
+          this.notifyEmployeeAboutServerError(responseBody.errorMessage);
+          break;
+
+        case 419:
+          this.showUserNotification('session_expired_login_again', 'error', true);
+      }
+    },
+
+    addedMovieCandidatesCleanUp(addedMovieCandidates : number[]) : void {
+        this.removeMovieCandidatesFromList(addedMovieCandidates);
+        this.showUserNotification('movie_or_movies_added_successfully');
+    },
+
+    showMovieCandidateValidationErrors(errors) : void {
+      let errorMessage = `${Translator.translate('validation_error')} : `;
+      errorMessage += JSON.stringify(errors);
+      this.showUserNotification(errorMessage, 'error', true);
+    }
   },
 
   mixins: [
     UserNotificationCalls,
-    DeletingMovieCandidate, 
-    SettingMovieCandidateListHeaders, 
+    DeletingMovieCandidate,
+    SettingMovieCandidateListHeaders,
     GettingPendingMovieCandidates,
     UpdatingMovieCandidatesTable,
     LoadingMovieCandidatesValuesToEditor,

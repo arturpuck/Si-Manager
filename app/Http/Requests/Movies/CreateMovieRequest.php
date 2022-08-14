@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Movies;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use App\Rules\MovieCandidatesAreChosenFromTheBeginning;
 
-class DeleteMovieCandidateRequest extends FormRequest
+
+class CreateMovieRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +28,8 @@ class DeleteMovieCandidateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'exists:movie_candidates']
+            'candidates_ids' => ['required', 'array', new MovieCandidatesAreChosenFromTheBeginning()],
+            'candidates_ids.*' => ['required', 'integer', 'exists:movie_candidates,id']
         ];
     }
 

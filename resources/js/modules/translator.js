@@ -472,9 +472,12 @@ export default {
       comment_text : "Treść komentarza",
       added_movie : "Dodano film",
       data_saved_successfully : "Pomyślnie zapisano dane",
-      movie_candidate_successfully_deleted : "Pomyślnie usunięto kandydata na film",
+      movie_candidate_successfully_deleted : "Pomyślnie usunięto kandydata/ów na film",
       latex : "Latex",
+      movie_or_movies_added_successfully : "Film/y dodano prawidłowo",
+      validation_error : "Błąd walidacji",
       employee_added_incorrect_parameters : "Podano nieprawidłowe parametry, lista problemów",
+      session_expired_login_again : "Sesja wygasła, zaloguj się ponownie",
       packages: {
          content_sidebar: {
             hide_side_bar_title: "Schowaj boczne menu",

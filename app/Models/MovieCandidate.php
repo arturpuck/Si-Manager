@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Nationality;
 use App\Models\Location;
 use App\Models\StoryOrCostumeType;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MovieCandidate extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = ['created_at', 'updated_at', 'deleted_at'];
     protected $with = ['actressNationality', 'location', 'storyOrCostumeType'];

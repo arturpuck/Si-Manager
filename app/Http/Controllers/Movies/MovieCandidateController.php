@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Movies;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\DeleteMovieCandidateRequest;
+use App\Http\Requests\Movies\MovieCandidateRangeRequest;
 use App\Handlers\Movies\ShowMovieCreatorPanelHandler;
 use App\Handlers\Movies\UpdateOrCreateMovieCandidateHandler;
 use App\Handlers\Movies\GetPendingMovieCandidatesHandler;
@@ -27,7 +27,7 @@ class MovieCandidateController extends Controller
         return $handler->handle();
     }
 
-    public function deleteMovieCandidate(DeleteMovieCandidateHandler $handler, DeleteMovieCandidateRequest $request) : JsonResponse
+    public function deleteMovieCandidate(DeleteMovieCandidateHandler $handler, MovieCandidateRangeRequest $request) : JsonResponse
     {
        return $handler->handle($request);
     }

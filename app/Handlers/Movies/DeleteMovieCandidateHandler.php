@@ -3,20 +3,34 @@
 namespace App\Handlers\Movies;
 
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\DeleteMovieCandidateRequest;
+use App\Http\Requests\Movies\MovieCandidateRangeRequest;
 use Throwable;
 use App\Models\MovieCandidate;
 
 Class DeleteMovieCandidateHandler
 {
-    public function handle(DeleteMovieCandidateRequest $request) : JsonResponse
+    public function handle(MovieCandidateRangeRequest $request) : JsonResponse
     {
-         try {
-            $movieCandidateId = $request->get('id');
-            MovieCandidate::where('id',$movieCandidateId)->delete();
-            return new JsonResponse(['id' => $movieCandidateId], 200);
-         } catch (Throwable $failure) {
-            return new JsonResponse(['errorMessage' => $failure->getMessage()],500);
-         }
+        try {
+            $movieCandidateRange = $request->get('id');
+            return $this->tryToDeleteMovieCandidates($movieCandidateRange);
+        } catch (Throwable $failure) {
+            return new JsonResponse(['errorMessage' => $failure->getMessage()], 500);
+        }
+    }
+
+    public function tryToDeleteMovieCandidates($range) : JsonResponse
+    {
+        switch(true) {
+        case $range === 'all':
+            MovieCandidate::query()->delete();
+            break;
+
+        default:
+            MovieCandidate::where('id', $range)->delete();
+            break;
+        }
+
+        return new JsonResponse(['id' => $range], 200);
     }
 }

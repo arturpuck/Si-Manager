@@ -4,7 +4,7 @@
       <th class="resource-header" v-for="header in headers" v-bind:key="header">
         {{ header }}
       </th>
-      <th colspan="2" class="resource-header">
+      <th v-bind:colspan="actionsColspan" class="resource-header">
         {{ translator.translate("actions") }}
       </th>
     </thead>
@@ -35,6 +35,11 @@
             translator.translate("delete")
           }}</phantom-button>
         </td>
+        <td v-if="aditionalActionControlName" v-on:click="emitResourceSelectedbyAditionalAction(resource)" class="resource-cell aditional-cell">
+          <phantom-button class="action-button">{{
+            aditionalActionControlName
+          }}</phantom-button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -47,7 +52,7 @@ import Translator from "@jsmodules/translator.js";
 export default {
   name: "simple-resource-table",
 
-  emits: ["edit", "delete"],
+  emits: ["edit", "delete", 'resourcesHaveChanged', 'aditionalActionSelected'],
 
   components: {
     PhantomButton,
@@ -59,6 +64,12 @@ export default {
       default: "600px",
       type: String,
     },
+
+    aditionalActionControlName : {
+      required: false,
+      default: "",
+      type: String,
+    }
   },
 
   data() {
@@ -67,6 +78,12 @@ export default {
       resourceInstances: [],
       translator: Translator,
     };
+  },
+
+  computed : {
+    actionsColspan() : number {
+      return this.aditionalActionControlName ? 3 : 2;
+    }
   },
 
   methods: {
@@ -86,6 +103,10 @@ export default {
       this.emitter.on("removeResourcesFromTable", this.deleteResources);
     },
 
+    onFlushTable(): void {
+       this.emitter.on('flushResourcesTable', this.flushResourcesTable);
+    },
+
     updateTableHeaders(headers: string[]): void {
       this.headers = headers;
     },
@@ -101,6 +122,7 @@ export default {
             resourcesWithDeletedItems = resourcesWithDeletedItems.filter(resourceFromList => resourceFromList[deleteKey] != deletedIdentifier)
        });
        this.resourceInstances = resourcesWithDeletedItems;
+       this.resourcesHaveChanged();
     },
 
     updateResources(updateData: {
@@ -120,10 +142,19 @@ export default {
         );
       });
       this.resourceInstances = resourcesForMapping;
+      this.resourcesHaveChanged();
+    },
+
+    emitResourceSelectedbyAditionalAction(resource) : void {
+        this.$emit('aditionalActionSelected', resource);
     },
 
     emitEditEvent(resource): void {
       this.$emit("edit", resource);
+    },
+
+    resourcesHaveChanged() : void {
+        this.$emit('resourcesHaveChanged', this.resourceInstances);
     },
 
     emitDeleteEvent(resource): void {
@@ -136,14 +167,25 @@ export default {
       } else {
         this.resourceInstances.push(resource);
       }
+      this.resourcesHaveChanged();
     },
+
+    flushResourcesTable() : void {
+      this.resourceInstances = [];
+      this.resourcesHaveChanged();
+    },
+
+    registerListeningToEvents() : void {
+       this.onUpdateTableHeaders();
+       this.onAddResource();
+       this.onUpdateResources();
+       this.onDeleteResources();
+       this.onFlushTable();
+    }
   },
 
   created() {
-    this.onUpdateTableHeaders();
-    this.onAddResource();
-    this.onUpdateResources();
-    this.onDeleteResources();
+      this.registerListeningToEvents();
   },
 };
 </script>
@@ -194,6 +236,12 @@ export default {
 .delete-cell {
   &:hover {
     background: red;
+  }
+}
+
+.aditional-cell {
+  &:hover {
+    background: rgb(214, 214, 8);
   }
 }
 

@@ -52,6 +52,9 @@ Route::middleware('auth')->group( function () {
 
                     Route::get('/panel', [MovieController::class, 'showMovieCreationPanel'])
                     ->name('panel');
+
+                    Route::post('', [MovieController::class, 'createMovies'])
+                          ->name('create');
                 });
         });
 

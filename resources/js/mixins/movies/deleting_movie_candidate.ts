@@ -5,18 +5,21 @@ export default {
     mixins: [UserNotificationCalls],
 
     methods: {
+
         async deleteMovieCandidate(movieCandidate) {
+            this.makeDeleteMovieCandidatesRequest(movieCandidate.id)
+                .then(this.processDeletedMovieCandidateResponse);
+        },
+
+        async makeDeleteMovieCandidatesRequest(range: number | string) {
             const requestData = {
                 method: 'DELETE',
-                body: JSON.stringify({ id: movieCandidate.id }),
                 headers: {
                     'X-CSRF-TOKEN': this.csrfToken,
-                    "Content-type": "application/json; charset=UTF-8",
                 }
             };
 
-            const response = await fetch('/movie-candidate', requestData);
-            this.processDeletedMovieCandidateResponse(response);
+            return fetch(`/movie-candidate?id=${range}`, requestData);
         },
 
         async processDeletedMovieCandidateResponse(response) {
@@ -37,19 +40,33 @@ export default {
             }
         },
 
-        successfullyDeletedMovieCandidateProcedure(movieCandidateId: number): void {
+        successfullyDeletedMovieCandidateProcedure(movieCandidateId: number | string): void {
             this.showUserNotification('movie_candidate_successfully_deleted');
-            this.removeMovieCandidateFromList(movieCandidateId);
+            
+            switch (true) {
+                case movieCandidateId === 'all':
+                    this.flushMovieCandidatesTable()
+                    break;
+
+                default:
+                    this.removeMovieCandidatesFromList([movieCandidateId]);
+                    break;
+            }
+
         },
 
-        removeMovieCandidateFromList(movieCandidateId: number): void {
+        flushMovieCandidatesTable(): void {
+            this.emitter.emit('flushResourcesTable');
+        },
+
+        removeMovieCandidatesFromList(movieCandidatesIds : any[]): void {
             const deleteData: {
                 deleteKey: string,
                 deletedResourceIdentifiers: any[]
             } = {
                 deleteKey: 'id',
-                deletedResourceIdentifiers: [movieCandidateId]
-            }
+                deletedResourceIdentifiers: movieCandidatesIds
+            };
             this.emitter.emit('removeResourcesFromTable', deleteData);
         },
     }
