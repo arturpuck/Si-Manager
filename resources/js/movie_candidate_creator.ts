@@ -14,6 +14,12 @@ import AddingNewMovieCandidatesToTable from "@js/mixins/movies/adding_new_movie_
 const EventBus = EventEmmiter();
 const settings = {
 
+  data() {
+    return { 
+      anyMovieCandidatesAvailable : false
+    }
+  },
+
   mixins: [
     UserNotificationCalls,
     DeletingMovieCandidate, 
@@ -32,7 +38,14 @@ const settings = {
 
   mounted() {
     this.csrfToken = (<HTMLMetaElement>document.getElementById("csrf-token")).content;
+    this.setMovieCandidatesListHeaders();
     this.getPendingMovieCandidates();
+  },
+
+  methods : {
+    controlResourcesTableVisibility(movieCandidates : object[]) : void {
+        this.anyMovieCandidatesAvailable = movieCandidates.length > 0;
+    }
   }
 
 };

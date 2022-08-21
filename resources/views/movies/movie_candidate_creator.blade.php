@@ -9,6 +9,7 @@
         <h2 class="main-header">{{__('added_movies_awaiting_confirmation')}}</h2>
         <simple-resource-table 
         v-on:delete="deleteMovieCandidate"
+        v-on:resources-have-changed="controlResourcesTableVisibility"
         v-on:edit="loadResourceValuesToEditor"></simple-resource-table>
    </section>
    <user-notification></user-notification>

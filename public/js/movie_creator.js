@@ -19807,11 +19807,11 @@ var adding_new_movie_candidates_to_table_1 = __importDefault(__webpack_require__
 
 exports.default = {
   mixins: [user_notification_call_1["default"], seting_movie_candidates_list_headers_1["default"], adding_new_movie_candidates_to_table_1["default"]],
-  data: function data() {
-    return {
-      anyMovieCandidatesAvailable: false
-    };
-  },
+  // data() {
+  //   return { 
+  //     anyMovieCandidatesAvailable : false
+  //   }
+  // },
   methods: {
     getPendingMovieCandidates: function getPendingMovieCandidates() {
       return __awaiter(this, void 0, void 0, function () {
@@ -19875,11 +19875,6 @@ exports.default = {
     },
     processSuccessfullMovieCandidatesFetch: function processSuccessfullMovieCandidatesFetch(movieCandidates) {
       if (Array.isArray(movieCandidates) && movieCandidates.length > 0) {
-        if (!this.anyMovieCandidatesAvailable) {
-          this.anyMovieCandidatesAvailable = true;
-          this.setMovieCandidatesListHeaders();
-        }
-
         this.addNewMovieCandidatesToTable(movieCandidates);
       }
     }
@@ -26160,6 +26155,11 @@ var settings = {
       movies: []
     };
   },
+  computed: {
+    anyMovieCandidatesAvailable: function anyMovieCandidatesAvailable() {
+      return this.movies.length > 0;
+    }
+  },
   methods: {
     deleteAllMovieCandidates: function deleteAllMovieCandidates() {
       this.makeDeleteMovieCandidatesRequest('all').then(this.processDeletedMovieCandidateResponse);
@@ -26251,6 +26251,7 @@ var settings = {
   },
   mounted: function mounted() {
     this.csrfToken = document.getElementById("csrf-token").content;
+    this.setMovieCandidatesListHeaders();
     this.getPendingMovieCandidates();
   }
 }; //@ts-ignore

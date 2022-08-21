@@ -17,8 +17,14 @@ const EventBus = EventEmmiter();
 const settings = {
 
   data() {
-    return { 
-       movies: []
+    return {
+      movies: []
+    }
+  },
+
+  computed: {
+    anyMovieCandidatesAvailable(): boolean {
+      return this.movies.length > 0
     }
   },
 
@@ -28,24 +34,24 @@ const settings = {
         .then(this.processDeletedMovieCandidateResponse);
     },
 
-    updateMovies(movies) : void {
-       this.movies = movies;
+    updateMovies(movies): void {
+      this.movies = movies;
     },
 
     createAllMoviesFromList(): void {
       let movieCandidatesIds = this.getAllMovieCandidatesIds();
-        this.makeAcceptMovieRequest(movieCandidatesIds)
-            .then(this.processMovieCreationResponse);
+      this.makeAcceptMovieRequest(movieCandidatesIds)
+        .then(this.processMovieCreationResponse);
     },
 
     getAllMovieCandidatesIds() {
       let candidates_ids = this.movies.map(movieCandidate => movieCandidate.id);
-      return {candidates_ids}
+      return { candidates_ids }
     },
 
-    createMovie(movie) : void {
-      this.makeAcceptMovieRequest({candidates_ids : [movie.id]})
-      .then(this.processMovieCreationResponse);
+    createMovie(movie): void {
+      this.makeAcceptMovieRequest({ candidates_ids: [movie.id] })
+        .then(this.processMovieCreationResponse);
     },
 
     makeAcceptMovieRequest(moviCandidatesIDs) {
@@ -82,12 +88,12 @@ const settings = {
       }
     },
 
-    addedMovieCandidatesCleanUp(addedMovieCandidates : number[]) : void {
-        this.removeMovieCandidatesFromList(addedMovieCandidates);
-        this.showUserNotification('movie_or_movies_added_successfully');
+    addedMovieCandidatesCleanUp(addedMovieCandidates: number[]): void {
+      this.removeMovieCandidatesFromList(addedMovieCandidates);
+      this.showUserNotification('movie_or_movies_added_successfully');
     },
 
-    showMovieCandidateValidationErrors(errors) : void {
+    showMovieCandidateValidationErrors(errors): void {
       let errorMessage = `${Translator.translate('validation_error')} : `;
       errorMessage += JSON.stringify(errors);
       this.showUserNotification(errorMessage, 'error', true);
@@ -113,6 +119,7 @@ const settings = {
 
   mounted() {
     this.csrfToken = (<HTMLMetaElement>document.getElementById("csrf-token")).content;
+    this.setMovieCandidatesListHeaders();
     this.getPendingMovieCandidates();
   }
 

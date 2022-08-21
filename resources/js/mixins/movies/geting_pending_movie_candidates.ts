@@ -5,11 +5,11 @@ import AddingNewMoviesToTable from "@js/mixins/movies/adding_new_movie_candidate
 export default {
     mixins : [UserNotificationCalls, SettingMovieCandidateListHeaders, AddingNewMoviesToTable],
 
-    data() {
-      return { 
-        anyMovieCandidatesAvailable : false
-      }
-    },
+    // data() {
+    //   return { 
+    //     anyMovieCandidatesAvailable : false
+    //   }
+    // },
 
     methods : {
         async getPendingMovieCandidates() {
@@ -44,13 +44,10 @@ export default {
 
           processSuccessfullMovieCandidatesFetch(movieCandidates) {
             if (Array.isArray(movieCandidates) && movieCandidates.length > 0) {
-              if (!this.anyMovieCandidatesAvailable) {
-                this.anyMovieCandidatesAvailable = true;
-                this.setMovieCandidatesListHeaders();
-              }
               this.addNewMovieCandidatesToTable(movieCandidates);
             }
           },
+
           
     }
 }
