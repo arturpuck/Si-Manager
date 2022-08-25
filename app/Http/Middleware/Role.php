@@ -16,10 +16,22 @@ class Role
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        $user = \Auth::user();
-        if($user->hasRole('admin') || in_array($user()->role, $roles)) {
+        
+        if($this->userIsAdminOrHasRequiredRoles($roles)) {
             return $next($request);
         }
         abort(403);
+    }
+
+    private function userIsAdminOrHasRequiredRoles(array $roles) : bool
+    {
+        $user = \Auth::user();
+        $userRolesArray = $user->roles->pluck('name')->toArray();
+        return $user->hasRole('admin') || $this->userHasAllRequiredRoles($roles, $userRolesArray);
+    }
+
+    private function userHasAllRequiredRoles(array $requiredRoles, array $presentRoles) : bool
+    {
+        return count(array_diff($requiredRoles, $presentRoles)) === 0;
     }
 }
