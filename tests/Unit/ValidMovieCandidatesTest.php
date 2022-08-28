@@ -26,7 +26,7 @@ class ValidMovieCandidatesTest extends TestCase
         'title' => 'nice title'
         ];
 
-        $cameraStyles = MovieCandidatesAttributes::getCameraStyles();
+        $cameraStyles = MovieCandidatesAttributes::CAMERA_STYLES;
 
         $user = User::factory()
             ->employeeAllowedToMakeMovieCandidates()
@@ -45,12 +45,7 @@ class ValidMovieCandidatesTest extends TestCase
 
     public function testCreateMinimumMovieCandidateWithDifferentLocations()
     {
-        $payload = [
-            'abundance' => MovieCandidatesAttributes::getRandomAbundance(),
-            'duration' => date('H:i:s', rand(1, 200000)),
-            'camera_style' => 'outside',
-            'title' => 'nice title'
-        ];
+        $payload = MovieCandidatesAttributes::getMinimumRequiredPayload();
     
             $locations = Location::pluck('name')->toArray();
     
@@ -62,8 +57,7 @@ class ValidMovieCandidatesTest extends TestCase
                 $payload['location'] = $location;
                 $response = $this->actingAs($user)
                     ->postJson(route('movie-candidate.create'), $payload);
-                $payloadToAssert = $payload;
-                $payloadToAssert['location'] =  ['id' => $locationID + 1, 'name' => $location];
+                $payloadToAssert = MovieCandidatesAttributes::parseToMatchResponse($payload);
                 $response->assertStatus(201)
                     ->assertJson($payloadToAssert);
             }
@@ -77,7 +71,7 @@ class ValidMovieCandidatesTest extends TestCase
             'camera_style' => 'outside',
             ];
     
-            $abundances = MovieCandidatesAttributes::getAbundances();
+            $abundances = MovieCandidatesAttributes::ABUNDANCES;
     
             $user = User::factory()
                 ->employeeAllowedToMakeMovieCandidates()
@@ -95,12 +89,7 @@ class ValidMovieCandidatesTest extends TestCase
 
     public function testCreateMinimumMovieCandidateWithPornstars()
     {
-        $payload = [
-            'abundance' => MovieCandidatesAttributes::getRandomAbundance(),
-            'duration' => date('H:i:s', rand(1, 200000)),
-            'title' => 'nice title',
-            'camera_style' => 'outside',
-            ];
+        $payload = MovieCandidatesAttributes::getMinimumRequiredPayload();
 
         $user = User::factory()
                     ->employeeAllowedToMakeMovieCandidates()
@@ -112,14 +101,29 @@ class ValidMovieCandidatesTest extends TestCase
                                     ->toArray();
 
         $payload['pornstars_list'] = $pornstarsNickames;
-        $expectedPayload = $payload;
-        $expectedPayload['pornstars_list'] = implode(',',$pornstarsNickames);
+        $expectedPayload = MovieCandidatesAttributes::parseToMatchResponse($payload);
 
         $response = $this->actingAs($user)
                         ->postJson(route('movie-candidate.create'), $payload);
         
         $response->assertStatus(201)
                  ->assertJson($expectedPayload);
+    }
+
+    public function testCreateMovieCandidateWithAllFields()
+    {
+        $payload = MovieCandidatesAttributes::getRandomCompletePayload();
+        $payloadResponse = MovieCandidatesAttributes::parseToMatchResponse($payload);
+        
+        $user = User::factory()
+                    ->employeeAllowedToMakeMovieCandidates()
+                    ->create();
+        
+        $response = $this->actingAs($user)
+                    ->postJson(route('movie-candidate.create'), $payload);
+    
+        $response->assertStatus(201)
+                    ->assertJson($payloadResponse);
     }
 
 }

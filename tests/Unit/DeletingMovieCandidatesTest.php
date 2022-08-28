@@ -48,6 +48,6 @@ class DeletingMovieCandidatesTest extends TestCase
             ->deleteJson($url);
                 
         $response->assertStatus(200)
-            ->assertJson(['id' => 'all']);
+            ->assertJson(['id' => $movieCandidatesIDs]);
     }
 }

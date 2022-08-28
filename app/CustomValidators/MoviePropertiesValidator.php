@@ -6,79 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Http\Exceptions\FailedValidationException;
+use App\Helpers\Testing\MovieCandidatesAttributes;
 
 class MoviePropertiesValidator
 {
-
-    private const ABUNDANCE_TYPES = [
-        'one_male_one_female',
-        'bukkake',
-        'single_female',
-        'lesbian',
-        'group',
-        'one_male_many_females',
-        'GangBang',
-        'one_female_two_males',
-        'lesbianGroup'
-    ];
-
-    private const SMB_SIZES = [
-        'small',
-        'medium',
-        'big'
-    ];
-
-    private const THICKNESS_SIZES = [
-        'skinny',
-        'medium',
-        'fat'
-    ];
-
-    private const AGE_RANGES = [
-        'teenagers',
-        'young',
-        'mature'
-    ];
-
-    private const HAIR_COLORS = [
-        'dark',
-        'blonde',
-        'brown',
-        'red'
-    ];
-
-    private const RACES = [
-        'white',
-        'asian',
-        'ebony',
-        'latin',
-        'arabic'
-    ];
-
-    private const CUMSHOT_TYPES = [
-        'on_face',
-        'cum_swallow',
-        'creampie',
-        'anal_creampie',
-        'on_tits',
-        'on_pussy',
-        'on_ass',
-        'on_feet',
-        'on_many_places',
-        'on_other_body_parts',
-        'exclude'
-    ];
-
-    private const CAMERA_STYLES = [
-        'outside',
-        'POV',
-        'mixed'
-    ];
-
-    private const PROFESSIONALISM_LEVELS = [
-        'professional',
-        'amateur'
-    ];
 
     public static bool $checkMovieID = false;
 
@@ -92,22 +23,22 @@ class MoviePropertiesValidator
             'title' => ['required', 'string', 'min:3', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
 
-            'abundance' => ['required', 'string', Rule::in(self::ABUNDANCE_TYPES)],
-            'actress_tits_size' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
-            'actress_ass_size' => ['string', 'nullable', Rule::in(self::SMB_SIZES)],
-            'actress_thickness' => ['string', 'nullable', Rule::in(self::THICKNESS_SIZES)],
-            'actress_age_range' => ['string', 'nullable', Rule::in(self::AGE_RANGES)],
-            'actress_hair_color' => ['string', 'nullable', Rule::in(self::HAIR_COLORS)],
-            'actress_race' => ['string', 'nullable', Rule::in(self::RACES)],
+            'abundance' => ['required', 'string', Rule::in(MovieCandidatesAttributes::ABUNDANCES)],
+            'actress_tits_size' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::BODY_PART_SIZES)],
+            'actress_ass_size' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::BODY_PART_SIZES)],
+            'actress_thickness' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::BODY_SIZES)],
+            'actress_age_range' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::AGE_RANGES)],
+            'actress_hair_color' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::HAIR_COLORS)],
+            'actress_race' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::RACES)],
             'actress_nationality' => ['string', 'nullable', 'exists:nationalities,name'],
             'shows_shaved_pussy' => ['nullable', 'boolean'],
-            'actor_cumshot_type' => ['string', 'nullable', Rule::in(self::CUMSHOT_TYPES)],
+            'actor_cumshot_type' => ['string', 'nullable', Rule::in(MovieCandidatesAttributes::CUMSHOT_TYPES)],
             'location' => ['string', 'nullable', 'exists:locations,name'],
-            'camera_style' => ['required', 'string', Rule::in(self::CAMERA_STYLES)],
+            'camera_style' => ['required', 'string', Rule::in(MovieCandidatesAttributes::CAMERA_STYLES)],
             'has_story' => ['nullable', 'boolean'],
             'story_or_costume_type' => ['string', 'nullable', 'exists:story_or_costume_types,name'],
-            'is_professional_production' => ['nullable', 'string', Rule::in(self::PROFESSIONALISM_LEVELS)],
-            'duration' => ['date_format:H:i:s', 'after:00:00:00'],
+            'is_professional_production' => ['nullable', 'boolean'],
+            'duration' => ['required', 'date_format:H:i:s', 'after:00:00:00'],
 
             'anal_percentage' => $sexTypeRule,
             'blowjob_percentage' => $sexTypeRule,

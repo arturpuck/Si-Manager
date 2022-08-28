@@ -18883,10 +18883,6 @@ exports.default = {
         }
       });
 
-      if (this.pornstars_list.length === 0) {
-        delete movieData.pornstars_list;
-      }
-
       if (this.id === null) {
         delete movieData.id;
       }
@@ -19008,18 +19004,10 @@ exports.default = {
           this.pornstars_list = propertyValue ? propertyValue.split(",") : [];
           break;
 
-        case movieProperty === "is_professional_production":
-          this.is_professional_production = this.matchReturnedValueForProfessionalismLevel(propertyValue);
-          break;
-
         default:
           this[movieProperty] = propertyValue;
           break;
       }
-    },
-    matchReturnedValueForProfessionalismLevel: function matchReturnedValueForProfessionalismLevel(returnedValue) {
-      if (returnedValue === null) return null;
-      return returnedValue === 1 ? "professional" : "amateur";
     }
   },
   computed: {
@@ -22115,8 +22103,8 @@ var _default = (_actress_tits_size$ac = {
   cleaner: _translator["default"].translate('cleaner'),
   mommy: _translator["default"].translate('mommy')
 }), _defineProperty(_actress_tits_size$ac, "is_professional_production", {
-  professional: _translator["default"].translate("professional"),
-  amateur: _translator["default"].translate("amateur")
+  1: _translator["default"].translate("professional"),
+  0: _translator["default"].translate("amateur")
 }), _defineProperty(_actress_tits_size$ac, "pornstarsFetchingLabel", _translator["default"].translate("fetching_pornstars")), _defineProperty(_actress_tits_size$ac, "notSelected", _translator["default"].translate("not_selected")), _defineProperty(_actress_tits_size$ac, "selectedTimeLabel", _translator["default"].translate("minutes_inflected")), _defineProperty(_actress_tits_size$ac, "selectedViewsLabel", _translator["default"].translate("views_inflected")), _defineProperty(_actress_tits_size$ac, "fetchingMoviesLabel", _translator["default"].translate("fetching_movies")), _defineProperty(_actress_tits_size$ac, "totalMoviesLabel", _translator["default"].translate("total_movies_found")), _defineProperty(_actress_tits_size$ac, "noMoviesHaveBeenFound", _translator["default"].translate("no_movies_have_been_found")), _defineProperty(_actress_tits_size$ac, "noOptionsHaveBeenSelected", _translator["default"].translate("no_options_have_been_selected")), _defineProperty(_actress_tits_size$ac, "unexpectedError", _translator["default"].translate("unexpected_error_occured")), _defineProperty(_actress_tits_size$ac, "fetchingPornstarsFailed", _translator["default"].translate("failed_to_fetch_pornstars_list")), _defineProperty(_actress_tits_size$ac, "searchHasBenStoppedBecauseThereWereToManyRequests", _translator["default"].translate("because_of_security_reasons_search_was_blocked")), _actress_tits_size$ac);
 
 exports.default = _default;

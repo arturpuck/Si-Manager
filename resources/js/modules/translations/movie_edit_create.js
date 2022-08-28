@@ -154,8 +154,8 @@ export default {
   },
 
   is_professional_production: {
-    professional: Translator.translate("professional"),
-    amateur: Translator.translate("amateur")
+    1: Translator.translate("professional"),
+    0: Translator.translate("amateur")
   },
 
   pornstarsFetchingLabel: Translator.translate("fetching_pornstars"),

@@ -23,7 +23,8 @@ Class DeleteMovieCandidateHandler
     {
         switch(true) {
         case $range === 'all':
-            MovieCandidate::query()->delete();
+            $range = MovieCandidate::pluck('id')->toArray();
+            MovieCandidate::whereIn('id', $range)->delete();
             break;
 
         default:

@@ -90,13 +90,6 @@ protected function assignPornstarsList(MovieCandidate $movieCandidate) : void
 protected function assignSimpleValues(MovieCandidate $movieCandidate) : void
 {
     $simpleValues = array_diff_key($this->validatedData, array_flip(self::RELATIONAL_PROPERTIES));
-    if(array_key_exists('is_professional_production', $simpleValues)) {
-        $simpleValues['is_professional_production'] = match($simpleValues['is_professional_production']) {
-            'professional' => 1,
-            'amateur' => 0,
-            default => null
-        };
-    }
     foreach($simpleValues as $propertyName => $value) {
        $movieCandidate->$propertyName = $value;
     }

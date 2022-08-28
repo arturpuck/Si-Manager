@@ -24,4 +24,6 @@ class MovieCandidateFactory extends Factory
             'camera_style' => MovieCandidatesAttributes::getRandomCameraStyle()
         ];
     }
+
+    
 }

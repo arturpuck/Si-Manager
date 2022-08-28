@@ -542,10 +542,6 @@ export default {
         }
       });
 
-      if (this.pornstars_list.length === 0) {
-        delete movieData.pornstars_list;
-      }
-
       if (this.id === null) {
         delete movieData.id;
       }
@@ -643,21 +639,12 @@ export default {
           this.pornstars_list = propertyValue ? propertyValue.split(",") : [];
           break;
 
-        case movieProperty === "is_professional_production":
-          this.is_professional_production =
-            this.matchReturnedValueForProfessionalismLevel(propertyValue);
-          break;
-
         default:
           this[movieProperty] = propertyValue;
           break;
       }
     },
 
-    matchReturnedValueForProfessionalismLevel(returnedValue): string {
-      if (returnedValue === null) return null;
-      return returnedValue === 1 ? "professional" : "amateur";
-    }
   },
 
   computed: {

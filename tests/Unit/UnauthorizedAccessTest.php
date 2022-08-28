@@ -58,7 +58,7 @@ class UnauthorizedAccessTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function userThatIsNotMovieCreatorWantsToDeleteMovieCandidate()
+    public function testUserThatIsNotMovieCreatorWantsToDeleteMovieCandidate()
     {
         $user = User::factory()
             ->create();
